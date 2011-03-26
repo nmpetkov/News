@@ -83,7 +83,7 @@ class News_Installer extends Zikula_AbstractInstaller
 
         // register handlers
         EventUtil::registerPersistentModuleHandler('News', 'get.pending_content', array('News_Handlers', 'pendingContent'));
-        EventUtil::registerPersistentModuleHandler('News', 'module.content.getTypes', array('News_Handlers', 'getTypes'));
+        EventUtil::registerPersistentModuleHandler('News', 'module.content.gettypes', array('News_Handlers', 'getTypes'));
         HookUtil::registerHookSubscriberBundles($this->version);
 
         // Initialisation successful
@@ -310,7 +310,7 @@ class News_Installer extends Zikula_AbstractInstaller
             case '2.6.2':
                 // register handlers
                 EventUtil::registerPersistentModuleHandler('News', 'get.pending_content', array('News_Handlers', 'pendingContent'));
-                EventUtil::registerPersistentModuleHandler('News', 'module.content.getTypes', array('News_Handlers', 'getTypes'));
+                EventUtil::registerPersistentModuleHandler('News', 'module.content.gettypes', array('News_Handlers', 'getTypes'));
                 // update the table
                 if (!DBUtil::changeTable('news')) {
                     return '2.6.2';
