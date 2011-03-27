@@ -37,10 +37,7 @@ class News_Controller_User extends Zikula_AbstractController
      */
     public function newitem($args)
     {
-        // Security check
-        if (!SecurityUtil::checkPermission('News::', '::', ACCESS_COMMENT)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('News::', '::', ACCESS_COMMENT), LogUtil::getErrorMsgPermission());
 
         // Any item set for preview will be stored in a session var
         // Once the new article is posted we'll clear the session var.
@@ -293,10 +290,7 @@ class News_Controller_User extends Zikula_AbstractController
      */
     public function view($args = array())
     {
-        // Security check
-        if (!SecurityUtil::checkPermission('News::', '::', ACCESS_OVERVIEW)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('News::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
 
         // clean the session preview data
         SessionUtil::delVar('newsitem');
@@ -632,10 +626,7 @@ class News_Controller_User extends Zikula_AbstractController
         $month = (int) FormUtil::getPassedValue('month', null, 'REQUEST');
         $day = '31';
 
-        // Security check
-        if (!SecurityUtil::checkPermission('News::', '::', ACCESS_OVERVIEW)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('News::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
 
         // Dates validation
         $currentdate = explode(',', DateUtil::getDatetime('', '%Y,%m,%d'));
@@ -747,10 +738,7 @@ class News_Controller_User extends Zikula_AbstractController
      */
     public function categorylist($args)
     {
-        // Security check
-        if (!SecurityUtil::checkPermission('News::', '::', ACCESS_OVERVIEW)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('News::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
 
         $enablecategorization = $this->getVar('enablecategorization');
         if (UserUtil::isLoggedIn()) {

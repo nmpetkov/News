@@ -34,10 +34,7 @@ class News_Api_Admin extends Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! No such article found.'));
         }
 
-        // Security check
-        if (!SecurityUtil::checkPermission('News::', "{$item['cr_uid']}::{$item['sid']}", ACCESS_DELETE)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('News::', $item['cr_uid'] . '::' . $item['sid'], ACCESS_DELETE), LogUtil::getErrorMsgPermission());
 
         if (!DBUtil::deleteObjectByID('news', $args['sid'], 'sid')) {
             return LogUtil::registerError($this->__('Error! Could not delete article.'));
@@ -97,10 +94,7 @@ class News_Api_Admin extends Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! No such article found.'));
         }
 
-        // Security check
-        if (!$this->_isSubmittor($item) && !SecurityUtil::checkPermission('News::', "{$item['cr_uid']}::{$args['sid']}", ACCESS_EDIT)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless($this->_isSubmittor($item) || SecurityUtil::checkPermission('News::', $item['cr_uid'] . '::' . $args['sid'], ACCESS_EDIT), LogUtil::getErrorMsgPermission());
 
         // evaluates the input action
         $args['action'] = isset($args['action']) ? $args['action'] : null;
@@ -172,10 +166,7 @@ class News_Api_Admin extends Zikula_AbstractApi
      */
     public function purgepermalinks($args)
     {
-        // Security check
-        if (!SecurityUtil::checkPermission('News::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('News::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
 
         // disable categorization to do this (if enabled)
         $catenabled = $this->getVar('enablecategorization');
