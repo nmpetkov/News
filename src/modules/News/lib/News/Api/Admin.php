@@ -284,7 +284,7 @@ class News_Api_Admin extends Zikula_AbstractApi
 
     private function _isSubmittor($item) {
         $submittor = $item['cr_uid'];
-        $currentUser = SessionUtil::getVar('uid');
+        $currentUser = UserUtil::getVar('uid');
         if (($submittor == $currentUser) && ($item['published_status'] <> 0)) {
             return true;
         }

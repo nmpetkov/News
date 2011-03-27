@@ -665,7 +665,7 @@ class News_Api_User extends Zikula_AbstractApi
         } else {
             $args['contributor'] = UserUtil::getVar('uname');
             if ($args['published_status'] == 0) {
-                $args['approver'] = SessionUtil::getVar('uid');
+                $args['approver'] = UserUtil::getVar('uid');
             }
         }
 

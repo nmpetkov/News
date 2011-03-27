@@ -754,7 +754,7 @@ class News_Controller_User extends Zikula_AbstractController
 
         $enablecategorization = $this->getVar('enablecategorization');
         if (UserUtil::isLoggedIn()) {
-            $uid = SessionUtil::getVar('uid');
+            $uid = UserUtil::getVar('uid');
         } else {
             $uid = 0;
         }

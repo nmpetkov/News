@@ -62,7 +62,7 @@ function smarty_function_articleadminlinks($params, &$smarty)
 /*
     // Check for the current user to enable users to edit their own articles
     if (UserUtil::isLoggedIn()) {
-        $uid = SessionUtil::getVar('uid');
+        $uid = UserUtil::getVar('uid');
     } else {
         $uid = 0;
     }
