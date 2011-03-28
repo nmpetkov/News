@@ -961,9 +961,11 @@ class News_Api_User extends Zikula_AbstractApi
             }
         }
         if (SecurityUtil::checkPermission('News::', '::', ACCESS_COMMENT)) {
-            $links[] = array('url' => ModUtil::url('News', 'user', 'newitem'),
-                    'text' => $this->__('Submit an article'),
-                    'class' => 'z-icon-es-new');
+            if (FormUtil::getPassedValue('func', null, 'GET') <> 'newitem') {
+                $links[] = array('url' => ModUtil::url('News', 'user', 'newitem'),
+                        'text' => $this->__('Submit an article'),
+                        'class' => 'z-icon-es-new');
+            }
         }
         if (SecurityUtil::checkPermission('News::', '::', ACCESS_EDIT)) {
             $count = $this->countitems(array('status' => 2));
