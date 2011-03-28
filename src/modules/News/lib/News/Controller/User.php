@@ -13,6 +13,11 @@
 
 class News_Controller_User extends Zikula_AbstractController
 {
+    const ACTION_PREVIEW = 0;
+    const ACTION_SUBMIT = 1;
+    const ACTION_PUBLISH = 2;
+    const ACTION_SAVEPENDING = 4;
+    const ACTION_SAVEDRAFT = 6;
 
     /**
      * the main user function
@@ -75,7 +80,7 @@ class News_Controller_User extends Zikula_AbstractController
         }
 
         $preview = '';
-        if (isset($item['action']) && $item['action'] == 0) {
+        if (isset($item['action']) && $item['action'] == self::ACTION_PREVIEW) {
             $preview = $this->preview(array('title' => $item['title'],
                         'hometext' => $item['hometext'],
                         'hometextcontenttype' => $item['hometextcontenttype'],
@@ -174,7 +179,7 @@ class News_Controller_User extends Zikula_AbstractController
             'to' => isset($story['to']) ? $story['to'] : null,
             'unlimited' => isset($story['unlimited']) && $story['unlimited'] ? true : false,
             'weight' => isset($story['weight']) ? $story['weight'] : 0,
-            'action' => isset($story['action']) ? $story['action'] : 0,
+            'action' => isset($story['action']) ? $story['action'] : self::ACTION_PREVIEW,
             'sid' => isset($story['sid']) ? $story['sid'] : null);
 
         // convert user times to server times (TZ compensation) refs #181
@@ -192,8 +197,8 @@ class News_Controller_User extends Zikula_AbstractController
             $item['to'] = null;
             $item['unlimited'] = true;
             $item['weight'] = 0;
-            if ($item['action'] > 1) {
-                $item['action'] = 0;
+            if ($item['action'] > self::ACTION_SUBMIT) {
+                $item['action'] = self::ACTION_PREVIEW;
             }
         }
 
@@ -217,7 +222,7 @@ class News_Controller_User extends Zikula_AbstractController
 
         // if the user has selected to preview the article we then route them back
         // to the new function with the arguments passed here
-        if ($item['action'] == 0 || $validationerror !== false) {
+        if ($item['action'] == self::ACTION_PREVIEW || $validationerror !== false) {
             // log the error found if any
             if ($validationerror !== false) {
                 LogUtil::registerError($validationerror);
@@ -257,7 +262,7 @@ class News_Controller_User extends Zikula_AbstractController
                 $this->notify($item, $modvars); // send notification email
                 if (isset($files) && $modvars['picupload_enabled']) {
                     $resized = News_ImageUtil::resizeImages($sid, $files, $modvars); // resize and move the uploaded pics
-                    if ($item['action'] == 6) {
+                    if ($item['action'] == self::ACTION_SAVEDRAFT) {
                         LogUtil::registerStatus($this->_fn('%1$s out of %2$s picture was uploaded and resized. Article now has draft status, since not all pictures were uploaded.', '%1$s out of %2$s pictures were uploaded and resized. Article now has draft status, since not all pictures were uploaded.', $item['pictures'], array($resized, $item['pictures'])));
                     } else {
                         LogUtil::registerStatus($this->_fn('%1$s out of %2$s picture was uploaded and resized.', '%1$s out of %2$s pictures were uploaded and resized.', $item['pictures'], array($resized, $item['pictures'])));
@@ -1009,7 +1014,7 @@ class News_Controller_User extends Zikula_AbstractController
     {
         // notify the configured addresses of a new Pending Review article
         $notifyonpending = $this->getVar('notifyonpending', false);
-        if ($notifyonpending && ($item['action'] == 1 || $item['action'] == 4)) {
+        if ($notifyonpending && ($item['action'] == self::ACTION_SUBMIT || $item['action'] == self::ACTION_SAVEPENDING)) {
             $sitename = System::getVar('sitename');
             $adminmail = System::getVar('adminmail');
             $fromname = !empty($modvars['notifyonpending_fromname']) ? $modvars['notifyonpending_fromname'] : $sitename;
