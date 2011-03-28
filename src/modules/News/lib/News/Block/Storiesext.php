@@ -162,10 +162,10 @@ class News_Block_Storiesext extends Zikula_Controller_AbstractBlock
             $vars['newimagelimit'] = 3;
         }
         if (!isset($vars['newimageset'])) {
-            $vars['newimageset'] = 'news';
+            $vars['newimageset'] = 'icons/extrasmall/';
         }
         if (!isset($vars['newimagesrc'])) {
-            $vars['newimagesrc'] = 'new_3day.gif';
+            $vars['newimagesrc'] = 'favorites.png';
         }
         // display the items in a scrolling box, pausing, fading or marquee
         if (!isset($vars['scrolling'])) {
@@ -459,10 +459,10 @@ height:50px;
             $vars['newimagelimit'] = 3;
         }
         if (!isset($vars['newimageset'])) {
-            $vars['newimageset'] = 'news';
+            $vars['newimageset'] = 'icons/extrasmall';
         }
         if (!isset($vars['newimagesrc'])) {
-            $vars['newimagesrc'] = 'new_3day.gif';
+            $vars['newimagesrc'] = 'favorites.png';
         }
         // display the items in a scrolling box, pausing, fading or marquee
         if (!isset($vars['scrolling'])) {

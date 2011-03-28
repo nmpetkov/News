@@ -314,8 +314,8 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
             'dispsplitchar' => ',',
             'dispnewimage' => false,
             'newimagelimit' => 3,
-            'newimageset' => 'global',
-            'newimagesrc' => 'new_3day.gif',
+            'newimageset' => 'icons/extrasmall',
+            'newimagesrc' => 'favorites.png',
             'linktosubmit' => true,
             'customtemplate' => '');
     }
