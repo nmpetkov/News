@@ -395,7 +395,7 @@ height:50px;
 
         // Defaults
         if (!isset($vars['category'])) {
-            $vars['category'] = null;
+            $vars['category'] = array();
         }
         if (!isset($vars['show'])) {
             $vars['show'] = 1;
@@ -506,6 +506,7 @@ height:50px;
             // Get the registrered categories for the News module
             $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('News', 'news');
             $this->view->assign('catregistry', $catregistry);
+            $this->view->assign('category', $vars['category']);
         }
         $this->view->assign('enablecategorization', $enablecategorization);
         // assign the block vars
