@@ -149,12 +149,16 @@ class News_Block_Stories extends Zikula_Controller_AbstractBlock
         if (empty($vars['limit'])) {
             $vars['limit'] = 10;
         }
+        if (empty($vars['category'])) {
+            $vars['category'] = null;
+        }
 
         // Create output object
         $this->view->setCaching(false);
 
         $mainCat = CategoryRegistryUtil::getRegisteredModuleCategory('News', 'news', 'Main', 30); // 30 == /__SYSTEM__/Modules/Global
         $this->view->assign('mainCategory', $mainCat);
+        $this->view->assign('category', $vars['category']);
         $this->view->assign(ModUtil::getVar('News'));
 
         // assign the block vars
