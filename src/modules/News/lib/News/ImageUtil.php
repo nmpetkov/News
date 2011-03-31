@@ -20,7 +20,6 @@ class News_ImageUtil {
             @unlink($dir . DIRECTORY_SEPARATOR . $name . "-thumb2.jpg");
             $count++;
         }
-        //LogUtil::registerStatus(__f('Images deleted by name (%s)', $count, ZLanguage::getModuleDomain('News')));
         return $count;
     }
 
@@ -41,7 +40,6 @@ class News_ImageUtil {
             $name = "pic_sid" . $sid . "-" . $i;
             $result += self::deleteImagesByName($dir, array($name));
         }
-        //LogUtil::registerStatus(__f('Total images deleted by SID (%s)', $count, ZLanguage::getModuleDomain('News')));
         return $result;
     }
 
@@ -80,7 +78,6 @@ class News_ImageUtil {
                 $index++;
             }
         }
-        //LogUtil::registerStatus(__f('Images resized (%s)', $index, ZLanguage::getModuleDomain('News')));
         return $index;
     }
 
@@ -176,7 +173,6 @@ class News_ImageUtil {
                 $lastfile++;
             }
         }
-        //LogUtil::registerStatus(__f('Images renumbered (%s)', $lastfile, ZLanguage::getModuleDomain('News')));
         return $lastfile;
     }
 
@@ -187,7 +183,6 @@ class News_ImageUtil {
      * @param array $file_post $_FILES array to reArray
      * @return array resultant reordered array
      */
-
     public static function reArrayFiles($file_post) {
         if (!isset($file_post) || !is_array($file_post)) {
             return null;
@@ -208,4 +203,75 @@ class News_ImageUtil {
         }
         return $file_ary;
     }
+
+    /**
+     * Move images to temp location so they can be recaptured later
+     * @param array $files
+     */
+    public static function tempStore($files) {
+        $destination = ModUtil::getVar('News', 'picupload_uploaddir') . DIRECTORY_SEPARATOR . "PREVIEW";
+        if (!is_dir($destination)) {
+            News_ImageUtil::mkdir($destination);
+        }
+        $newfiles = array();
+        foreach ($files as $key => $file) {
+            if ($file['resize']) {
+                $filename = $file['name'];
+                $uploadfile = $file['tmp_name'];
+                $file['tmp_name'] = DataUtil::formatForOS("$destination/$filename");
+                move_uploaded_file($uploadfile, $file['tmp_name']);
+                $newfiles[] = $file;
+            }
+        }
+        return $newfiles;
+    }
+
+    /**
+     * remove files located in the PREVIEW dir
+     * @param array $names
+     * @return int
+     */
+    public static function removePreviewImages($files) {
+        $dir = ModUtil::getVar('News', 'picupload_uploaddir') . DIRECTORY_SEPARATOR . "PREVIEW";
+        if (!is_array($files)) {
+            return;
+        }
+        $count = 0;
+        foreach ($files as $file) {
+            @unlink($dir . DIRECTORY_SEPARATOR . $file['name']);
+            $count++;
+        }
+        return $count;
+    }
+
+    /**
+     * Create a directory for news pics
+     * @param string $dir
+     */
+    public static function mkdir($dir) {
+        $dom = ZLanguage::getModuleDomain('News');
+        if ($dir[0] == '/') {
+            LogUtil::registerError(__f("Warning! The image upload directory at [%s] appears to be 'above' the DOCUMENT_ROOT. Please choose a path relative to the webserver (e.g. images/news_picupload).", $dir, $dom));
+        } else {
+            if (is_dir($dir)) {
+                if (!is_writable($dir)) {
+                    LogUtil::registerError(__f('Warning! The image upload directory at [%s] exists but is not writable by the webserver.', $dir, $dom));
+                }
+            } else {
+                // Try to create the specified directory
+                if (FileUtil::mkdirs($dir, 0777)) {
+                    // write a htaccess file in the image upload directory
+                    $htaccessContent = FileUtil::readFile('modules' . DIRECTORY_SEPARATOR . 'News' . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'htaccess');
+                    if (FileUtil::writeFile($dir . DIRECTORY_SEPARATOR . '.htaccess', $htaccessContent)) {
+                        LogUtil::registerStatus(__f('News publisher created the image upload directory successfully at [%s] and wrote an .htaccess file there for security.', $dir, $dom));
+                    } else {
+                        LogUtil::registerStatus(__f('News publisher created the image upload directory successfully at [%s], but could not write the .htaccess file there.', $dir, $dom));
+                    }
+                } else {
+                    LogUtil::registerStatus(__f('Warning! News publisher could not create the specified image upload directory [%s]. Try to create it yourself and make sure that this folder is accessible via the web and writable by the webserver.', $dir, $dom));
+                }
+            }
+        }
+    }
+
 }

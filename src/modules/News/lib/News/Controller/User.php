@@ -46,48 +46,47 @@ class News_Controller_User extends Zikula_AbstractController
 
         // Any item set for preview will be stored in a session var
         // Once the new article is posted we'll clear the session var.
-        $item = SessionUtil::getVar('newsitem');
-
-        // Admin functions of this type can be called by other modules.
-        extract($args);
+        $item = array();
+        $sess_item = SessionUtil::getVar('newsitem');
 
         // get the type parameter so we can decide what template to use
         $type = FormUtil::getPassedValue('type', 'user', 'REQUEST');
 
         // Set the default values for the form. If not previewing an item prior
         // to submission these values will be null but do need to be set
-        if (empty($item)) {
-            $item = array();
-            $item['sid'] = '';
-            $item['__CATEGORIES__'] = array();
-            $item['__ATTRIBUTES__'] = array();
-            $item['title'] = '';
-            $item['urltitle'] = '';
-            $item['hometext'] = '';
-            $item['hometextcontenttype'] = '';
-            $item['bodytext'] = '';
-            $item['bodytextcontenttype'] = '';
-            $item['notes'] = '';
-            $item['hideonindex'] = 1;
-            $item['language'] = '';
-            $item['disallowcomments'] = 1;
-            $item['from'] = DateUtil::getDatetime(null, '%Y-%m-%d %H:%M');
-            $item['to'] = DateUtil::getDatetime(null, '%Y-%m-%d %H:%M');
-            $item['tonolimit'] = 1;
-            $item['unlimited'] = 1;
-            $item['weight'] = 0;
-            $item['pictures'] = 0;
-        }
+        $item['sid'] = isset($sess_item['sid']) ? $sess_item['sid'] : '';
+        $item['__CATEGORIES__'] = isset($sess_item['__CATEGORIES__']) ? $sess_item['__CATEGORIES__'] : array();
+        $item['__ATTRIBUTES__'] = isset($sess_item['__ATTRIBUTES__']) ? $sess_item['__ATTRIBUTES__'] : array();
+        $item['title'] = isset($sess_item['title']) ? $sess_item['title'] : '';
+        $item['urltitle'] = isset($sess_item['urltitle']) ? $sess_item['urltitle'] : '';
+        $item['hometext'] = isset($sess_item['hometext']) ? $sess_item['hometext'] : '';
+        $item['hometextcontenttype'] = isset($sess_item['hometextcontenttype']) ? $sess_item['hometextcontenttype'] : '';
+        $item['bodytext'] = isset($sess_item['bodytext']) ? $sess_item['bodytext'] : '';
+        $item['bodytextcontenttype'] = isset($sess_item['bodytextcontenttype']) ? $sess_item['bodytextcontenttype'] : '';
+        $item['notes'] = isset($sess_item['notes']) ? $sess_item['notes'] : '';
+        $item['hideonindex'] = isset($sess_item['hideonindex']) ? $sess_item['hideonindex'] : 1;
+        $item['language'] = isset($sess_item['language']) ? $sess_item['language'] : '';
+        $item['disallowcomments'] = isset($sess_item['disallowcomments']) ? $sess_item['disallowcomments'] : 1;
+        $item['from'] = isset($sess_item['from']) ? $sess_item['from'] : DateUtil::getDatetime(null, '%Y-%m-%d %H:%M');
+        $item['to'] = isset($sess_item['to']) ? $sess_item['to'] : DateUtil::getDatetime(null, '%Y-%m-%d %H:%M');
+        $item['tonolimit'] = isset($sess_item['tonolimit']) ? $sess_item['tonolimit'] : 1;
+        $item['unlimited'] = isset($sess_item['unlimited']) ? $sess_item['unlimited'] : 1;
+        $item['weight'] = isset($sess_item['weight']) ? $sess_item['weight'] : 0;
+        $item['pictures'] = isset($sess_item['pictures']) ? $sess_item['pictures'] : 0;
+        $item['tempfiles'] = isset($sess_item['tempfiles']) ? $sess_item['tempfiles'] : null;
+        $item['temp_pictures'] = isset($sess_item['tempfiles']) ? unserialize($sess_item['tempfiles']) : null;
 
         $preview = '';
-        if (isset($item['action']) && $item['action'] == self::ACTION_PREVIEW) {
+        if (isset($sess_item['action']) && $sess_item['action'] == self::ACTION_PREVIEW) {
             $preview = $this->preview(array('title' => $item['title'],
                         'hometext' => $item['hometext'],
                         'hometextcontenttype' => $item['hometextcontenttype'],
                         'bodytext' => $item['bodytext'],
                         'bodytextcontenttype' => $item['bodytextcontenttype'],
                         'notes' => $item['notes'],
-                        'sid' => $item['sid']));
+                        'sid' => $item['sid'],
+                        'pictures' => $item['pictures'],
+                        'temp_pictures' => $item['temp_pictures']));
         }
 
         // Create output object
@@ -112,7 +111,7 @@ class News_Controller_User extends Zikula_AbstractController
         $this->view->assign('lang', ZLanguage::getLanguageCode());
 
         // Assign the item to the template
-        $this->view->assign($item);
+        $this->view->assign('item', $item);
 
         // Assign the content format
         $formattedcontent = ModUtil::apiFunc('News', 'user', 'isformatted', array('func' => 'new'));
@@ -162,7 +161,8 @@ class News_Controller_User extends Zikula_AbstractController
         $files = News_ImageUtil::reArrayFiles(FormUtil::getPassedValue('news_files', null, 'FILES'));
 
         // Create the item array for processing
-        $item = array('title' => $story['title'],
+        $item = array(
+            'title' => $story['title'],
             'urltitle' => isset($story['urltitle']) ? $story['urltitle'] : '',
             '__CATEGORIES__' => isset($story['__CATEGORIES__']) ? $story['__CATEGORIES__'] : null,
             '__ATTRIBUTES__' => isset($story['attributes']) ? $story['attributes'] : null,
@@ -180,7 +180,10 @@ class News_Controller_User extends Zikula_AbstractController
             'unlimited' => isset($story['unlimited']) && $story['unlimited'] ? true : false,
             'weight' => isset($story['weight']) ? $story['weight'] : 0,
             'action' => isset($story['action']) ? $story['action'] : self::ACTION_PREVIEW,
-            'sid' => isset($story['sid']) ? $story['sid'] : null);
+            'sid' => isset($story['sid']) ? $story['sid'] : null,
+            'tempfiles' => isset($story['tempfiles']) ? $story['tempfiles'] : null,
+            'del_pictures' => isset($story['del_pictures']) ? $story['del_pictures'] : null,
+            );
 
         // convert user times to server times (TZ compensation) refs #181
         //  can't do the below because values are YYYY-MM-DD HH:MM:SS and DateUtil value is in seconds.
@@ -220,12 +223,41 @@ class News_Controller_User extends Zikula_AbstractController
             $validationerror .= $this->__('Error! Hooked content does not validate.') . "<br />";
         }
 
+        // get all module vars
+        $modvars = $this->getVars();
+
+        if (isset($files) && $modvars['picupload_enabled']) {
+            list($files, $item) = News_ImageUtil::validateImages($files, $item, $modvars);
+        } else {
+            $item['pictures'] = 0;
+        }
+
+        // story was previewed with uploaded pics
+        if (isset($item['tempfiles'])) {
+            $tempfiles = unserialize($item['tempfiles']);
+            // delete files if requested
+            if (isset($item['del_pictures'])) {
+                foreach ($tempfiles as $key => $file) {
+                    if (in_array($file['name'], $item['del_pictures'])) {
+                        unset($tempfiles[$key]);
+                        News_ImageUtil::removePreviewImages(array($file));
+                    }
+                }
+            }
+            $files = array_merge($files, $tempfiles);
+            $item['pictures'] += count($tempfiles);
+        }
+
         // if the user has selected to preview the article we then route them back
         // to the new function with the arguments passed here
         if ($item['action'] == self::ACTION_PREVIEW || $validationerror !== false) {
             // log the error found if any
             if ($validationerror !== false) {
                 LogUtil::registerError($validationerror);
+            }
+            if ($item['pictures'] > 0) {
+                $tempfiles = News_ImageUtil::tempStore($files);
+                $item['tempfiles'] = serialize($tempfiles);
             }
             // back to the referer form
             SessionUtil::setVar('newsitem', $item);
@@ -236,15 +268,6 @@ class News_Controller_User extends Zikula_AbstractController
 
             // As we're not previewing the item let's remove it from the session
             SessionUtil::delVar('newsitem');
-        }
-
-        // get all module vars
-        $modvars = $this->getVars();
-
-        if (isset($files) && $modvars['picupload_enabled']) {
-            list($files, $item) = News_ImageUtil::validateImages($files, $item, $modvars);
-        } else {
-            $item['pictures'] = 0;
         }
 
         // Notable by its absence there is no security check here
@@ -262,6 +285,9 @@ class News_Controller_User extends Zikula_AbstractController
                 $this->notify($item, $modvars); // send notification email
                 if (isset($files) && $modvars['picupload_enabled']) {
                     $resized = News_ImageUtil::resizeImages($sid, $files, $modvars); // resize and move the uploaded pics
+                    if (isset($item['tempfiles'])) {
+                        News_ImageUtil::removePreviewImages($tempfiles); // remove any preview images
+                    }
                     if ($item['action'] == self::ACTION_SAVEDRAFT) {
                         LogUtil::registerStatus($this->_fn('%1$s out of %2$s picture was uploaded and resized. Article now has draft status, since not all pictures were uploaded.', '%1$s out of %2$s pictures were uploaded and resized. Article now has draft status, since not all pictures were uploaded.', $item['pictures'], array($resized, $item['pictures'])));
                     } else {
@@ -706,16 +732,15 @@ class News_Controller_User extends Zikula_AbstractController
      */
     public function preview($args)
     {
-        // Get parameters from whatever input we need
-        $title = FormUtil::getPassedValue('title', null, 'REQUEST');
-        $hometext = FormUtil::getPassedValue('hometext', null, 'REQUEST');
-        $hometextcontenttype = FormUtil::getPassedValue('hometextcontenttype', null, 'REQUEST');
-        $bodytext = FormUtil::getPassedValue('bodytext', null, 'REQUEST');
-        $bodytextcontenttype = FormUtil::getPassedValue('bodytextcontenttype', null, 'REQUEST');
-        $notes = FormUtil::getPassedValue('notes', null, 'REQUEST');
-
-        // User functions of this type can be called by other modules
-        extract($args);
+        $title = $args['title'];
+        $hometext = $args['hometext'];
+        $hometextcontenttype = $args['hometextcontenttype'];
+        $bodytext = $args['bodytext'];
+        $bodytextcontenttype = $args['bodytextcontenttype'];
+        $notes = $args['notes'];
+        $sid = $args['sid'];
+        $pictures = $args['pictures'];
+        $temp_pictures = $args['temp_pictures'];
 
         // format the contents if needed
         if ($hometextcontenttype == 0) {
@@ -726,11 +751,15 @@ class News_Controller_User extends Zikula_AbstractController
         }
         $this->view->setCaching(false);
 
-        $this->view->assign('preview', array('title' => $title,
+        $this->view->assign('preview', array(
+            'title' => $title,
             'hometext' => $hometext,
             'bodytext' => $bodytext,
             'notes' => $notes,
-            'sid' => $sid));
+            'sid' => $sid,
+            'pictures' => $pictures,
+            'temp_pictures' => $temp_pictures,
+            ));
 
         return $this->view->fetch('user/preview.tpl');
     }
