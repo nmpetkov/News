@@ -293,8 +293,8 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
      */
     public function getDefaultData()
     {
-        return array(
-	    'title' => '',
+        $defaultdata = array(
+            'title' => '',
             'categories' => null,
             'status' => 0,
             'show' => 1,
@@ -318,6 +318,25 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
             'newimagesrc' => 'favorites.png',
             'linktosubmit' => true,
             'customtemplate' => '');
+        
+        // Get the registered categories for the News module
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('News', 'news');
+        $properties = array_keys($catregistry);
+
+        // set a default category based on page category
+        foreach ($properties as $prop) {
+            $subcats_fulldata = CategoryUtil::getCategoriesByParentID($catregistry[$prop]);
+            $subcats = array();
+            foreach ($subcats_fulldata as $subcat_fulldata) {
+                $subcats[] = $subcat_fulldata['id'];
+            }
+            if (in_array($this->getPageCategoryId(), $subcats)) {
+                // this awkward array format iswhat $this->loadData() interprets to set category
+                $defaultdata['category__' . $prop] = $this->getPageCategoryId();
+            }
+        }
+
+        return $defaultdata;
     }
 
     /**
