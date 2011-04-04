@@ -259,7 +259,7 @@ class News_Controller_Admin extends Zikula_AbstractController
 
         // Check if the article goes from pending to published
         if ($item['published_status'] == 2 && $story['published_status'] == 0) {
-            $story['approver'] = SessionUtil::getVar('uid');
+            $story['approver'] = UserUtil::getVar('uid');
         }
 
         $modvars = $this->getVars();
