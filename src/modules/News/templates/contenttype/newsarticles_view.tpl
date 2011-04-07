@@ -19,7 +19,7 @@
         {* Optional additional info on the story *}
         {if $dispinfo}
             ({if $dispuname}
-                {gt text='Contributed by %s' tag1=$story.uname|userprofilelink}
+                {gt text='Contributed by %s' tag1=$story.uname|profilelinkbyuname}
                 {if $dispdate} {gt text='on %s' tag1=$story.from|dateformat:$dateformat}{/if}
                 {if $dispreads||$dispcomments}{$dispsplitchar} {/if}
             {/if}
