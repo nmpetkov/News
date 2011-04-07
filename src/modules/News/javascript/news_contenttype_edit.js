@@ -1,5 +1,4 @@
 /**
-  *  $Id:  $ 
   * Create the onload function to enable the switch visibility functions
  */
 Event.observe(window, 'load', news_contenttype_edit_init);

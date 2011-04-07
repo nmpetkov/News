@@ -1,7 +1,3 @@
-/*
- *  $Id: news_admin_modifyconfig.js 34 2008-12-24 00:07:35Z Guite $ 
- */
-
 /**
  * create the onload function to enable the respective functions
  *

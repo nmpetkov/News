@@ -316,26 +316,26 @@ function savedraft()
         Form.Element.focus('news_title');
         return;
     }
-    var sid = $F('news_sid');
     // Re-fill the original textareas if Scribite Xinha is used, manual onsubmit needed
     if (typeof Xinha != "undefined") {
         $('news_user_newform').onsubmit();
     }
+    var pars = $('news_user_newform').serialize(true);
+    pars.title = title;
+    var sid = $F('news_sid');
     if (sid) {
         // Update the current draft with the stored sid
-        var pars = 'module=News&func=savedraft&title=' + title + '&sid=' + sid + '&' + Form.serialize('news_user_newform');
-    } else {
-        // Create a new draft article with a new sid
-        var pars = 'module=News&func=savedraft&title=' + title + '&' + Form.serialize('news_user_newform');
+        pars.sid = sid;
     }
+    // else create a new draft article with a new sid (sid not set)
+
     $('news_status_info').show();
     $('news_saving_draft').show();
     $('news_status_text').update(Zikula.__('Saving draft...','module_News'));
     $('news_button_text_draft').update(Zikula.__('Saving draft...','module_News'));
     new Zikula.Ajax.Request(
-        'ajax.php', 
+        'ajax.php&module=News&func=savedraft',
         {
-            method: 'post', 
             parameters: pars, 
             onComplete: savedraft_update
         });
@@ -359,10 +359,6 @@ function savedraft_update(req)
 //    if (json.showslugedit) {
 //        $('news_sample_urltitle_edit').show();
 //    }
-    // make preview button "active" again
-//    $('news_button_preview').setStyle({color: '#565656'});
-//    $('news_button_preview').setOpacity(1.0);
-//    $('news_button_preview').disabled = false;
     $('news_sid').value = data.sid;
 //    pnsetselectoption('news_published_status',4);
 //    $('news_published_status').selectedIndex = 4;
@@ -391,10 +387,6 @@ function news_title_init()
 //    Event.observe('news_title', 'change', savedraft);
 //    $('news_urltitle_details').hide();
     $('news_status_info').hide();
-    // dim the preview button until a draft is saved
-//    $('news_button_preview').setStyle({color: '#aaa'});
-//    $('news_button_preview').setOpacity(0.7);
-//    $('news_button_preview').disabled = true;
   
     // not the correct location but for reference later on:
     //new PeriodicalExecuter(savedraft, 30);
