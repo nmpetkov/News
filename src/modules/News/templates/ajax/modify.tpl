@@ -1,10 +1,8 @@
-{checkpermission component='News::' instance="$cr_uid::$sid" level='ACCESS_DELETE' assign='mayDelete'}
+{checkpermission component='News::' instance="$item.cr_uid::$item.sid" level='ACCESS_DELETE' assign='mayDelete'}
 
-{gt text='Edit news article' assign='templatetitle' domain='module_news'}
+<h2>{gt text='Edit news article'}: {$item.title|safetext}</h2>
 
-<h2>{$templatetitle}: {$title|safetext}</h2>
-
-{if $picupload_enabled}
+{if $modvars.News.picupload_enabled}
 <form id="news_ajax_modifyform" class="z-form" action="{modurl modname='News' type='admin' func='update'}" onsubmit="return true;" method="post" enctype="multipart/form-data">
 {else}
 <form id="news_ajax_modifyform" class="z-form" action="{modurl modname='News' type='admin' func='update'}" onsubmit="return true;" method="post" enctype="application/x-www-form-urlencoded">
@@ -12,9 +10,9 @@
     <div >
         <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
         <input type="hidden" name="page" value="{$page|safetext}" />
-        <input type="hidden" name="story[sid]" value="{$sid|safetext}" />
-        <input type="hidden" name="story[published_status]" value="{$published_status|safetext}" />
-        <input type="hidden" name="story[pictures]" value="{$pictures}" />
+        <input type="hidden" name="story[sid]" value="{$item.sid|safetext}" />
+        <input type="hidden" name="story[published_status]" value="{$item.published_status|safetext}" />
+        <input type="hidden" name="story[pictures]" value="{$item.pictures}" />
         {if $formattedcontent eq 1}
         <input type="hidden" name="story[hometextcontenttype]" value="1" />
         <input type="hidden" name="story[bodytextcontenttype]" value="1" />
@@ -25,24 +23,24 @@
 
             <div class="z-formrow">
                 <label for="news_title">{gt text='Title text' domain='module_news'}<span class="z-mandatorysym">*</span></label>
-                <input id="news_title" class="z-form-text" name="story[title]" type="text" size="32" maxlength="255" value="{$title|safetext}" />
+                <input id="news_title" class="z-form-text" name="story[title]" type="text" size="32" maxlength="255" value="{$item.title|safetext}" />
             </div>
 
             <div class="z-formrow">
                 <label for="news_urltitle">{gt text='Permalink URL' domain='module_news'}</label>
-                <input id="news_urltitle" class="z-form-text" name="story[urltitle]" type="text" size="32" maxlength="255" value="{$urltitle|safetext}" />
+                <input id="news_urltitle" class="z-form-text" name="story[urltitle]" type="text" size="32" maxlength="255" value="{$item.urltitle|safetext}" />
                 <em class="z-sub z-formnote">{gt text='(Generated automatically if left blank)' domain='module_news'}</em>
             </div>
 
-            {if $enablecategorization}
+            {if $modvars.News.enablecategorization}
             <div class="z-formrow">
                 <label>{gt text='Category' domain='module_news'}</label>
                 {gt text='Choose category' assign='lblDef'}
                 {nocache}
                 {foreach from=$catregistry key='property' item='category'}
-                {array_field_isset array=$__CATEGORIES__ field=$property assign='catExists'}
+                {array_field_isset array=$item.__CATEGORIES__ field=$property assign='catExists'}
                 {if $catExists}
-                {array_field_isset array=$__CATEGORIES__.$property field='id' returnValue=1 assign='selectedValue'}
+                {array_field_isset array=$item.__CATEGORIES__.$property field='id' returnValue=1 assign='selectedValue'}
                 {else}
                 {assign var='selectedValue' value='0'}
                 {/if}
@@ -55,7 +53,7 @@
             {if $modvars.ZConfig.multilingual}
             <div class="z-formrow">
                 <label for="news_language">{gt text='Language(s) for which article should be displayed' domain='module_news'}</label>
-                {html_select_languages id="news_language" name="story[language]" installed=1 all=1 selected=$language|default:''}
+                {html_select_languages id="news_language" name="story[language]" installed=1 all=1 selected=$item.language|default:''}
             </div>
             {/if}
         </fieldset>
@@ -70,7 +68,7 @@
             </div>
             <div class="z-formrow">
                 <label for="news_hometext"><strong>{gt text='Index page teaser text' domain='module_news'}</strong></label>
-                <textarea id="news_hometext" class="z-form-text" name="story[hometext]" cols="40" rows="10">{$hometext|safetext}</textarea>
+                <textarea id="news_hometext" class="z-form-text" name="story[hometext]" cols="40" rows="10">{$item.hometext|safetext}</textarea>
                 <span id="news_hometext_remaining" class="z-formnote z-sub">{gt text='(Limit: %s characters)' tag1='4,294,967,295' domain='module_news'}</span>
             </div>
 
@@ -78,15 +76,15 @@
             <div class="z-formrow">
                 <label for="news_hometextcontenttype">{gt text='Index page teaser format' domain='module_news'}</label>
                 <select id="news_hometextcontenttype" name="story[hometextcontenttype]">
-                    <option value="0"{if $hometextcontenttype eq 0} selected="selected"{/if}>{gt text='Plain text' domain='module_news'}</option>
-                    <option value="1"{if $hometextcontenttype eq 1} selected="selected"{/if}>{gt text='Text formatted with mark-up language' domain='module_news'}</option>
+                    <option value="0"{if $item.hometextcontenttype eq 0} selected="selected"{/if}>{gt text='Plain text' domain='module_news'}</option>
+                    <option value="1"{if $item.hometextcontenttype eq 1} selected="selected"{/if}>{gt text='Text formatted with mark-up language' domain='module_news'}</option>
                 </select>
             </div>
             {/if}
 
             <div class="z-formrow">
                 <label for="news_bodytext"><strong>{gt text='Article body text' domain='module_news'}</strong></label>
-                <textarea id="news_bodytext" class="z-form-text" name="story[bodytext]" cols="40" rows="10">{$bodytext|safetext}</textarea>
+                <textarea id="news_bodytext" class="z-form-text" name="story[bodytext]" cols="40" rows="10">{$item.bodytext|safetext}</textarea>
                 <span id="news_bodytext_remaining" class="z-formnote z-sub">{gt text='(Limit: %s characters)' tag1='4,294,967,295' domain='module_news'}</span>
             </div>
 
@@ -94,8 +92,8 @@
             <div class="z-formrow">
                 <label for="news_bodytextcontenttype">{gt text='Article body format' domain='module_news'}</label>
                 <select id="news_bodytextcontenttype" name="story[bodytextcontenttype]">
-                    <option value="0"{if $bodytextcontenttype eq 0} selected="selected"{/if}>{gt text='Plain text' domain='module_news'}</option>
-                    <option value="1"{if $bodytextcontenttype eq 1} selected="selected"{/if}>{gt text='Text formatted with mark-up language' domain='module_news'}</option>
+                    <option value="0"{if $item.bodytextcontenttype eq 0} selected="selected"{/if}>{gt text='Plain text' domain='module_news'}</option>
+                    <option value="1"{if $item.bodytextcontenttype eq 1} selected="selected"{/if}>{gt text='Text formatted with mark-up language' domain='module_news'}</option>
                 </select>
             </div>
             {/if}
@@ -103,13 +101,13 @@
             <div class="z-formrow">
                 <label for="news_notes"><a id="news_notes_collapse" href="javascript:void(0);"><span id="news_notes_showhide">{gt text='Show' domain='module_news'}</span> {gt text='Footnote' domain='module_news'}</a></label>
                 <p id="news_notes_details">
-                    <textarea id="news_notes" class="z-form-text" name="story[notes]" cols="40" rows="10">{$notes|safetext}</textarea>
+                    <textarea id="news_notes" class="z-form-text" name="story[notes]" cols="40" rows="10">{$item.notes|safetext}</textarea>
                     <span id="news_notes_remaining" class="z-formnote z-sub">{gt text='(Limit: %s characters)' tag1='65,536' domain='module_news'}</span>
                 </p>
             </div>
         </fieldset>
 
-        {* if $picupload_enabled}
+        {* if $modvars.News.picupload_enabled}
         <fieldset>
             <legend>{gt text='Pictures' domain='module_news'}</legend>
             <label for="news_files_element">{gt text='Select a picture' domain='module_news'}</label>
@@ -122,10 +120,10 @@
                 // ]]>
             </script>
 
-            {if $pictures gt 0}
+            {if $item.pictures gt 0}
             <div><br>
-                {section name=counter start=0 loop=$pictures step=1}
-                    <img src="{$picupload_uploaddir}/pic_sid{$sid}-{$smarty.section.counter.index}-thumb.jpg" width="80" /> <input type="checkbox" name="story[del_pictures-{$smarty.section.counter.index}]">{gt text='Delete this picture' domain='module_news'}<br>
+                {section name=counter start=0 loop=$item.pictures step=1}
+                    <img src="{$modvars.News.picupload_uploaddir}/pic_sid{$item.sid}-{$smarty.section.counter.index}-thumb.jpg" width="80" /> <input type="checkbox" name="story[del_pictures-{$smarty.section.counter.index}]">{gt text='Delete this picture' domain='module_news'}<br>
                 {/section}
             </div>
             {/if}
@@ -137,42 +135,42 @@
             <div id="news_publication_details">
                 <div class="z-formrow">
                     <label for="news_hideonindex">{gt text='Publish on news index page' domain='module_news'}</label>
-                    <input id="news_hideonindex" name="story[hideonindex]" type="checkbox" value="1" {if $hideonindex eq 0}checked="checked" {/if}/>
+                    <input id="news_hideonindex" name="story[hideonindex]" type="checkbox" value="1" {if $item.hideonindex eq 0}checked="checked" {/if}/>
                 </div>
                 <div class="z-formrow">
                     <label for="news_weight">{gt text='Article weight' domain='module_news'}</label>
                     <div>
-                        <input id="news_weight" name="story[weight]" type="text" size="10" maxlength="10" value="{$weight|safetext}" />
+                        <input id="news_weight" name="story[weight]" type="text" size="10" maxlength="10" value="{$item.weight|safetext}" />
                     </div>
                 </div>
                 <div class="z-formrow">
                     <label for="news_unlimited">{gt text='No time limit' domain='module_news'}</label>
-                    <input id="news_unlimited" name="story[unlimited]" type="checkbox" value="1" {if $unlimited eq 1}checked="checked" {/if}/>
+                    <input id="news_unlimited" name="story[unlimited]" type="checkbox" value="1" {if $item.unlimited eq 1}checked="checked" {/if}/>
                 </div>
 
                 <div id="news_expiration_details">
                     <div class="z-formrow">
                         <label>{gt text='Start date' domain='module_news'}</label>
                         <div>
-                            <input id="news_from" class="datepicker" name="story[from]" type="text" size="18" value="{$from}" />
+                            <input id="news_from" class="datepicker" name="story[from]" type="text" size="18" value="{$item.from}" />
                         </div>
                     </div>
                     <div class="z-formrow">
                         <label for="news_tonolimit">{gt text='No end date' domain='module_news'}</label>
-                        <input id="news_tonolimit" name="story[tonolimit]" type="checkbox" value="1" {if $tonolimit eq 1}checked="checked" {/if}/>
+                        <input id="news_tonolimit" name="story[tonolimit]" type="checkbox" value="1" {if $item.tonolimit eq 1}checked="checked" {/if}/>
                     </div>
                     <div id="news_expiration_date">
                         <div class="z-formrow">
                             <label>{gt text='End date' domain='module_news'}</label>
                             <div>
-                                <input id="news_to" class="datepicker" name="story[to]" type="text" size="18" value="{$to}" />
+                                <input id="news_to" class="datepicker" name="story[to]" type="text" size="18" value="{$item.to}" />
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="z-formrow">
                     <label for="news_disallowcomments">{gt text='Allow comments on this article' domain='module_news'}</label>
-                    <input id="news_disallowcomments" name="story[disallowcomments]" type="checkbox" value="1" {if $disallowcomments eq 0}checked="checked" {/if}/>
+                    <input id="news_disallowcomments" name="story[disallowcomments]" type="checkbox" value="1" {if $item.disallowcomments eq 0}checked="checked" {/if}/>
                 </div>
             </div>
         </fieldset>
@@ -192,7 +190,7 @@
             // ]]>
         </script>
 
-        {if $enableattribution}
+        {if $modvars.News.enableattribution}
         <fieldset>
             <legend><a id="news_attributes_collapse" href="javascript:void(0);"><span id="news_attributes_showhide">{gt text='Show'}</span> {gt text='Article attributes'}</a></legend>
             <div id="news_attributes_details">
@@ -201,9 +199,9 @@
                         <a onclick="javascript:itemlist_news_attributes.appenditem();" href="javascript:void(0);">{img src='insert_table_row.png' modname='core' set='icons/extrasmall' alt='' __title='Create new attribute'} {gt text='Create new attribute'}</a>
                     </div>
                     <ul id="news_attributes" class="z-itemlist">
-                        {if isset($__ATTRIBUTES__)}
+                        {if isset($item.__ATTRIBUTES__)}
                         {counter name='news_attributes' reset=true print=false start=0}
-                        {foreach from=$__ATTRIBUTES__ key='name' item='value'}
+                        {foreach from=$item.__ATTRIBUTES__ key='name' item='value'}
                         {counter name='news_attributes' print=false assign='attrnum'}
                         <li id="listitem_news_attributes_{$attrnum}" class="sortable z-clearfix {cycle values='z-odd,z-even'}">
                             <span class="z-itemcell z-w04">&nbsp;</span>
@@ -248,7 +246,7 @@
         </script>
         {/if}
 
-        {notifydisplayhooks eventname='news.hook.articles.ui.edit' area='modulehook_area.news.articles' subject=$item id=$sid caller="News"}
+        {notifydisplayhooks eventname='news.hook.articles.ui.edit' area='modulehook_area.news.articles' subject=$item id=$item.sid caller="News"}
 
         <div class="z-buttonrow z-buttons z-center">
             <a href="javascript:void(0);" onclick="editnews_save('update');" class="z-btgreen">{img src='button_ok.png' modname='core' set='icons/extrasmall' __alt='Save' __title='Save your changes' } {gt text='Save' domain='module_news'}</a>

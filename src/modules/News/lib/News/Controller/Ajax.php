@@ -56,7 +56,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
             $item['tonolimit'] = 0;
         }
 
-        Zikula_Controller::configureView();
+        Zikula_AbstractController::configureView();
         $this->view->setCaching(false);
 
         $modvars = $this->getVars();
@@ -67,7 +67,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
         }
 
         // Assign the item to the template
-        $this->view->assign($item);
+        $this->view->assign('item', $item);
 
         // Assign the current page
         $this->view->assign('page', $page);
@@ -189,7 +189,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                                     array('info' => $info,
                                         'links' => $links));
 
-                    Zikula_Controller::configureView();
+                    Zikula_AbstractController::configureView();
                     $this->view->setCaching(false);
 
                     // Assign the story info arrays
