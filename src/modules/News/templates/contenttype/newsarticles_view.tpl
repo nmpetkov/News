@@ -1,13 +1,13 @@
 <h4>{$title}</h4>
 {if $stories}
 <ul class="content_stories">
-    {foreach from=$stories item=story}
+    {foreach from=$stories item='story'}
     <li>
         {if $story.readperm}
             {if $useshorturls}
-                {modurl modname=News func=display sid=$story.sid from=$story.from urltitle=$story.urltitle assign=storylink'}
+                {modurl modname='News' type='user' func='display' sid=$story.sid from=$story.from urltitle=$story.urltitle assign='storylink'}
             {else}
-                {modurl modname=News func=display sid=$story.sid assign=storylink'}
+                {modurl modname='News' type='user' func='display' sid=$story.sid assign='storylink'}
             {/if}
         {/if}
         {if $story.readperm}<a href="{$storylink}">{/if}
@@ -38,7 +38,7 @@
                 {$story.hometext|notifyfilters:'news.hook.articlesfilter.ui.filter'|safehtml}
             {/if}
             {if ($story.hometextwrapped || strlen($story.bodytext) > 0) && $story.readperm}
-                <a href="{modurl modname=News func=display sid=$story.sid}">{$hometextwraptext|safehtml}</a>
+                <a href="{modurl modname='News' type='user' func='display' sid=$story.sid}">{$hometextwraptext|safehtml}</a>
             {/if}
         </div>
         {/if}

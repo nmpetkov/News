@@ -116,5 +116,5 @@
         </ul>
     {/foreach}
 {else}
-    {modfunc modname='News' type='user' func='main'}
+    {modfunc modname='News' type='user' func='view'}
 {/if}

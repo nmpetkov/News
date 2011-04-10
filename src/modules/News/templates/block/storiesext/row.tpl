@@ -1,4 +1,4 @@
-{if $readperm}<a href="{modurl modname='News' func='display' sid=$sid}">{/if}
+{if $readperm}<a href="{modurl modname='News' type='user' func='display' sid=$sid}">{/if}
 {if $itemnewimage}{img modname='core' set=$newimageset src=$newimagesrc __alt='New'}{/if}
 {$title|safehtml}{if $titlewrapped}{$titlewraptxt|safehtml}{/if}
 {if $readperm}</a>{/if}
@@ -13,7 +13,7 @@
 <div class="storiesext_hometext">
     {if $hometextwrapped}
     {$hometext|notifyfilters:'news.hook.articlesfilter.ui.filter'|truncatehtml:$maxhometextlength:''|safehtml}
-    {if $readperm}<a href="{modurl modname='News' func='display' sid=$sid}">{/if}
+    {if $readperm}<a href="{modurl modname='News' type='user' func='display' sid=$sid}">{/if}
     {$hometextwraptxt|safehtml}
     {if $readperm}</a>{/if}
 {else}

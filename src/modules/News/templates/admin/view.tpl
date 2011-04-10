@@ -55,7 +55,7 @@
     </form>
     {/if}
 
-    <form class="z-form" id="news_bulkaction_form" action="{modurl modname=News type=admin func=processbulkaction}" method="post">
+    <form class="z-form" id="news_bulkaction_form" action="{modurl modname='News' type='admin' func='processbulkaction'}" method="post">
         <div>
             <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
             <table id="news_admintable" class="z-datatable">

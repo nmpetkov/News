@@ -21,9 +21,8 @@ class News_Controller_User extends Zikula_AbstractController
 
     /**
      * the main user function
-     *
-     * @author Mark West
-     * @return string HTML string
+     * @deprecated
+     * @return redirect
      */
     public function main()
     {
@@ -31,7 +30,7 @@ class News_Controller_User extends Zikula_AbstractController
             'hideonindex' => 0,
             'itemsperpage' => $this->getVar('storyhome', 10)
         );
-        return $this->view($args);
+        $this->redirect(ModUtil::url('News', 'user', 'view', $args));
     }
 
     /**

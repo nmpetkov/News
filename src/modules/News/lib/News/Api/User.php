@@ -756,13 +756,13 @@ class News_Api_User extends Zikula_AbstractApi
         }
 
         // define the available user functions
-        $funcs = array('main', 'newitem', 'create', 'view', 'archives', 'display', 'categorylist', 'displaypdf');
+        $funcs = array('newitem', 'create', 'view', 'archives', 'display', 'categorylist', 'displaypdf');
         // set the correct function name based on our input
         if (empty($args['vars'][2])) {
-            System::queryStringSetVar('func', 'main');
+            System::queryStringSetVar('func', 'view');
             $nextvar = 3;
         } elseif ($args['vars'][2] == 'page') {
-            System::queryStringSetVar('func', 'main');
+            System::queryStringSetVar('func', 'view');
             $nextvar = 3;
         } elseif (!in_array($args['vars'][2], $funcs)) {
             System::queryStringSetVar('func', 'display');
@@ -772,7 +772,7 @@ class News_Api_User extends Zikula_AbstractApi
             $nextvar = 3;
         }
 
-        $func = FormUtil::getPassedValue('func', 'main', 'GET');
+        $func = FormUtil::getPassedValue('func', 'view', 'GET');
 
         // for now let the core handle the view function
         if (($func == 'view' || $func == 'main') && isset($args['vars'][$nextvar])) {
@@ -934,18 +934,14 @@ class News_Api_User extends Zikula_AbstractApi
             return;
         }
 
-        $func = FormUtil::getPassedValue('func', 'main');
+        $func = FormUtil::getPassedValue('func', 'view');
         $links = array();
 
         if (SecurityUtil::checkPermission('News::', '::', ACCESS_READ)) {
             if ($func <> "main") {
-                $links[] = array('url' => ModUtil::url('News', 'user', 'main'),
+                $links[] = array('url' => ModUtil::url('News', 'user', 'view'),
                         'text' => $this->__('News articles list'),
                         'class' => 'z-icon-es-view');
-            } else {
-                $links[] = array('url'  => ModUtil::url('News', 'user', 'main', array('theme' => 'RSS')),
-                        'text' => '',
-                        'class' => 'z-icon-es-rss'); // class defined in News module style.css
             }
             if ($this->getVar('enablecategorization')) {
                 if ($func <> "categorylist") {

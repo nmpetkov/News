@@ -209,7 +209,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                     // we do not increment the read count!!!
                     // when urltitle has changed, do a reload with the full url and switch to no shorturl usage
                     if (strcmp($oldurltitle, $item['urltitle']) != 0) {
-                        $reloadurl = ModUtil::url('News', 'User', 'display', array('sid' => $info['sid'], 'page' => $page), null, null, true, true);
+                        $reloadurl = ModUtil::url('News', 'user', 'display', array('sid' => $info['sid'], 'page' => $page), null, null, true, true);
                     } else {
                         $reloadurl = '';
                     }
@@ -234,7 +234,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                 } else {
                     // Success
                     // the url for reloading, after setting to pending refer to the news index since this article is not visible any more
-                    $reloadurl = ModUtil::url('News', 'User', 'view', array(), null, null, true);
+                    $reloadurl = ModUtil::url('News', 'user', 'view', array(), null, null, true);
                     $output = DataUtil::formatForDisplayHTML($this->__f('Done! Saved your changes.'));
                 }
                 break;
@@ -244,7 +244,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                 if (ModUtil::apiFunc('News', 'Admin', 'delete', array('sid' => $story['sid']))) {
                     // Success
                     // the url for reloading, after deleting refer to the news index
-                    $reloadurl = ModUtil::url('News', 'User', 'view', array(), null, null, true);
+                    $reloadurl = ModUtil::url('News', 'user', 'view', array(), null, null, true);
                     $output = DataUtil::formatForDisplayHTML($this->__f('Done! Deleted article.'));
                 } else {
                     $output = DataUtil::formatForDisplayHTML($this->__('Error! Could not delete article.'));
@@ -323,7 +323,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                 $output = $this->__f('Draft updated at %s', DateUtil::getDatetime_Time('', '%H:%M'));
                 // Return the permalink (domain shortened) and the slug of the permalink
                 $slug = $item['urltitle'];
-                $fullpermalink = DataUtil::formatForDisplayHTML(ModUtil::url('News', 'User', 'display', array('sid' => $sid)));
+                $fullpermalink = DataUtil::formatForDisplayHTML(ModUtil::url('News', 'user', 'display', array('sid' => $sid)));
                 // limit the display length of the permalink
                 //if (strlen($fullpermalink) > $permalinkmaxdisplay) {
                 //    $fullpermalink = '...' . substr($fullpermalink, strlen($fullpermalink) - $permalinkmaxdisplay, $permalinkmaxdisplay);
@@ -361,7 +361,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                     $output = $this->__f('Draft saved at %s', DateUtil::getDatetime_Time($item['cr_date'], '%H:%M'));
                     // Return the permalink (domain shortened) and the slug of the permalink
                     $slug = $item['urltitle'];
-                    $fullpermalink = DataUtil::formatForDisplayHTML(ModUtil::url('News', 'User', 'display', array('sid' => $sid)));
+                    $fullpermalink = DataUtil::formatForDisplayHTML(ModUtil::url('News', 'user', 'display', array('sid' => $sid)));
                     // limit the display length of the permalink
                     //if (strlen($fullpermalink) > $permalinkmaxdisplay) {
                     //    $fullpermalink = '...' . substr($fullpermalink, strlen($fullpermalink) - $permalinkmaxdisplay, $permalinkmaxdisplay);

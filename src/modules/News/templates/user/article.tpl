@@ -26,7 +26,7 @@
 {/foreach}</h4>
 <ul>
     {foreach from=$morearticlesincat item='morearticle'}
-    <li><a href="{modurl modname='News' func='display' sid=$morearticle.sid}">{$morearticle.title|safehtml}</a> ({gt text='by %1$s on %2$s' tag1=$morearticle.contributor tag2=$morearticle.from|dateformat:'datebrief'})</li>
+    <li><a href="{modurl modname='News' type='user' func='display' sid=$morearticle.sid}">{$morearticle.title|safehtml}</a> ({gt text='by %1$s on %2$s' tag1=$morearticle.contributor tag2=$morearticle.from|dateformat:'datebrief'})</li>
     {/foreach}
 </ul>
 </div>
