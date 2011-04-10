@@ -165,7 +165,7 @@ class News_Controller_User extends Zikula_AbstractController
             'title' => $story['title'],
             'urltitle' => isset($story['urltitle']) ? $story['urltitle'] : '',
             '__CATEGORIES__' => isset($story['__CATEGORIES__']) ? $story['__CATEGORIES__'] : null,
-            '__ATTRIBUTES__' => isset($story['attributes']) ? $story['attributes'] : null,
+            '__ATTRIBUTES__' => isset($story['attributes']) ? News_Util::reformatAttributes($story['attributes']) : null,
             'language' => isset($story['language']) ? $story['language'] : '',
             'hometext' => isset($story['hometext']) ? $story['hometext'] : '',
             'hometextcontenttype' => $story['hometextcontenttype'],
@@ -207,12 +207,6 @@ class News_Controller_User extends Zikula_AbstractController
 
         // Get the referer type for later use
         $referertype = (stristr(System::serverGetVar('HTTP_REFERER'), 'type=admin')) ? 'admin' : 'user';
-
-        // Reformat the attributes array
-        if (isset($item['attributes'])) {
-            $item['__ATTRIBUTES__'] = News_Util::reformatAttributes($item['attributes']);
-            unset($item['attributes']);
-        }
 
         // Validate the input
         $validationerror = News_Util::validateArticle($this, $item);

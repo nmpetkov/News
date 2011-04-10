@@ -178,3 +178,7 @@ div.news_index {
     background: url("../../../images/icons/extrasmall/folder_yellow.png") no-repeat scroll 0 50% transparent;
     padding: 2px 0 2px 20px;
 }
+.z-icon-es-insertrow {
+    background: url("../../../images/icons/extrasmall/insert_table_row.png") no-repeat scroll 0 50% transparent;
+    padding: 2px 0 2px 20px;
+}

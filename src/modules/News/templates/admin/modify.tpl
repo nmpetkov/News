@@ -1,8 +1,5 @@
 {ajaxheader modname='News' filename='news.js' effects=true dragdrop=true}
 {pageaddvar name='javascript' value='modules/News/javascript/sizecheck.js'}
-{if $modvars.News.enableattribution}
-{pageaddvar name="javascript" value="javascript/helpers/Zikula.itemlist.js"}
-{/if}
 {pageaddvar name='javascript' value='modules/News/javascript/prototype-base-extensions.js'}
 {pageaddvar name='javascript' value='modules/News/javascript/prototype-date-extensions.js'}
 {pageaddvar name='javascript' value='modules/News/javascript/datepicker.js'}
@@ -11,8 +8,6 @@
 {if $modvars.News.picupload_enabled AND $modvars.News.picupload_maxpictures gt 1}
 {pageaddvar name='javascript' value='modules/News/javascript/multifile.js'}
 {/if}
-
-{gt text='Edit news article' assign='templatetitle'}
 
 {* Add editing / deleting of own (draft) articles *}
 {checkpermission component='News::' instance="$item.cr_uid::$item.sid" level='ACCESS_DELETE' assign='mayDelete'}
@@ -26,12 +21,6 @@
 <script type="text/javascript">
     // <![CDATA[
     var bytesused = Zikula.__f('%s characters out of 4,294,967,295','#{chars}','module_News');
-    {{if $modvars.News.enableattribution}}
-    var itemlist_news_attributes = null;
-    Event.observe(window, 'load', function() {
-        itemlist_news_attributes = new Zikula.itemlist('news_attributes');
-    }, false);
-    {{/if}}
     // ]]>
 </script>
 
@@ -43,7 +32,7 @@
 
     <div class="z-adminpageicon">{icon type="edit" size="large"}</div>
 
-    <h2>{$templatetitle}</h2>
+    <h2>{gt text='Edit news article'}</h2>
 
     {if $modvars.News.picupload_enabled}
     <form id="news_user_modifyform" class="z-form" action="{modurl modname='News' type='admin' func='update'}" method="post" enctype="multipart/form-data">
@@ -242,49 +231,7 @@
             <fieldset>
                 <legend><a id="news_attributes_collapse" href="javascript:void(0);"><span id="news_attributes_showhide">{gt text='Show'}</span> {gt text='Article attributes'}</a></legend>
                 <div id="news_attributes_details">
-                    <div class="z-formrow">
-                        <div class="z-itemlist_newitemdiv">
-                            <a onclick="javascript:itemlist_news_attributes.appenditem();" href="javascript:void(0);">{img src='insert_table_row.png' modname='core' set='icons/extrasmall' alt='' __title='Create new attribute'} {gt text='Create new attribute'}</a>
-                        </div>
-                        <ul id="news_attributes" class="z-itemlist">
-                            {if isset($item.__ATTRIBUTES__)}
-                            {counter name='news_attributes' reset=true print=false start=0}
-                            {foreach from=$item.__ATTRIBUTES__ key='name' item='value'}
-                            {counter name='news_attributes' print=false assign='attrnum'}
-                            <li id="listitem_news_attributes_{$attrnum}" class="sortable z-clearfix {cycle values='z-odd,z-even'}">
-                                <span class="z-itemcell z-w04">&nbsp;</span>
-                                <span class="z-itemcell z-w40">
-                                    <input type="text" id="story_attributes_{$attrnum}_name" name="story[attributes][{$attrnum}][name]" size="25" maxlength="255" value="{$name}" />
-                                </span>
-                                <span class="z-itemcell z-w40">
-                                    <input type="text" id="story_attributes_{$attrnum}_value" name="story[attributes][{$attrnum}][value]" size="25" maxlength="255" value="{$value}" />
-                                </span>
-                                <span class="z-itemcell z-w07">
-                                    <button type="button" id="buttondelete_news_attributes_{$attrnum}" class="buttondelete">{img src='14_layer_deletelayer.png' modname='core' set='icons/extrasmall' __alt='Delete'  __title='Delete this attribute' }</button>
-                                </span>
-                            </li>
-                            {foreachelse}
-                            <li>&nbsp;</li>
-                            {/foreach}
-                            {else}
-                            <li>&nbsp;</li>
-                            {/if}
-                        </ul>
-                        <ul style="display:none">
-                            <li id="news_attributes_emptyitem" class="sortable z-clearfix">
-                                <span class="z-itemcell z-w04">&nbsp;</span>
-                                <span class="z-itemcell z-w40">
-                                    <input type="text" id="story_attributes_X_name" name="dummy[]" size="25" maxlength="255" value="" />
-                                </span>
-                                <span class="z-itemcell z-w40">
-                                    <input type="text" id="story_attributes_X_value" name="dummy[]" size="25" maxlength="255" value="" />
-                                </span>
-                                <span class="z-itemcell z-w07">
-                                    <button type="button" id="buttondelete_news_attributes_X" class="buttondelete">{img src='14_layer_deletelayer.png' modname='core' set='icons/extrasmall' __alt='Delete'  __title='Delete this attribute' }</button>
-                                </span>
-                            </li>
-                        </ul>
-                    </div>
+                    {include file='user/attribute_subform.tpl'}
                 </div>
             </fieldset>
             {/if}
