@@ -938,14 +938,15 @@ class News_Api_User extends Zikula_AbstractApi
         $links = array();
 
         if (SecurityUtil::checkPermission('News::', '::', ACCESS_READ)) {
-            if ($func <> "main") {
-                $links[] = array('url' => ModUtil::url('News', 'user', 'view'),
-                        'text' => $this->__('News articles list'),
-                        'class' => 'z-icon-es-view');
-            }
+            $links[] = array('url' => ModUtil::url('News', 'user', 'view', array('theme' => 'RSS')),
+                    'text' => '',
+                    'class' => 'z-icon-es-rss');
+            $links[] = array('url' => ModUtil::url('News', 'user', 'view'),
+                    'text' => $this->__('News articles list'),
+                    'class' => 'z-icon-es-view');
             if ($this->getVar('enablecategorization')) {
                 if ($func <> "categorylist") {
-                    $links[] = array('url'  => ModUtil::url('News', 'user', 'categorylist'),
+                    $links[] = array('url' => ModUtil::url('News', 'user', 'categorylist'),
                             'text' =>  $this->__('News categories'),
                             'class' => 'z-icon-es-view');
                 }
