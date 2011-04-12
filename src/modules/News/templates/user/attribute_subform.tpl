@@ -21,7 +21,7 @@
                 <span class="z-itemcell z-w40">
                     <input type="text" id="story_attributes_{$smarty.foreach.attributeitems.index}_value" name="story[attributes][{$smarty.foreach.attributeitems.index}][value]" size="25" maxlength="255" value="{$attributevalue}" />
                 </span>
-                <span class="z-itemcell z-w05">
+                <span class="z-itemcell z-w15">
                     <button type="button" id="buttondelete_newsattributes_{$smarty.foreach.attributeitems.index}" class="z-imagebutton buttondelete">{img src='14_layer_deletelayer.png' modname='core' set='icons/extrasmall' __alt='Delete'  __title='Delete this attribute' }</button>
                     (<span class="itemid">{$smarty.foreach.attributeitems.index}</span>)
                 </span>
@@ -43,7 +43,7 @@
                 <span class="z-itemcell z-w40">
                     <input type="text" class="listinput" id="story_attributes_X_value" name="dummy[]" size="25" maxlength="255" value="" />
                 </span>
-                <span class="z-itemcell z-w05">
+                <span class="z-itemcell z-w15">
                     <button type="button" id="buttondelete_newsattributes_X" class="z-imagebutton buttondelete">{img src='14_layer_deletelayer.png' modname='core' set='icons/extrasmall' __alt='Delete'  __title='Delete this attribute' }</button>
                     (<span class="itemid"></span>)
                 </span>

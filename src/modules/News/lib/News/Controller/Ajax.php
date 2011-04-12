@@ -131,9 +131,9 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
         switch ($action)
         {
             case 'update':
-                // Update the story, security check inside of the API func
-
-                $modvars = $this->getVars();
+                $this->throwForbiddenUnless(SecurityUtil::checkPermission('News::', $item['cr_uid'] . '::' . $item['sid'], ACCESS_EDIT), LogUtil::getErrorMsgPermission());
+                // Update the story
+                
                 // TODO: See Admin Controller on usage of News_ImageUtil::
                 // to accomplish the code that has been removed from here to
                 // accomodate images
@@ -143,6 +143,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                                     'title' => $story['title'],
                                     'urltitle' => $story['urltitle'],
                                     '__CATEGORIES__' => $story['__CATEGORIES__'],
+                                    '__ATTRIBUTES__' => (isset($story['attributes'])) ? News_Util::reformatAttributes($story['attributes']) : null,
                                     'language' => isset($story['language']) ? $story['language'] : '',
                                     'hometext' => $story['hometext'],
                                     'hometextcontenttype' => $story['hometextcontenttype'],
@@ -198,6 +199,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                         'preformat' => $preformat,
                         'page' => $page));
                     // Some vars
+                    $modvars = $this->getVars();
                     $this->view->assign('enablecategorization', $modvars['enablecategorization']);
                     $this->view->assign('catimagepath', $modvars['catimagepath']);
                     $this->view->assign('enableajaxedit', $modvars['enableajaxedit']);

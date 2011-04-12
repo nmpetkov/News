@@ -1,4 +1,5 @@
 {checkpermission component='News::' instance="$item.cr_uid::$item.sid" level='ACCESS_DELETE' assign='mayDelete'}
+{if $modvars.News.enableattribution}{pageaddvar name="javascript" value="javascript/helpers/Zikula.itemlist.js"}{/if}
 
 <h2>{gt text='Edit news article'}: {$item.title|safetext}</h2>
 
@@ -107,29 +108,6 @@
             </div>
         </fieldset>
 
-        {* if $modvars.News.picupload_enabled}
-        <fieldset>
-            <legend>{gt text='Pictures' domain='module_news'}</legend>
-            <label for="news_files_element">{gt text='Select a picture' domain='module_news'}</label>
-            <input id="news_files_element" name="news_files" type="file"><br><span class="z-sub">{gt text='(max files %s, first picture is used as thumbnail in the index teaser page for this article.)' tag1=$picupload_maxpictures domain='module_news'}</span>
-            <div id="news_files_list"></div>
-            <script type="text/javascript">
-                // <![CDATA[
-                var multi_selector = new MultiSelector( document.getElementById( 'news_files_list' ), {{$picupload_maxpictures}} );
-                multi_selector.addElement( document.getElementById( 'news_files_element' ) );
-                // ]]>
-            </script>
-
-            {if $item.pictures gt 0}
-            <div><br>
-                {section name=counter start=0 loop=$item.pictures step=1}
-                    <img src="{$modvars.News.picupload_uploaddir}/pic_sid{$item.sid}-{$smarty.section.counter.index}-thumb.jpg" width="80" /> <input type="checkbox" name="story[del_pictures-{$smarty.section.counter.index}]">{gt text='Delete this picture' domain='module_news'}<br>
-                {/section}
-            </div>
-            {/if}
-        </fieldset>
-        {/if *}
-
         <fieldset>
             <legend><a id="news_publication_collapse" href="javascript:void(0);"><span id="news_publication_showhide">{gt text='Show' domain='module_news'}</span> {gt text='Publishing options' domain='module_news'}</a></legend>
             <div id="news_publication_details">
@@ -194,56 +172,9 @@
         <fieldset>
             <legend><a id="news_attributes_collapse" href="javascript:void(0);"><span id="news_attributes_showhide">{gt text='Show'}</span> {gt text='Article attributes'}</a></legend>
             <div id="news_attributes_details">
-                <div class="z-formrow">
-                    <div class="z-itemlist_newitemdiv">
-                        <a onclick="javascript:itemlist_news_attributes.appenditem();" href="javascript:void(0);">{img src='insert_table_row.png' modname='core' set='icons/extrasmall' alt='' __title='Create new attribute'} {gt text='Create new attribute'}</a>
-                    </div>
-                    <ul id="news_attributes" class="z-itemlist">
-                        {if isset($item.__ATTRIBUTES__)}
-                        {counter name='news_attributes' reset=true print=false start=0}
-                        {foreach from=$item.__ATTRIBUTES__ key='name' item='value'}
-                        {counter name='news_attributes' print=false assign='attrnum'}
-                        <li id="listitem_news_attributes_{$attrnum}" class="sortable z-clearfix {cycle values='z-odd,z-even'}">
-                            <span class="z-itemcell z-w04">&nbsp;</span>
-                            <span class="z-itemcell z-w40">
-                                <input type="text" id="story_attributes_{$attrnum}_name" name="story[attributes][{$attrnum}][name]" size="25" maxlength="255" value="{$name}" />
-                            </span>
-                            <span class="z-itemcell z-w40">
-                                <input type="text" id="story_attributes_{$attrnum}_value" name="story[attributes][{$attrnum}][value]" size="25" maxlength="255" value="{$value}" />
-                            </span>
-                            <span class="z-itemcell z-w07">
-                                <button type="button" id="buttondelete_news_attributes_{$attrnum}" class="buttondelete">{img src='14_layer_deletelayer.png' modname='core' set='icons/extrasmall' __alt='Delete'  __title='Delete this attribute' }</button>
-                            </span>
-                        </li>
-                        {foreachelse}
-                        <li>&nbsp;</li>
-                        {/foreach}
-                        {else}
-                        <li>&nbsp;</li>
-                        {/if}
-                    </ul>
-                    <ul style="display:none">
-                        <li id="news_attributes_emptyitem" class="sortable z-clearfix">
-                            <span class="z-itemcell z-w04">&nbsp;</span>
-                            <span class="z-itemcell z-w40">
-                                <input type="text" id="story_attributes_X_name" name="dummy[]" size="25" maxlength="255" value="" />
-                            </span>
-                            <span class="z-itemcell z-w40">
-                                <input type="text" id="story_attributes_X_value" name="dummy[]" size="25" maxlength="255" value="" />
-                            </span>
-                            <span class="z-itemcell z-w07">
-                                <button type="button" id="buttondelete_news_attributes_X" class="buttondelete">{img src='14_layer_deletelayer.png' modname='core' set='icons/extrasmall' __alt='Delete'  __title='Delete this attribute' }</button>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
+                {include file='user/attribute_subform.tpl'}
             </div>
         </fieldset>
-        <script type="text/javascript">
-            // <![CDATA[
-            itemlist_news_attributes = new Zikula.itemlist('news_attributes');
-            // ]]>
-        </script>
         {/if}
 
         {notifydisplayhooks eventname='news.hook.articles.ui.edit' area='modulehook_area.news.articles' subject=$item id=$item.sid caller="News"}

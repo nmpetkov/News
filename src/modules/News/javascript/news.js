@@ -107,6 +107,15 @@ function editnews_init(req)
         editors = Xinha.makeEditors(xinha_editorsarray, xinha_config, xinha_plugins);
         Xinha.startEditors(editors);
     }
+
+    // enable attribute UI
+    var list_newsattributes = null;
+    list_newsattributes = new Zikula.itemlist('newsattributes', {headerpresent: true, firstidiszero: true});
+
+    $('appendattribute').observe('click',function(event){
+        list_newsattributes.appenditem();
+        event.stop();
+    });
     
     return;
 }
