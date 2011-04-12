@@ -237,6 +237,10 @@ class News_Controller_Admin extends Zikula_AbstractController
 
         // Validate the input
         $validationerror = News_Util::validateArticle($this, $story);
+        $hookvalidators = $this->notifyHooks('news.hook.articles.validate.edit', $item, $item['sid'], array(), new Zikula_Hook_ValidationProviders())->getData();
+        if ($hookvalidators->hasErrors()) {
+            $validationerror .= $this->__('Error! Hooked content does not validate.') . "<br />";
+        }
 
         // if the user has selected to preview the article we then route them back
         // to the new function with the arguments passed here
