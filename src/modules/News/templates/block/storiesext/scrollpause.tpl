@@ -1,7 +1,7 @@
 {pageaddvar name='javascript' value='modules/News/javascript/storiesext_pausing.js'}
 {assign var='divid' value='#storiesext'|cat:$bid}
 {assign var='parsedstyle' value=$scrollstyle|replace:'%DIVID%':$divid}
-{pageaddvar name="rawtext" value='<style type="text/css">'|cat:$parsedstyle|cat:'</style>'}
+{pageaddvar name="header" value='<style type="text/css">'|cat:$parsedstyle|cat:'</style>'}
 
 {foreach from=$stories key='k' item='story'}
 <div id="storiesext{$bid}{$k}">{$story}</div>

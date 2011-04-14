@@ -1,7 +1,7 @@
 {pageaddvar name='javascript' value='modules/News/javascript/storiesext_marquee.js'}
 {assign var='divid' value='#storiesext'|cat:$bid}
 {assign var='parsedstyle' value=$scrollstyle|replace:'%DIVID%':$divid}
-{pageaddvar name='rawtext' value='<style type="text/css">'|cat:$parsedstyle|cat:'</style>'}
+{pageaddvar name='header' value='<style type="text/css">'|cat:$parsedstyle|cat:'</style>'}
 
 <div id="storiesext{$bid}">
     <div id="vmarquee{$bid}" style="position: absolute; width: 98%;">
