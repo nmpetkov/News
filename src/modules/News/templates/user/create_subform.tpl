@@ -21,12 +21,8 @@
 
 <h3>{gt text='Create an article'}</h3>
 
-{if $accesspicupload AND $modvars.News.picupload_enabled}
-<form id="news_user_newform" class="z-form" action="{modurl modname='News' type='user' func='create'}" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="MAX_FILE_SIZE" value="{$modvars.News.picupload_maxfilesize|safetext}" />
-{else}
-<form id="news_user_newform" class="z-form" action="{modurl modname='News' type='user' func='create'}" method="post" enctype="application/x-www-form-urlencoded">
-{/if}
+
+<form id="news_user_newform" class="z-form" action="{modurl modname='News' type='user' func='create'}" method="post" enctype="{if $accesspicupload AND $modvars.News.picupload_enabled}multipart/form-data{else}application/x-www-form-urlencoded{/if}">
     <div>
         <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
         {if $accessadd neq 1}
@@ -145,7 +141,7 @@
         <fieldset>
             <legend>{gt text='Pictures'}</legend>
 			<label for="news_files_element">{gt text='Select a picture (max. %s kB per picture)' tag1="`$modvars.News.picupload_maxfilesize/1000`"}</label>
-            <input type="hidden" name="MAX_FILE_SIZE" value="{$modvars.News.picupload_maxfilesize}" />
+            <input type="hidden" name="MAX_FILE_SIZE" value="{$modvars.News.picupload_maxfilesize|safetext}" />
             {if $modvars.News.picupload_maxpictures eq 1}
 			<input id="news_files_element" name="news_files[0]" type="file">
             {else}
@@ -222,16 +218,17 @@
         </fieldset>
         <script type="text/javascript">
             // <![CDATA[
-            lang = '{{$lang}}';
+            var lang = '{{$lang}}';
+            var thisbaseurl='{{$baseurl}}';
             if (Control.DatePicker.Language[lang]) {
                 if (!Control.DatePicker.Locale[lang+'_iso8601']) {
                     with (Control.DatePicker) Locale[lang+'_iso8601'] = i18n.createLocale('iso8601', lang);
                 }
-                new Control.DatePicker('news_from', {locale: lang+'_iso8601', use24hrs: true, icon: '{{$baseurl}}modules/News/images/calendar.png', timePicker: true, timePickerAdjacent: true});
-                new Control.DatePicker('news_to', {locale: lang+'_iso8601', use24hrs: true, icon: '{{$baseurl}}modules/News/images/calendar.png', timePicker: true, timePickerAdjacent: true});
+                new Control.DatePicker('news_from', {locale:lang+'_iso8601', use24hrs:true, icon:thisbaseurl+'modules/News/images/calendar.png', timePicker:true, timePickerAdjacent:true});
+                new Control.DatePicker('news_to', {locale:lang+'_iso8601', use24hrs:true, icon:thisbaseurl+'modules/News/images/calendar.png', timePicker:true, timePickerAdjacent:true});
             } else {
-                new Control.DatePicker('news_from', {locale: 'en_iso8601', use24hrs: true, icon: '{{$baseurl}}modules/News/images/calendar.png', timePicker: true, timePickerAdjacent: true});
-                new Control.DatePicker('news_to', {locale: 'en_iso8601', use24hrs: true, icon: '{{$baseurl}}modules/News/images/calendar.png', timePicker: true, timePickerAdjacent: true});
+                new Control.DatePicker('news_from', {locale:'en_iso8601', use24hrs:true, icon:thisbaseurl+'modules/News/images/calendar.png', timePicker:true, timePickerAdjacent:true});
+                new Control.DatePicker('news_to', {locale:'en_iso8601', use24hrs:true, icon:thisbaseurl+'modules/News/images/calendar.png', timePicker:true, timePickerAdjacent:true});
             }
             // ]]>
         </script>
