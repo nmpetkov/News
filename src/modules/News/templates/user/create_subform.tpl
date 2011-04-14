@@ -218,18 +218,24 @@
         </fieldset>
         <script type="text/javascript">
             // <![CDATA[
-            var lang = '{{$lang}}';
             var thisbaseurl='{{$baseurl}}';
+            var dpPars = {
+                use24hrs:true,
+                icon:thisbaseurl+'modules/News/images/calendar.png',
+                timePicker:true,
+                timePickerAdjacent:true
+            }
+            var lang = '{{$lang}}';
             if (Control.DatePicker.Language[lang]) {
                 if (!Control.DatePicker.Locale[lang+'_iso8601']) {
                     with (Control.DatePicker) Locale[lang+'_iso8601'] = i18n.createLocale('iso8601', lang);
                 }
-                new Control.DatePicker('news_from', {locale:lang+'_iso8601', use24hrs:true, icon:thisbaseurl+'modules/News/images/calendar.png', timePicker:true, timePickerAdjacent:true});
-                new Control.DatePicker('news_to', {locale:lang+'_iso8601', use24hrs:true, icon:thisbaseurl+'modules/News/images/calendar.png', timePicker:true, timePickerAdjacent:true});
+                dpPars.locale=lang+'_iso8601';
             } else {
-                new Control.DatePicker('news_from', {locale:'en_iso8601', use24hrs:true, icon:thisbaseurl+'modules/News/images/calendar.png', timePicker:true, timePickerAdjacent:true});
-                new Control.DatePicker('news_to', {locale:'en_iso8601', use24hrs:true, icon:thisbaseurl+'modules/News/images/calendar.png', timePicker:true, timePickerAdjacent:true});
+                dpPars.locale='en_iso8601';
             }
+            new Control.DatePicker('news_from', dpPars);
+            new Control.DatePicker('news_to', dpPars);
             // ]]>
         </script>
 
@@ -241,7 +247,7 @@
             </div>
         </fieldset>
         {/if}
-        {/if}{* if $accesspubdetails *}
+        {/if}{* /if $accesspubdetails *}
 
         {notifydisplayhooks eventname='news.hook.articles.ui.edit' area='modulehook_area.news.articles' subject=null id=null caller="News"}
 
