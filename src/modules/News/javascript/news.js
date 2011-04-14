@@ -343,7 +343,7 @@ function savedraft()
     $('news_status_text').update(Zikula.__('Saving draft...','module_News'));
     $('news_button_text_draft').update(Zikula.__('Saving draft...','module_News'));
     new Zikula.Ajax.Request(
-        'ajax.php&module=News&func=savedraft',
+        'ajax.php?module=news&func=savedraft',
         {
             parameters: pars, 
             onComplete: savedraft_update
