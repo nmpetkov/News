@@ -1,4 +1,4 @@
-{ajaxheader modname='News' filename='news.js' effects=true dragdrop=true}
+{ajaxheader modname='News' filename='news.js'}
 {pageaddvar name='javascript' value='modules/News/javascript/sizecheck.js'}
 {pageaddvar name='javascript' value='modules/News/javascript/prototype-base-extensions.js'}
 {pageaddvar name='javascript' value='modules/News/javascript/prototype-date-extensions.js'}
