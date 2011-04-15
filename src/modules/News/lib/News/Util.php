@@ -26,16 +26,16 @@ class News_Util {
      * @param array $story article array
      * @return boolean
      */
-    public static function validateArticle($controller, $story) {
-
+    public static function validateArticle($story) {
+        $dom = ZLanguage::getModuleDomain('News');
         // Validate the input
         $validationerror = false;
         if ($story['action'] != 0 && empty($story['title'])) {
-            $validationerror .= $controller->__f('Error! You did not enter a %s.', $controller->__('title')) . "<br />";
+            $validationerror .= __f('Error! You did not enter a %s.', __('title', $dom), $dom) . "<br />";
         }
         // both text fields can't be empty
         if ($story['action'] != 0 && empty($story['hometext']) && empty($story['bodytext'])) {
-            $validationerror .= $controller->__f('Error! You did not enter the minimum necessary %s.', $controller->__('article content')) . "<br />";
+            $validationerror .= __f('Error! You did not enter the minimum necessary %s.', __('article content', $dom), $dom) . "<br />";
         }
 
         return $validationerror;
