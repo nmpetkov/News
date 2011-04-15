@@ -13,11 +13,12 @@ class News_ImageUtil {
      */
     public static function deleteImagesByName($dir, $names)
     {
+        $dir = DataUtil::formatForOS($dir . '/');
         $count = 0;
         foreach ($names as $name) {
-            @unlink($dir . DIRECTORY_SEPARATOR . $name . "-norm.jpg");
-            @unlink($dir . DIRECTORY_SEPARATOR . $name . "-thumb.jpg");
-            @unlink($dir . DIRECTORY_SEPARATOR . $name . "-thumb2.jpg");
+            @unlink($dir . $name . "-norm.jpg");
+            @unlink($dir . $name . "-thumb.jpg");
+            @unlink($dir . $name . "-thumb2.jpg");
             $count++;
         }
         return $count;
@@ -51,18 +52,18 @@ class News_ImageUtil {
      * @author craigh
      * @param int $sid story ID
      * @param array $files
-     * @param array $modvars
      * @return int number of files resized
      */
-    public static function resizeImages($sid, $files, $modvars, $index = 0)
+    public static function resizeImages($sid, $files, $index = 0)
     {
+        $modvars = ModUtil::getVar('News');
         // include the phpthumb library for thumbnail generation
         require_once ('modules/News/lib/vendor/phpthumb/ThumbLib.inc.php');
-        $uploaddir = $modvars['picupload_uploaddir'] . DIRECTORY_SEPARATOR;
+        $uploaddir = $modvars['picupload_uploaddir'] . '/';
         $method = ($modvars['picupload_sizing'] == '0') ? 'Resize' : 'adaptiveResize';
         foreach ($files as $key => $file) {
             if ($file['resize']) {
-                $filename = $uploaddir . 'pic_sid' . $sid . '-' . $index;
+                $filename = DataUtil::formatForOS($uploaddir . 'pic_sid' . $sid . '-' . $index);
                 // TODO loop this? add try/catch block
                 $thumb1 = PhpThumbFactory::create($file['tmp_name'], array('jpegQuality' => 80));
                 $thumb1->$method($modvars['picupload_picmaxwidth'], $modvars['picupload_picmaxheight']);
@@ -89,14 +90,13 @@ class News_ImageUtil {
      * @author craigh
      * @param array $files
      * @param array $item
-     * @param array $modvars
      * @return array ($files, $item)
      */
-    public static function validateImages($files, $item, $modvars)
+    public static function validateImages($files, $item)
     {
-
         $uploadNoFile = false;
         $count = 0;
+        $modvars = ModUtil::getVar('News');
 
         $allowedExtensionsArray = explode(',', $modvars['picupload_allowext']);
         foreach ($files as $key => $file) {
@@ -150,11 +150,11 @@ class News_ImageUtil {
      * @author craigh
      * @param int $numOfPics number of images in the original story
      * @param int $sid the story ID
-     * @param array $modvars
      * @return int ID of last file renamed
      */
-    public static function renumberImages($numOfPics, $sid, $modvars) {
-        $uploaddir = $modvars['picupload_uploaddir'] . DIRECTORY_SEPARATOR;
+    public static function renumberImages($numOfPics, $sid) {
+        $modvars = ModUtil::getVar('News');
+        $uploaddir = DataUtil::formatForOS($modvars['picupload_uploaddir'] . '/');
         $lastfile = 0;
         for ($i=0; $i<$numOfPics; $i++){
             $filename = 'pic_sid' . $sid . "-";
@@ -209,7 +209,7 @@ class News_ImageUtil {
      * @param array $files
      */
     public static function tempStore($files) {
-        $destination = ModUtil::getVar('News', 'picupload_uploaddir') . DIRECTORY_SEPARATOR . "PREVIEW";
+        $destination = ModUtil::getVar('News', 'picupload_uploaddir') . '/' . "PREVIEW";
         if (!is_dir($destination)) {
             News_ImageUtil::mkdir($destination);
         }
@@ -232,13 +232,14 @@ class News_ImageUtil {
      * @return int
      */
     public static function removePreviewImages($files) {
-        $dir = ModUtil::getVar('News', 'picupload_uploaddir') . DIRECTORY_SEPARATOR . "PREVIEW";
+        $dir = ModUtil::getVar('News', 'picupload_uploaddir') . '/' . "PREVIEW";
         if (!is_array($files)) {
             return;
         }
         $count = 0;
         foreach ($files as $file) {
-            @unlink($dir . DIRECTORY_SEPARATOR . $file['name']);
+            $fullpath = DataUtil::formatForOS($dir . '/' . $file['name']);
+            @unlink($fullpath);
             $count++;
         }
         return $count;
@@ -261,8 +262,8 @@ class News_ImageUtil {
                 // Try to create the specified directory
                 if (FileUtil::mkdirs($dir, 0777)) {
                     // write a htaccess file in the image upload directory
-                    $htaccessContent = FileUtil::readFile('modules' . DIRECTORY_SEPARATOR . 'News' . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'htaccess');
-                    if (FileUtil::writeFile($dir . DIRECTORY_SEPARATOR . '.htaccess', $htaccessContent)) {
+                    $htaccessContent = FileUtil::readFile('modules/News/docs/htaccess');
+                    if (FileUtil::writeFile($dir . '/.htaccess', $htaccessContent)) {
                         LogUtil::registerStatus(__f('News publisher created the image upload directory successfully at [%s] and wrote an .htaccess file there for security.', $dir, $dom));
                     } else {
                         LogUtil::registerStatus(__f('News publisher created the image upload directory successfully at [%s], but could not write the .htaccess file there.', $dir, $dom));

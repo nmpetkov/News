@@ -204,11 +204,8 @@ class News_Controller_User extends Zikula_AbstractController
             }
         }
 
-        // Get the referer type for later use
-        $referertype = (stristr(System::serverGetVar('HTTP_REFERER'), 'type=admin')) ? 'admin' : 'user';
-
         // Validate the input
-        $validationerror = News_Util::validateArticle($this, $item);
+        $validationerror = News_Util::validateArticle($item);
         // check hooked modules for validation
         $sid = isset($item['sid']) ? $item['sid'] : null;
         $hookvalidators = $this->notifyHooks('news.hook.articles.validate.edit', $item, $sid, array(), new Zikula_Hook_ValidationProviders())->getData();
@@ -220,7 +217,7 @@ class News_Controller_User extends Zikula_AbstractController
         $modvars = $this->getVars();
 
         if (isset($files) && $modvars['picupload_enabled']) {
-            list($files, $item) = News_ImageUtil::validateImages($files, $item, $modvars);
+            list($files, $item) = News_ImageUtil::validateImages($files, $item);
         } else {
             $item['pictures'] = 0;
         }
@@ -254,16 +251,14 @@ class News_Controller_User extends Zikula_AbstractController
             }
             // back to the referer form
             SessionUtil::setVar('newsitem', $item);
-            return $this->redirect(ModUtil::url('News', $referertype, 'newitem'));
+            $this->redirect(ModUtil::url('News', 'user', 'newitem'));
         } else {
-            // Confirm authorisation code.
-            $this->checkCsrfToken();
-
             // As we're not previewing the item let's remove it from the session
             SessionUtil::delVar('newsitem');
         }
 
-        // Notable by its absence there is no security check here
+        // Confirm authorization code.
+        $this->checkCsrfToken();
 
         if (!isset($item['sid']) || empty($item['sid'])) {
             // Create the news story
@@ -275,9 +270,9 @@ class News_Controller_User extends Zikula_AbstractController
                 // Let any hooks know that we have created a new item
                 $this->notifyHooks('news.hook.articles.process.edit', $item, $sid);
 
-                $this->notify($item, $modvars); // send notification email
+                $this->notify($item); // send notification email
                 if (isset($files) && $modvars['picupload_enabled']) {
-                    $resized = News_ImageUtil::resizeImages($sid, $files, $modvars); // resize and move the uploaded pics
+                    $resized = News_ImageUtil::resizeImages($sid, $files); // resize and move the uploaded pics
                     if (isset($item['tempfiles'])) {
                         News_ImageUtil::removePreviewImages($tempfiles); // remove any preview images
                     }
@@ -1032,11 +1027,11 @@ class News_Controller_User extends Zikula_AbstractController
      * @param array $item the news item
      * return boolean success/failure of notification
      */
-    public function notify($item, $modvars)
+    public function notify($item)
     {
+        $modvars = $this->getVars();
         // notify the configured addresses of a new Pending Review article
-        $notifyonpending = $this->getVar('notifyonpending', false);
-        if ($notifyonpending && ($item['action'] == self::ACTION_SUBMIT || $item['action'] == self::ACTION_SAVEPENDING)) {
+        if ($modvars['notifyonpending'] && ($item['action'] == self::ACTION_SUBMIT || $item['action'] == self::ACTION_SAVEPENDING)) {
             $sitename = System::getVar('sitename');
             $adminmail = System::getVar('adminmail');
             $fromname = !empty($modvars['notifyonpending_fromname']) ? $modvars['notifyonpending_fromname'] : $sitename;

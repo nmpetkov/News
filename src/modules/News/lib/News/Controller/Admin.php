@@ -236,7 +236,7 @@ class News_Controller_Admin extends Zikula_AbstractController
         }
 
         // Validate the input
-        $validationerror = News_Util::validateArticle($this, $story);
+        $validationerror = News_Util::validateArticle($story);
         $hookvalidators = $this->notifyHooks('news.hook.articles.validate.edit', $item, $item['sid'], array(), new Zikula_Hook_ValidationProviders())->getData();
         if ($hookvalidators->hasErrors()) {
             $validationerror .= $this->__('Error! Hooked content does not validate.') . "<br />";
@@ -271,13 +271,13 @@ class News_Controller_Admin extends Zikula_AbstractController
                 $story['pictures'] = $story['pictures'] - $deletedPics;
             }
             if (isset($deletedPics) && ($deletedPics > 0)) {
-                $nextImageId = News_ImageUtil::renumberImages($item['pictures'], $story['sid'], $modvars);
+                $nextImageId = News_ImageUtil::renumberImages($item['pictures'], $story['sid']);
             } else {
                 $nextImageId = isset($story['pictures']) ? $story['pictures'] : 0;
             }
             if (isset($files) && !empty($files)) {
-                list($files, $story) = News_ImageUtil::validateImages($files, $story, $modvars);
-                $story['pictures'] = News_ImageUtil::resizeImages($story['sid'], $files, $modvars, $nextImageId); // resize and move the uploaded pics
+                list($files, $story) = News_ImageUtil::validateImages($files, $story);
+                $story['pictures'] = News_ImageUtil::resizeImages($story['sid'], $files, $nextImageId); // resize and move the uploaded pics
             }
         }
 
