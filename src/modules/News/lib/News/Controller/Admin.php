@@ -33,12 +33,13 @@ class News_Controller_Admin extends Zikula_AbstractController
     /**
      * create a new news article
      * this function is purely a wrapper for the output from news_user_new
+     * @deprecated
      *
-     * @author Mark West
      * @return string HTML string
      */
     public function newitem()
     {
+        LogUtil::registerError($this->__f('The %s method has been deprecated. Please change your link to the user controller.', 'News_Admin_Controller::newitem'));
         $this->redirect(ModUtil::url('News', 'user', 'newitem'));
     }
 

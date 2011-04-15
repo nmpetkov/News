@@ -256,7 +256,7 @@ class News_Api_Admin extends Zikula_AbstractApi
                     ));
         }
         if (SecurityUtil::checkPermission('News::', '::', ACCESS_ADD)) {
-            $links[] = array('url'  => ModUtil::url('News', 'admin', 'newitem'),
+            $links[] = array('url'  => ModUtil::url('News', 'user', 'newitem'),
                     'text' =>  $this->__('Create new article'),
                     'class' => 'z-icon-es-new');
         }
