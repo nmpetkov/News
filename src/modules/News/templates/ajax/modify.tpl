@@ -3,11 +3,7 @@
 
 <h2>{gt text='Edit news article'}: {$item.title|safetext}</h2>
 
-{if $modvars.News.picupload_enabled}
-<form id="news_ajax_modifyform" class="z-form" action="{modurl modname='News' type='admin' func='update'}" onsubmit="return true;" method="post" enctype="multipart/form-data">
-{else}
-<form id="news_ajax_modifyform" class="z-form" action="{modurl modname='News' type='admin' func='update'}" onsubmit="return true;" method="post" enctype="application/x-www-form-urlencoded">
-{/if}
+<form id="news_user_newform" class="z-form" action="{modurl modname='News' type='user' func='create'}" method="post" enctype="{if $accesspicupload AND $modvars.News.picupload_enabled}multipart/form-data{else}application/x-www-form-urlencoded{/if}">
     <div >
         <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
         <input type="hidden" name="page" value="{$page|safetext}" />
@@ -154,20 +150,26 @@
         </fieldset>
         <script type="text/javascript">
             // <![CDATA[
-            lang = '{{$lang}}';
+            var thisbaseurl='{{$baseurl}}';
+            var dpPars = {
+                use24hrs:true,
+                icon:thisbaseurl+'modules/News/images/calendar.png',
+                timePicker:true,
+                timePickerAdjacent:true
+            }
+            var lang = '{{$lang}}';
             if (Control.DatePicker.Language[lang]) {
                 if (!Control.DatePicker.Locale[lang+'_iso8601']) {
                     with (Control.DatePicker) Locale[lang+'_iso8601'] = i18n.createLocale('iso8601', lang);
                 }
-                new Control.DatePicker('news_from', {locale: lang+'_iso8601', use24hrs: true, icon: '{{$baseurl}}modules/News/images/calendar.png', timePicker: true, timePickerAdjacent: true});
-                new Control.DatePicker('news_to', {locale: lang+'_iso8601', use24hrs: true, icon: '{{$baseurl}}modules/News/images/calendar.png', timePicker: true, timePickerAdjacent: true});
+                dpPars.locale=lang+'_iso8601';
             } else {
-                new Control.DatePicker('news_from', {locale: 'en_iso8601', use24hrs: true, icon: '{{$baseurl}}modules/News/images/calendar.png', timePicker: true, timePickerAdjacent: true});
-                new Control.DatePicker('news_to', {locale: 'en_iso8601', use24hrs: true, icon: '{{$baseurl}}modules/News/images/calendar.png', timePicker: true, timePickerAdjacent: true});
+                dpPars.locale='en_iso8601';
             }
+            new Control.DatePicker('news_from', dpPars);
+            new Control.DatePicker('news_to', dpPars);
             // ]]>
         </script>
-
         {if $modvars.News.enableattribution}
         <fieldset>
             <legend><a id="news_attributes_collapse" href="javascript:void(0);"><span id="news_attributes_showhide">{gt text='Show'}</span> {gt text='Article attributes'}</a></legend>
