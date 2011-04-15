@@ -34,7 +34,7 @@
 
     <h2>{gt text='Edit news article'}</h2>
 
-    <form id="news_user_newform" class="z-form" action="{modurl modname='News' type='user' func='create'}" method="post" enctype="{if $accesspicupload AND $modvars.News.picupload_enabled}multipart/form-data{else}application/x-www-form-urlencoded{/if}">
+    <form id="news_user_newform" class="z-form" action="{modurl modname='News' type='admin' func='update'}" method="post" enctype="{if $accesspicupload AND $modvars.News.picupload_enabled}multipart/form-data{else}application/x-www-form-urlencoded{/if}">
         <div>
             <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
             <input type="hidden" name="story[sid]" id='news_sid' value="{$item.sid|safetext}" />
