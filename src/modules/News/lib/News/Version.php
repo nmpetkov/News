@@ -29,6 +29,17 @@ class News_Version extends Zikula_AbstractVersion
         $meta['securityschema'] = array('News::' => 'Contributor ID::Article ID',
                 'News:pictureupload:' => '::',
                 'News:publicationdetails:' => '::');
+        // Module depedencies
+        $meta['dependencies'] = array(
+                array('modname'    => 'Scribite',
+                      'minversion' => '4.2.1',
+                      'maxversion' => '',
+                      'status'     => ModUtil::DEPENDENCY_RECOMMENDED),
+                array('modname'    => 'EZComments',
+                      'minversion' => '3.0.1',
+                      'maxversion' => '',
+                      'status'     => ModUtil::DEPENDENCY_RECOMMENDED),
+        );
         return $meta;
     }
 
