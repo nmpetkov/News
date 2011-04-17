@@ -30,12 +30,12 @@ class News_Util {
         $dom = ZLanguage::getModuleDomain('News');
         // Validate the input
         $validationerror = false;
-        if ($story['action'] != 0 && empty($story['title'])) {
-            $validationerror .= __f('Error! You did not enter a %s.', __('title', $dom), $dom) . "<br />";
+        if ($story['action'] != News_Controller_User::ACTION_PREVIEW && empty($story['title'])) {
+            $validationerror .= __f('Error! You did not enter a %s.', __('title', $dom), $dom) . "\n";
         }
         // both text fields can't be empty
-        if ($story['action'] != 0 && empty($story['hometext']) && empty($story['bodytext'])) {
-            $validationerror .= __f('Error! You did not enter the minimum necessary %s.', __('article content', $dom), $dom) . "<br />";
+        if ($story['action'] != News_Controller_User::ACTION_PREVIEW && empty($story['hometext']) && empty($story['bodytext'])) {
+            $validationerror .= __f('Error! You did not enter the minimum necessary %s.', __('article content', $dom), $dom) . "\n";
         }
 
         return $validationerror;

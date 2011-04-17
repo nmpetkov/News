@@ -1,9 +1,9 @@
+{ajaxheader ui=true imageviewer="true"}
 {* For ajax modify and image uploading *}
-{if $modvars.News.picupload_enabled}
-{ajaxheader imageviewer="true"}
-{* if $modvars.News.enableajaxedit}
-{pageaddvar name='javascript' value='modules/News/javascript/multifile.js'}
-{/if *}
+{if $modvars.News.enableajaxedit}
+    {if $modvars.News.picupload_enabled}
+    {pageaddvar name='javascript' value='modules/News/javascript/multifile.js'}
+    {/if}
 {/if}
 
 {if $modvars.News.enabledescriptionvar}

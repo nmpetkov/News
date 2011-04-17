@@ -49,13 +49,7 @@
                 <label for="news_title">{gt text='Title text'}<span class="z-mandatorysym">*</span></label>
                 <input id="news_title" name="story[title]" type="text" size="32" maxlength="255" value="{$item.title|safetext}" />
             </div>
-            {*
-            <div class="z-formrow" style="margin-top:-5px;" id="news_urltitle_details">
-                <label for="news_urltitle" class="z-sub">{gt text='Permalink'}</label>
-                <div class="z-formnote"><span class="z-sub" id="news_sample_urltitle">&nbsp;</span> <a onclick="javascript:editpermalink()" href="javascript:void(0);" id="news_sample_urltitle_edit">{gt text='Edit'}</a></div>
-                <input id="news_urltitle" name="story[urltitle]" readonly="readonly" value="" />
-            </div>
-            *}
+
             {if $accessadd eq 1}
             <div class="z-formrow">
                 <label for="news_urltitle">{gt text='Permalink URL'}</label>
@@ -79,14 +73,10 @@
 
             {if $modvars.ZConfig.multilingual}
             <div class="z-formrow">
-                <label for="news_language">{gt text='Language'}</label>
+                <label for="news_language">{gt text='Language for which article should be displayed'}</label>
                 {html_select_languages id="news_language" name="story[language]" installed=1 all=1 selected=$item.language|default:$modvars.ZConfig.language_i18n}
             </div>
             {/if}
-            <div style="float:right" id="news_status_info">
-                <span id="news_saving_draft">{img modname='core' src='circle-ball-dark-antialiased.gif' set='ajax'}</span>
-                <span id="news_status_text" >statustext</span>
-            </div>
         </fieldset>
 
         <fieldset class="z-linear">
@@ -143,29 +133,38 @@
         {if $modvars.News.picupload_enabled AND $accesspicupload}
         <fieldset>
             <legend>{gt text='Pictures'}</legend>
-			<label for="news_files_element">{gt text='Select a picture (max. %s kB per picture)' tag1="`$modvars.News.picupload_maxfilesize/1000`"}</label>
+            <label for="news_files_element">{gt text='Select a picture (max. %s kB per picture)' tag1="`$modvars.News.picupload_maxfilesize/1000`"}</label>
             <input type="hidden" name="MAX_FILE_SIZE" value="{$modvars.News.picupload_maxfilesize|safetext}" />
             {if $modvars.News.picupload_maxpictures eq 1}
-			<input id="news_files_element" name="news_files[0]" type="file">
+            <input id="news_files_element" name="news_files[0]" type="file">
             {else}
-			<input id="news_files_element" name="news_files" type="file"><br>
+            <input id="news_files_element" name="news_files" type="file"><br>
             <span class="z-sub">{gt text='(max files %s, first picture is used as thumbnail in the index teaser page for this article.)' tag1=$modvars.News.picupload_maxpictures}</span>
             <div id="news_files_list"></div>
             <script type="text/javascript">
                 // <![CDATA[
                 var multi_selector = new MultiSelector(document.getElementById('news_files_list'), {{$modvars.News.picupload_maxpictures}}, {{$item.pictures}});
-                multi_selector.addElement( document.getElementById('news_files_element'));
+                multi_selector.addElement(document.getElementById('news_files_element'));
                 // ]]>
             </script>
             {/if}
             {if $item.pictures gt 0}
-            <div><br>
+            <div><br />
                 {foreach from=$item.temp_pictures item='file' name='temp_pics'}
-                    <img src='{$file.tmp_name}' width="80" />&nbsp;
-                    <input type="checkbox" id="story_del_picture_{$smarty.foreach.temp_pics.index}" name="story[del_pictures][]" value="{$file.name}">
-                    <label for="story_del_picture_{$smarty.foreach.temp_pics.index}">{gt text='Delete this picture'}</label><br />
+                <img src='{$file.tmp_name}' width="80" />&nbsp;
+                <input type="checkbox" id="story_del_picture_{$smarty.foreach.temp_pics.index}" name="story[del_pictures][]" value="{$file.name}">
+                <label for="story_del_picture_{$smarty.foreach.temp_pics.index}">{gt text='Delete this picture'}</label><br />
                 {/foreach}
                 <input type='hidden' name='story[tempfiles]' value='{$item.tempfiles}' />
+            </div>
+            {/if}
+            {if $item.pictures gt 0}
+            <div><br />
+                {section name=counter start=0 loop=$item.pictures step=1}
+                <img src="{$modvars.News.picupload_uploaddir}/pic_sid{$item.sid}-{$smarty.section.counter.index}-thumb.jpg" width="80" alt="{gt text='news picture'} #{$smarty.section.counter.index}" />&nbsp;
+                <input type="checkbox" id="story_del_picture_{$smarty.section.counter.index}" name="story[del_pictures][]" value="pic_sid{$item.sid}-{$smarty.section.counter.index}">
+                <label for="story_del_picture_{$smarty.section.counter.index}">{gt text='Delete this picture'}</label><br />
+                {/section}
             </div>
             {/if}
         </fieldset>
@@ -182,7 +181,7 @@
                 <div class="z-formrow">
                     <label for="news_weight">{gt text='Article weight'}</label>
                     <div>
-                        <input id="news_weight" name="story[weight]" type="text" size="5" value="{$item.weight|safetext}" />
+                        <input id="news_weight" name="story[weight]" type="text" size="10" maxlength="10" value="{$item.weight|safetext}" />
                     </div>
                 </div>
                 <div class="z-formrow">
@@ -198,9 +197,9 @@
                     </div>
                     <div class="z-formrow">
                         <label for="news_tonolimit">{gt text='No end date'}</label>
-                        <input id="news_tonolimit" name="story[tonolimit]" type="checkbox" value="1" {if $item.tonolimit eq 1}checked="checked" {/if} />
+                        <input id="news_tonolimit" name="story[tonolimit]" type="checkbox" value="1" {if $item.tonolimit eq 1}checked="checked" {/if}/>
                     </div>
-                    <div id ="news_expiration_date">
+                    <div id="news_expiration_date">
                         <div class="z-formrow">
                             <label>{gt text='End date'}</label>
                             <div>
@@ -212,6 +211,7 @@
                 <div class="z-formrow">
                     <label for="news_disallowcomments">{gt text='Allow comments on this article'}</label>
                     <input id="news_disallowcomments" name="story[disallowcomments]" type="checkbox" value="1" {if $item.disallowcomments eq 1}checked="checked" {/if}/>
+                    <em class="z-sub z-formnote">{gt text='(EZComments must be hooked to News to enable commenting.)'}</em>
                 </div>
                 <div class="z-formrow">
                     <label for="news_sid">{gt text='Article ID'}</label>
@@ -241,7 +241,6 @@
             new Control.DatePicker('news_to', dpPars);
             // ]]>
         </script>
-
         {if $modvars.News.enableattribution}
         <fieldset>
             <legend><a id="news_attributes_collapse" href="javascript:void(0);"><span id="news_attributes_showhide">{gt text='Show'}</span> {gt text='Article attributes'}</a></legend>
@@ -254,6 +253,10 @@
 
         {notifydisplayhooks eventname='news.hook.articles.ui.edit' area='modulehook_area.news.articles' subject=null id=null caller="News"}
 
+        <div id='news_picture_warning' class='z-center' style='padding: .5em;'>
+            <span class='z-warningmsg' id="news_picture_warning_text">text</span>
+        </div>
+
         <div class="z-buttonrow z-buttons z-center">
             {if $accessadd neq 1}
             <button id="news_button_submit" class="z-btgreen" type="submit" name="story[action]" value="1" title="{gt text='Submit this article'}">{img src='button_ok.png' modname='core' set='icons/extrasmall' __alt='Submit' __title='Submit this article' } {gt text='Submit'}</button>
@@ -263,14 +266,19 @@
                 <button id="news_button_draft_nonajax" type="submit" name="story[action]" value="6" title="{gt text='Save this article as draft'}">{img src='edit.png' modname='core' set='icons/extrasmall' __alt='Save as draft' __title='Save this article as draft'} {gt text='Save as draft'}</button>
             </span>
             <span id="news_button_savedraft_ajax" class="hidelink">
-                <a id="news_button_draft" href="javascript:void(0);" onclick="savedraft();">{img src='edit.png' modname='core' set='icons/extrasmall' __alt='Save as draft'  __title='Save this article as draft'}
-                    <span id="news_button_text_draft"> {gt text='Save as draft'}</span>
+                <a id="news_button_draft" href="javascript:void(0);" onclick="savedraft();">{img src='edit.png' modname='core' set='icons/extrasmall' __alt='Save quick draft'  __title='Quick save as draft'}
+                    <span id="news_button_text_draft"> {gt text='Save quick draft'}</span>
                 </a>
             </span>
+            <button id="news_button_fulldraft" type="submit" name="story[action]" value="8" title="{gt text='Save full draft'}">{img src='edit.png' modname='core' set='icons/extrasmall' __alt='Save full draft' __title='Save full draft'} {gt text='Save full draft'}</button>
             <button id="news_button_pending" type="submit" name="story[action]" value="4" title="{gt text='Mark this article as pending'}">{img src='clock.png' modname='core' set='icons/extrasmall' __alt='Pending' __title='Mark this article as pending'} {gt text='Pending'}</button>
             {/if}
             <button id="news_button_preview" type="submit" name="story[action]" value="0" title="{gt text='Preview this article'}">{img src='14_layer_visible.png' modname='core' set='icons/extrasmall' __alt='Preview' __title='Preview this article'} {gt text='Preview'}</button>
             <a id="news_button_cancel" href="{modurl modname='News' type='user' func='view'}" class="z-btred">{img modname='core' src='button_cancel.png' set='icons/extrasmall' __alt='Cancel' __title='Cancel'} {gt text='Cancel'}</a>
+            <div id="news_status_info" style='padding-top: 1em;'>
+                <span id="news_saving_draft">{img modname='core' src='circle-ball-dark-antialiased.gif' set='ajax'}</span>
+                <span class='z-informationmsg' id="news_status_text">statustext</span>
+            </div>
         </div>
     </div>
 </form>

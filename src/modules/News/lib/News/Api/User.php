@@ -13,6 +13,12 @@
 
 class News_Api_User extends Zikula_AbstractApi
 {
+    const STATUS_PUBLISHED = 0;
+    const STATUS_REJECTED = 1;
+    const STATUS_PENDING = 2;
+    const STATUS_ARCHIVED = 3;
+    const STATUS_DRAFT = 4;
+    const STATUS_SCHEDULED = 5;
     /**
      * get all news items
      * @author Mark West
@@ -600,15 +606,18 @@ class News_Api_User extends Zikula_AbstractApi
         $args['action'] = isset($args['action']) ? $args['action'] : null;
         switch ($args['action'])
         {
-            case 1: // submitted => pending
-                $args['published_status'] = 2;
+            case News_Controller_User::ACTION_SUBMIT: // submitted => pending
+                $args['published_status'] = self::STATUS_PENDING;
                 break;
-            case 2: // published
-            case 3: // rejected
-            case 4: // pending
-            case 5: // archived
-            case 6: // draft
+            case News_Controller_User::ACTION_PUBLISH:
+            case News_Controller_User::ACTION_REJECT:
+            case News_Controller_User::ACTION_SAVEPENDING:
+            case News_Controller_User::ACTION_ARCHIVE:
                 $args['published_status'] = $args['action']-2;
+                break;
+            case News_Controller_User::ACTION_SAVEDRAFT:
+            case News_Controller_User::ACTION_SAVEDRAFT_RETURN:
+                $args['published_status'] = self::STATUS_DRAFT;
                 break;
         }
 
@@ -618,10 +627,10 @@ class News_Api_User extends Zikula_AbstractApi
 
         } elseif (SecurityUtil::checkPermission('News::', '::', ACCESS_ADD)) {
             if (!isset($args['published_status'])) {
-                $args['published_status'] = 0;
+                $args['published_status'] = self::STATUS_PUBLISHED;
             }
         } else {
-            $args['published_status'] = 2;
+            $args['published_status'] = self::STATUS_PENDING;
         }
 
         // calculate the format type
@@ -664,7 +673,7 @@ class News_Api_User extends Zikula_AbstractApi
             $args['contributor'] = System::getVar('anonymous');
         } else {
             $args['contributor'] = UserUtil::getVar('uname');
-            if ($args['published_status'] == 0) {
+            if ($args['published_status'] == self::STATUS_PUBLISHED) {
                 $args['approver'] = UserUtil::getVar('uid');
             }
         }

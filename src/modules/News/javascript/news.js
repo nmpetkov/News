@@ -111,12 +111,16 @@ function editnews_init(req)
     // enable attribute UI
     var list_newsattributes = null;
     list_newsattributes = new Zikula.itemlist('newsattributes', {headerpresent: true, firstidiszero: true});
-
     $('appendattribute').observe('click',function(event){
         list_newsattributes.appenditem();
         event.stop();
     });
-    
+
+    // add warning to page about file ops
+    $('label_for_news_files_element').insert({
+        before: "<p class='z-warningmsg'>"+Zikula.__("Picture/file operations not supported in 'Quick edit' mode. You must click the 'Save full edit' button to complete these operations.")+"</div>"
+    });
+
     return;
 }
 
@@ -316,32 +320,16 @@ function permalinkeditsave_response(originalRequest)
  */
 function savedraft()
 {
-    // Obtain the title and sid (if present) from the form
-    var title = $F('news_title');
-    if (title == "") {
-        $('news_status_info').show();
-        $('news_saving_draft').hide();
-        $('news_status_text').update('<strong>'+Zikula.__('Title is empty, draft not saved!','module_News')+'</strong>');
-        Form.Element.focus('news_title');
-        return;
-    }
     // Re-fill the original textareas if Scribite Xinha is used, manual onsubmit needed
     if (typeof Xinha != "undefined") {
         $('news_user_newform').onsubmit();
     }
     var pars = $('news_user_newform').serialize(true);
-    pars.title = title;
-    var sid = $F('news_sid');
-    if (sid) {
-        // Update the current draft with the stored sid
-        pars.sid = sid;
-    }
-    // else create a new draft article with a new sid (sid not set)
 
     $('news_status_info').show();
     $('news_saving_draft').show();
-    $('news_status_text').update(Zikula.__('Saving draft...','module_News'));
-    $('news_button_text_draft').update(Zikula.__('Saving draft...','module_News'));
+    $('news_status_text').update(Zikula.__('Saving quick draft...','module_News'));
+    $('news_button_text_draft').update(Zikula.__('Saving quick draft...','module_News'));
     new Zikula.Ajax.Request(
         'ajax.php?module=news&func=savedraft',
         {
@@ -352,26 +340,35 @@ function savedraft()
 
 function savedraft_update(req)
 {
+    $('news_saving_draft').hide();
     if(!req.isSuccess()) {
+        $('news_button_text_draft').update(Zikula.__('Save quick draft','module_News'));
+        $('news_status_text').update(Zikula.__('Save quick draft failed','module_News'));
         Zikula.showajaxerror(req.getMessage());
         return;
     }
     var data = req.getData();
 
     draftsaved = true;
-    $('news_saving_draft').hide();
-    $('news_button_text_draft').update(Zikula.__('Update draft','module_News'));
+    $('news_button_text_draft').update(Zikula.__('Update quick draft','module_News'));
     $('news_status_text').update(data.result);
     $('news_urltitle').value = data.slug;
-//    $('news_sample_urltitle').update(json.fullpermalink);
-//    $('news_urltitle_details').show();
-//    if (json.showslugedit) {
-//        $('news_sample_urltitle_edit').show();
-//    }
     $('news_sid').value = data.sid;
-//    pnsetselectoption('news_published_status',4);
-//    $('news_published_status').selectedIndex = 4;
+
+    // add warning to page about file ops
+    showfilesaddedwarning();
+
     return;
+}
+
+function showfilesaddedwarning()
+{
+    var filecount=$$('.negative').size();
+    if (filecount>0) {
+        $('news_button_fulldraft').addClassName('z-btgreen');
+        $('news_picture_warning').show();
+        $('news_picture_warning_text').update(Zikula.__("Picture/file operations not supported in 'Quick draft' mode. You must click the 'Save full draft' button to complete these operations.",'module_News'));
+    }
 }
 
 function news_isdraft()
@@ -379,7 +376,7 @@ function news_isdraft()
     var sid = $F('news_sid');
     if (sid != '') {
         draftsaved = true;
-        $('news_button_text_draft').update(Zikula.__('Update draft','module_News'));
+        $('news_button_text_draft').update(Zikula.__('Update quick draft','module_News'));
     }
     return;
 }
@@ -396,6 +393,7 @@ function news_title_init()
 //    Event.observe('news_title', 'change', savedraft);
 //    $('news_urltitle_details').hide();
     $('news_status_info').hide();
+    $('news_picture_warning').hide();
   
     // not the correct location but for reference later on:
     //new PeriodicalExecuter(savedraft, 30);

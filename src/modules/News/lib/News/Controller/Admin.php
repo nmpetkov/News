@@ -108,7 +108,7 @@ class News_Controller_Admin extends Zikula_AbstractController
         }
 
         // if article is pending than set the publishing 'from' date to now
-        if ($item['published_status'] == 2) {
+        if ($item['published_status'] == News_Api_User::STATUS_PENDING) {
             $nowts = time();
             $now = DateUtil::getDatetime($nowts);
             // adjust 'to', since it is before the new 'from' set above
@@ -153,11 +153,16 @@ class News_Controller_Admin extends Zikula_AbstractController
             }
         }
 
+        $this->view->assign('accessadd', 0);
         if (SecurityUtil::checkPermission('News::', '::', ACCESS_ADD)) {
             $this->view->assign('accessadd', 1);
+            $this->view->assign('accesspicupload', 1);
+            $this->view->assign('accesspubdetails', 1);
         } else {
-            $this->view->assign('accessadd', 0);
+            $this->view->assign('accesspicupload', SecurityUtil::checkPermission('News:pictureupload:', '::', ACCESS_ADD));
+            $this->view->assign('accesspubdetails', SecurityUtil::checkPermission('News:publicationdetails:', '::', ACCESS_ADD));
         }
+
 
         if ($modvars['enablecategorization']) {
             $this->view->assign('catregistry', $catregistry);
@@ -240,7 +245,7 @@ class News_Controller_Admin extends Zikula_AbstractController
         $validationerror = News_Util::validateArticle($story);
         $hookvalidators = $this->notifyHooks('news.hook.articles.validate.edit', $item, $item['sid'], array(), new Zikula_Hook_ValidationProviders())->getData();
         if ($hookvalidators->hasErrors()) {
-            $validationerror .= $this->__('Error! Hooked content does not validate.') . "<br />";
+            $validationerror .= $this->__('Error! Hooked content does not validate.') . "\n";
         }
 
         // if the user has selected to preview the article we then route them back
@@ -248,7 +253,7 @@ class News_Controller_Admin extends Zikula_AbstractController
         if ($story['action'] == 0 || $validationerror !== false) {
             // log the error found if any
             if ($validationerror !== false) {
-                LogUtil::registerError($validationerror);
+                LogUtil::registerError(nl2br($validationerror));
             }
             // back to the referer form
             SessionUtil::setVar('newsitem', $story);
@@ -259,7 +264,7 @@ class News_Controller_Admin extends Zikula_AbstractController
         }
 
         // Check if the article goes from pending to published
-        if ($item['published_status'] == 2 && $story['published_status'] == 0) {
+        if ($item['published_status'] == News_Api_User::STATUS_PENDING && $story['published_status'] == News_Api_User::STATUS_PUBLISHED) {
             $story['approver'] = UserUtil::getVar('uid');
         }
 
@@ -496,12 +501,12 @@ class News_Controller_Admin extends Zikula_AbstractController
         // Set the possible status for later use
         $itemstatus = array(
             '' => $this->__('All'),
-            0 => $this->__('Published'),
-            1 => $this->__('Rejected'),
-            2 => $this->__('Pending Review'),
-            3 => $this->__('Archived'),
-            4 => $this->__('Draft'),
-            5 => $this->__('Scheduled')
+            News_Api_User::STATUS_PUBLISHED => $this->__('Published'),
+            News_Api_User::STATUS_REJECTED => $this->__('Rejected'),
+            News_Api_User::STATUS_PENDING => $this->__('Pending Review'),
+            News_Api_User::STATUS_ARCHIVED => $this->__('Archived'),
+            News_Api_User::STATUS_DRAFT => $this->__('Draft'),
+            News_Api_User::STATUS_SCHEDULED => $this->__('Scheduled')
         );
 
         $newsitems = array();
@@ -519,7 +524,7 @@ class News_Controller_Admin extends Zikula_AbstractController
             }
 
             if (SecurityUtil::checkPermission('News::', "{$item['cr_uid']}::{$item['sid']}", ACCESS_EDIT)) {
-                if ($item['published_status'] == 2) {
+                if ($item['published_status'] == News_Api_User::STATUS_PENDING) {
                     $options[] = array('url' => ModUtil::url('News', 'admin', 'modify', array('sid' => $item['sid'])),
                         'image' => 'editcut.png',
                         'title' => $this->__('Review'));
@@ -529,7 +534,7 @@ class News_Controller_Admin extends Zikula_AbstractController
                         'title' => $this->__('Edit'));
                 }
 
-                if (($item['published_status'] != 2 &&
+                if (($item['published_status'] != News_Api_User::STATUS_PENDING &&
                         (SecurityUtil::checkPermission('News::', "{$item['cr_uid']}::{$item['sid']}", ACCESS_DELETE))) ||
                         SecurityUtil::checkPermission('News::', "{$item['cr_uid']}::{$item['sid']}", ACCESS_ADMIN)) {
                     $options[] = array('url' => ModUtil::url('News', 'admin', 'delete', array('sid' => $item['sid'])),
@@ -716,7 +721,9 @@ class News_Controller_Admin extends Zikula_AbstractController
         $cat_data = FormUtil::getPassedValue('news_bulkaction_categorydata', '', 'POST');
 
         if ($bulkaction >= 1 && $bulkaction <= 5) {
-            $actionmap = array(1 => __('Delete'),
+            $actionmap = array(
+                // these indices are not constants, just unrelated integers
+                1 => __('Delete'),
                 2 => __('Archive'),
                 3 => __('Publish'),
                 4 => __('Reject'),
@@ -753,9 +760,9 @@ class News_Controller_Admin extends Zikula_AbstractController
                     break;
                 default: // archive, publish or reject
                     $statusmap = array(
-                        2 => 3, // archive
-                        3 => 0, // publish
-                        4 => 1  // reject
+                        2 => News_Api_User::STATUS_ARCHIVED,
+                        3 => News_Api_User::STATUS_PUBLISHED,
+                        4 => News_Api_User::STATUS_REJECTED
                     );
                     foreach ($articles as $article) {
                         $obj = array(

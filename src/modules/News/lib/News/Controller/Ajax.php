@@ -65,6 +65,16 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
             $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('News', 'news');
             $this->view->assign('catregistry', $catregistry);
         }
+        
+        $this->view->assign('accessadd', 0);
+        if (SecurityUtil::checkPermission('News::', '::', ACCESS_ADD)) {
+            $this->view->assign('accessadd', 1);
+            $this->view->assign('accesspicupload', 1);
+            $this->view->assign('accesspubdetails', 1);
+        } else {
+            $this->view->assign('accesspicupload', SecurityUtil::checkPermission('News:pictureupload:', '::', ACCESS_ADD));
+            $this->view->assign('accesspubdetails', SecurityUtil::checkPermission('News:publicationdetails:', '::', ACCESS_ADD));
+        }
 
         // Assign the item to the template
         $this->view->assign('item', $item);
@@ -280,79 +290,82 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
     public function savedraft()
     {
         $this->checkAjaxToken();
-        $title = $this->request->getPost()->get('title', null);
-        $sid = $this->request->getPost()->get('sid', 0);
         $story = $this->request->getPost()->get('story', null);
 
-        $output = $title;
+        // cannot process file inputs (pictures) via ajax
+        // File inputs are skipped as they cannot be serialized and sent using only JavaScript.
+        // @see http://api.prototypejs.org/dom/Form/serialize/
+        // @see http://www.openjs.com/articles/ajax/ajax_file_upload/
+
+        $output = '';
         $slug = '';
         $fullpermalink = '';
         $showslugedit = false;
-        // Permalink display length, only needed for 2 column layout later.
-        //$permalinkmaxdisplay = 40;
+        
+        // Validate the input
+        $validationerror = News_Util::validateArticle($story);
+        // check hooked modules for validation
+        $sid = isset($story['sid']) ? $story['sid'] : null;
+        $hookvalidators = $this->notifyHooks('news.hook.articles.validate.edit', $story, $sid, array(), new Zikula_Hook_ValidationProviders())->getData();
+        if ($hookvalidators->hasErrors()) {
+            $validationerror .= $this->__('Error! Hooked content does not validate.') . "\n";
+        }
+        if ($validationerror) {
+            return new Zikula_Response_Ajax_BadData($validationerror);
+        }
+
+        $newitem = array(
+            'sid' => isset($story['sid']) ? $story['sid'] : null,
+            'title' => $story['title'],
+            'urltitle' => isset($story['urltitle']) ? $story['urltitle'] : '',
+            '__CATEGORIES__' => isset($story['__CATEGORIES__']) ? $story['__CATEGORIES__'] : null,
+            '__ATTRIBUTES__' => isset($story['attributes']) ? News_Util::reformatAttributes($story['attributes']) : null,
+            'language' => isset($story['language']) ? $story['language'] : '',
+            'hometext' => isset($story['hometext']) ? $story['hometext'] : '',
+            'hometextcontenttype' => $story['hometextcontenttype'],
+            'bodytext' => isset($story['bodytext']) ? $story['bodytext'] : '',
+            'bodytextcontenttype' => $story['bodytextcontenttype'],
+            'notes' => isset($story['notes']) ? $story['notes'] : '',
+            'hideonindex' => isset($story['hideonindex']) ? $story['hideonindex'] : 0,
+            'disallowcomments' => isset($story['disallowcomments']) ? $story['disallowcomments'] : 0,
+            'from' => isset($story['from']) ? $story['from'] : null,
+            'tonolimit' => isset($story['tonolimit']) ? $story['tonolimit'] : null,
+            'to' => isset($story['to']) ? $story['to'] : null,
+            'unlimited' => isset($story['unlimited']) && $story['unlimited'] ? true : false,
+            'weight' => isset($story['weight']) ? $story['weight'] : 0,
+            'tempfiles' => isset($story['tempfiles']) ? $story['tempfiles'] : null,
+            'pictures' => isset($story['pictures']) ? $story['pictures'] : 0,
+            'del_pictures' => isset($story['del_pictures']) ? $story['del_pictures'] : null,
+            'published_status' => isset($story['published_status']) ? $story['published_status'] : News_Api_User::STATUS_DRAFT,
+            );
+
+        // get all module vars
+        $modvars = $this->getVars();
+
         // Check  if the article is already saved as draft
-        if ($sid > 0) {
+        if (isset($story['sid']) && $story['sid'] > 0) {
             // Get the current news article
-            $item = ModUtil::apiFunc('News', 'User', 'get', array('sid' => $sid));
+            $item = ModUtil::apiFunc('News', 'User', 'get', array('sid' => $story['sid']));
             if ($item == false) {
                 throw new Zikula_Exception_NotFound($this->__('Error! No such article found.'));
             }
             // Security check
-            $this->throwForbiddenUnless(SecurityUtil::checkPermission('News::', "{$item['cr_uid']}::$sid", ACCESS_EDIT));
+            $this->throwForbiddenUnless(SecurityUtil::checkPermission('News::', "{$item['cr_uid']}::{$story['sid']}", ACCESS_EDIT));
 
-            if (!ModUtil::apiFunc('News', 'admin', 'update',
-                            array('sid' => $sid,
-                                'title' => $story['title'],
-                                'urltitle' => $story['urltitle'],
-                                '__CATEGORIES__' => $story['__CATEGORIES__'],
-                                'language' => isset($story['language']) ? $story['language'] : '',
-                                'hometext' => $story['hometext'],
-                                'hometextcontenttype' => $story['hometextcontenttype'],
-                                'bodytext' => $story['bodytext'],
-                                'bodytextcontenttype' => $story['bodytextcontenttype'],
-                                'notes' => $story['notes'],
-                                'hideonindex' => isset($story['hideonindex']) ? $story['hideonindex'] : 1,
-                                'disallowcomments' => isset($story['disallowcomments']) ? $story['disallowcomments'] : 0,
-                                'unlimited' => isset($story['unlimited']) ? $story['unlimited'] : null,
-                                'from' => $story['from'],
-                                'tonolimit' => isset($story['tonolimit']) ? $story['tonolimit'] : null,
-                                'to' => $story['to'],
-                                'weight' => $story['weight'],
-                                'pictures' => isset($story['pictures']) ? $story['pictures'] : 0))) {
-
+            if (!ModUtil::apiFunc('News', 'admin', 'update', $newitem)) {
                 $output = DataUtil::formatForDisplayHTML($this->__('Error! Could not save your changes.'));
             } else {
                 $output = $this->__f('Draft updated at %s', DateUtil::getDatetime_Time('', '%H:%M'));
                 // Return the permalink (domain shortened) and the slug of the permalink
                 $slug = $item['urltitle'];
-                $fullpermalink = DataUtil::formatForDisplayHTML(ModUtil::url('News', 'user', 'display', array('sid' => $sid)));
-                // limit the display length of the permalink
-                //if (strlen($fullpermalink) > $permalinkmaxdisplay) {
-                //    $fullpermalink = '...' . substr($fullpermalink, strlen($fullpermalink) - $permalinkmaxdisplay, $permalinkmaxdisplay);
-                //}
+                $fullpermalink = DataUtil::formatForDisplayHTML(ModUtil::url('News', 'user', 'display', array('sid' => $story['sid'])));
                 // Only show "edit the slug" if the shorturls are active
                 $showslugedit = (System::getVar('shorturls') && System::getVar('shorturlstype') == 0);
             }
+            $sid = $story['sid'];
         } else {
             // Create a first draft version of the story
-            $sid = ModUtil::apiFunc('News', 'User', 'create', array(
-                        'title' => $title,
-                        '__CATEGORIES__' => isset($story['__CATEGORIES__']) ? $story['__CATEGORIES__'] : null,
-                        'language' => isset($story['language']) ? $story['language'] : '',
-                        'hometext' => isset($story['hometext']) ? $story['hometext'] : '',
-                        'hometextcontenttype' => isset($story['hometextcontenttype']) ? $story['hometextcontenttype'] : 0,
-                        'bodytext' => isset($story['bodytext']) ? $story['bodytext'] : '',
-                        'bodytextcontenttype' => isset($story['bodytextcontenttype']) ? $story['bodytextcontenttype'] : 0,
-                        'notes' => isset($story['notes']) ? $story['notes'] : '',
-                        'hideonindex' => isset($story['hideonindex']) ? $story['hideonindex'] : 1,
-                        'disallowcomments' => isset($story['disallowcomments']) ? $story['disallowcomments'] : 0,
-                        'unlimited' => isset($story['unlimited']) ? $story['unlimited'] : null,
-                        'from' => isset($story['from']) ? $story['from'] : null,
-                        'tonolimit' => isset($story['tonolimit']) ? $story['tonolimit'] : null,
-                        'to' => isset($story['to']) ? $story['to'] : null,
-                        'weight' => isset($story['weight']) ? $story['weight'] : 0,
-                        'pictures' => isset($story['pictures']) ? $story['pictures'] : 0,
-                        'published_status' => 4));
+            $sid = ModUtil::apiFunc('News', 'User', 'create', $newitem);
             if (!empty($sid)) {
                 // Success and now reload the news story
                 $item = ModUtil::apiFunc('News', 'User', 'get', array('sid' => $sid));
@@ -364,10 +377,6 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                     // Return the permalink (domain shortened) and the slug of the permalink
                     $slug = $item['urltitle'];
                     $fullpermalink = DataUtil::formatForDisplayHTML(ModUtil::url('News', 'user', 'display', array('sid' => $sid)));
-                    // limit the display length of the permalink
-                    //if (strlen($fullpermalink) > $permalinkmaxdisplay) {
-                    //    $fullpermalink = '...' . substr($fullpermalink, strlen($fullpermalink) - $permalinkmaxdisplay, $permalinkmaxdisplay);
-                    //}
                     // Only show "edit the slug" if the shorturls are active
                     $showslugedit = (System::getVar('shorturls') && System::getVar('shorturlstype') == 0);
                 }
@@ -375,6 +384,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                 $output = DataUtil::formatForDisplayHTML($this->__('Error! Could not save your changes.'));
             }
         }
+
         //lock the page so others cannot edit it
         if (ModUtil::available('PageLock')) {
             $returnUrl = ModUtil::url('News', 'admin', 'view');

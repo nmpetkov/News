@@ -16,8 +16,11 @@ class News_Controller_User extends Zikula_AbstractController
     const ACTION_PREVIEW = 0;
     const ACTION_SUBMIT = 1;
     const ACTION_PUBLISH = 2;
+    const ACTION_REJECT = 3;
     const ACTION_SAVEPENDING = 4;
+    const ACTION_ARCHIVE = 5;
     const ACTION_SAVEDRAFT = 6;
+    const ACTION_SAVEDRAFT_RETURN = 8;
 
     /**
      * the main user function
@@ -201,7 +204,7 @@ class News_Controller_User extends Zikula_AbstractController
         $sid = isset($item['sid']) ? $item['sid'] : null;
         $hookvalidators = $this->notifyHooks('news.hook.articles.validate.edit', $item, $sid, array(), new Zikula_Hook_ValidationProviders())->getData();
         if ($hookvalidators->hasErrors()) {
-            $validationerror .= $this->__('Error! Hooked content does not validate.') . "<br />";
+            $validationerror .= $this->__('Error! Hooked content does not validate.') . "\n";
         }
 
         // get all module vars
@@ -234,7 +237,7 @@ class News_Controller_User extends Zikula_AbstractController
         if ($item['action'] == self::ACTION_PREVIEW || $validationerror !== false) {
             // log the error found if any
             if ($validationerror !== false) {
-                LogUtil::registerError($validationerror);
+                LogUtil::registerError(nl2br($validationerror));
             }
             if ($item['pictures'] > 0) {
                 $tempfiles = News_ImageUtil::tempStore($files);
@@ -257,22 +260,13 @@ class News_Controller_User extends Zikula_AbstractController
             if ($sid != false) {
                 // Success
                 LogUtil::registerStatus($this->__('Done! Created new article.'));
-
                 // Let any hooks know that we have created a new item
                 $this->notifyHooks('news.hook.articles.process.edit', $item, $sid);
-
                 $this->notify($item); // send notification email
-                if (isset($files) && $modvars['picupload_enabled']) {
-                    $resized = News_ImageUtil::resizeImages($sid, $files); // resize and move the uploaded pics
-                    if (isset($item['tempfiles'])) {
-                        News_ImageUtil::removePreviewImages($tempfiles); // remove any preview images
-                    }
-                    if ($item['action'] == self::ACTION_SAVEDRAFT) {
-                        LogUtil::registerStatus($this->_fn('%1$s out of %2$s picture was uploaded and resized. Article now has draft status, since not all pictures were uploaded.', '%1$s out of %2$s pictures were uploaded and resized. Article now has draft status, since not all pictures were uploaded.', $item['pictures'], array($resized, $item['pictures'])));
-                    } else {
-                        LogUtil::registerStatus($this->_fn('%1$s out of %2$s picture was uploaded and resized.', '%1$s out of %2$s pictures were uploaded and resized.', $item['pictures'], array($resized, $item['pictures'])));
-                    }
-                }
+            } else {
+                // fail! story not created
+                throw new Zikula_Exception_Fatal($this->__('Story not created for unknown reason (Api failure).'));
+                return false;
             }
         } else {
             // update the draft
@@ -280,15 +274,34 @@ class News_Controller_User extends Zikula_AbstractController
             if ($result) {
                 LogUtil::registerStatus($this->__('Story Updated.'));
             } else {
-                LogUtil::registerStatus($this->__('Unable to update story.'));
-            }
-            // release pagelock
-            if (ModUtil::available('PageLock')) {
-                ModUtil::apiFunc('PageLock', 'user', 'releaseLock',
-                    array('lockName' => "Newsnews{$item['sid']}"));
+                // fail! story not updated
+                throw new Zikula_Exception_Fatal($this->__('Story not updated for unknown reason (Api failure).'));
+                return false;
             }
         }
-        return $this->redirect(ModUtil::url('News', $referertype, 'view'));
+
+        if (isset($files) && $modvars['picupload_enabled']) {
+            $resized = News_ImageUtil::resizeImages($sid, $files); // resize and move the uploaded pics
+            if (isset($item['tempfiles'])) {
+                News_ImageUtil::removePreviewImages($tempfiles); // remove any preview images
+            }
+            LogUtil::registerStatus($this->_fn('%1$s out of %2$s picture was uploaded and resized.', '%1$s out of %2$s pictures were uploaded and resized.', $item['pictures'], array($resized, $item['pictures'])));
+            if (($item['action'] >= self::ACTION_SAVEDRAFT) && ($resized <> $item['pictures'])) {
+                LogUtil::registerStatus($this->_fn('Article now has draft status, since the picture was not uploaded.', 'Article now has draft status, since not all pictures were uploaded.', $item['pictures'], array($resized, $item['pictures'])));
+            }
+        }
+
+        // release pagelock
+        if (ModUtil::available('PageLock')) {
+            ModUtil::apiFunc('PageLock', 'user', 'releaseLock',
+                array('lockName' => "Newsnews{$item['sid']}"));
+        }
+        
+        if ($item['action'] == self::ACTION_SAVEDRAFT_RETURN) {
+            SessionUtil::setVar('newsitem', $item);
+            $this->redirect(ModUtil::url('News', 'user', 'newitem'));
+        }
+        $this->redirect(ModUtil::url('News', 'user', 'view'));
     }
 
     /**
