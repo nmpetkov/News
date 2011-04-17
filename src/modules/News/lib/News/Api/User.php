@@ -383,7 +383,7 @@ class News_Api_User extends Zikula_AbstractApi
         unset($info['format_type']);
 
         // Check for comments
-        if (ModUtil::available('EZComments') && $info['disallowcomments'] == 0) {
+        if (ModUtil::available('EZComments') && $info['allowcomments'] == 1) {
             $info['commentcount'] = ModUtil::apiFunc('EZComments', 'user', 'countitems',
                     array('mod' => 'News',
                         'objectid' => $info['sid'],
@@ -406,7 +406,7 @@ class News_Api_User extends Zikula_AbstractApi
         $shorturlstype = System::getVar('shorturlstype');
 
         // Allowed to comment?
-        if (ModUtil::available('EZComments') && $info['disallowcomments'] == 0) {
+        if (ModUtil::available('EZComments') && $info['allowcomments'] == 1) {
             if ($shorturls && $shorturlstype == 0) {
                 $comment = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'display', array('sid' => $info['sid'], 'from' => $info['from'], 'urltitle' => $info['urltitle'], '__CATEGORIES__' => $info['categories']), null, 'comments'));
             } else {
@@ -523,7 +523,7 @@ class News_Api_User extends Zikula_AbstractApi
 
         $comment = '';
         $commentlink = '';
-        if (ModUtil::available('EZComments') && $info['disallowcomments'] == 0) {
+        if (ModUtil::available('EZComments') && $info['allowcomments'] == 1) {
             // Work out how to say 'comment(s)(?)' correctly
             $comment = ($info['commentcount'] == 0) ? $this->__('Comments?') : $this->_fn('%s comment', '%s comments', $info['commentcount'], $info['commentcount']);
 
@@ -639,20 +639,6 @@ class News_Api_User extends Zikula_AbstractApi
         // define the lowercase permalink, using the title as slug, if not present
         if (!isset($args['urltitle']) || empty($args['urltitle'])) {
             $args['urltitle'] = strtolower(DataUtil::formatPermalink($args['title']));
-        }
-
-        // The hideonindex table is inverted from what would seem logical
-        if (!isset($args['hideonindex']) || $args['hideonindex'] == 1) {
-            $args['hideonindex'] = 0;
-        } else {
-            $args['hideonindex'] = 1;
-        }
-
-        // Invert the value of disallowcomments, 1 in db means no comments allowed
-        if (!isset($args['disallowcomments']) || $args['disallowcomments'] == 1) {
-            $args['disallowcomments'] = 0;
-        } else {
-            $args['disallowcomments'] = 1;
         }
 
         // check the publishing date options
@@ -947,10 +933,10 @@ class News_Api_User extends Zikula_AbstractApi
         $links = array();
 
         if (SecurityUtil::checkPermission('News::', '::', ACCESS_READ)) {
-            $links[] = array('url' => ModUtil::url('News', 'user', 'view', array('theme' => 'RSS')),
+            $links[] = array('url' => ModUtil::url('News', 'user', 'view', array('theme' => 'RSS', 'displayonindex' => 1)),
                     'text' => '',
                     'class' => 'z-icon-es-rss');
-            $links[] = array('url' => ModUtil::url('News', 'user', 'view'),
+            $links[] = array('url' => ModUtil::url('News', 'user', 'view', array('displayonindex' => 1)),
                     'text' => $this->__('News articles list'),
                     'class' => 'z-icon-es-view');
             if ($this->getVar('enablecategorization')) {
@@ -1011,8 +997,8 @@ class News_Api_User extends Zikula_AbstractApi
             $queryargs[] = "{$news_column['published_status']} = '" . DataUtil::formatForStore($args['status']) . "'";
         }
 
-        if (isset($args['hideonindex'])) {
-            $queryargs[] = "{$news_column['hideonindex']} = '" . DataUtil::formatForStore($args['hideonindex']) . "'";
+        if (isset($args['displayonindex'])) {
+            $queryargs[] = "{$news_column['displayonindex']} = '" . DataUtil::formatForStore($args['displayonindex']) . "'";
         }
 
         // Check for specific date interval

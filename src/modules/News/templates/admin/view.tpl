@@ -98,7 +98,7 @@
                             {$newsitem.pictures|safetext}
                         </td>
                         {/if}
-                        <td>{$newsitem.hideonindex|safetext} / {$newsitem.weight|safetext}</td>
+                        <td>{$newsitem.displayonindex|yesno|safetext} / {$newsitem.weight|safetext}</td>
                         <td>
                             {if $newsitem.published_status eq '2'}
                             {gt text='Last edited %s' tag1=$newsitem.lu_date|dateformatHuman:'%x':'3'}
@@ -107,7 +107,7 @@
                             {$newsitem.from|dateformatHuman:'%x':'2'}.
                             {if $newsitem.to neq null}<br />{gt text='until %s' tag1=$newsitem.to|dateformatHuman:'%x':'3'}{/if}
                             {/if}
-                            {if $newsitem.disallowcomments eq '1'}
+                            {if $newsitem.allowcomments eq '0'}
                             <br /><em>{gt text='No comments allowed.'}</em>
                             {/if}
                         </td>

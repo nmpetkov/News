@@ -116,7 +116,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
      * @param int 'extendedtextcontenttype' the content type of the body text
      * @param string 'notes' any administrator notes
      * @param int 'published_status' the published status of the item
-     * @param int 'hideonindex' hide the article on the index page
+     * @param int 'displayonindex' display the article on the index page
      * @param string 'action' the action to perform, either 'update', 'delete' or 'pending'
      * @author Mark West
      * @author Frank Schummertz
@@ -160,8 +160,8 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                                     'bodytext' => $story['bodytext'],
                                     'bodytextcontenttype' => $story['bodytextcontenttype'],
                                     'notes' => $story['notes'],
-                                    'hideonindex' => isset($story['hideonindex']) ? $story['hideonindex'] : 1,
-                                    'disallowcomments' => isset($story['disallowcomments']) ? $story['disallowcomments'] : 0,
+                                    'displayonindex' => isset($story['displayonindex']) ? $story['displayonindex'] : 0,
+                                    'allowcomments' => isset($story['allowcomments']) ? $story['allowcomments'] : 0,
                                     'unlimited' => isset($story['unlimited']) ? $story['unlimited'] : null,
                                     'from' => isset($story['from']) ? $story['from'] : null,
                                     'tonolimit' => isset($story['tonolimit']) ? $story['tonolimit'] : null,
@@ -326,8 +326,8 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
             'bodytext' => isset($story['bodytext']) ? $story['bodytext'] : '',
             'bodytextcontenttype' => $story['bodytextcontenttype'],
             'notes' => isset($story['notes']) ? $story['notes'] : '',
-            'hideonindex' => isset($story['hideonindex']) ? $story['hideonindex'] : 0,
-            'disallowcomments' => isset($story['disallowcomments']) ? $story['disallowcomments'] : 0,
+            'displayonindex' => isset($story['displayonindex']) ? $story['displayonindex'] : 0,
+            'allowcomments' => isset($story['allowcomments']) ? $story['allowcomments'] : 0,
             'from' => isset($story['from']) ? $story['from'] : null,
             'tonolimit' => isset($story['tonolimit']) ? $story['tonolimit'] : null,
             'to' => isset($story['to']) ? $story['to'] : null,

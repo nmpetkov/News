@@ -208,7 +208,7 @@ class News_Controller_Admin extends Zikula_AbstractController
      * @param int 'extendedtextcontenttype' the content type of the body text
      * @param string 'notes' any administrator notes
      * @param int 'published_status' the published status of the item
-     * @param int 'hideonindex' hide the article on the index page
+     * @param int 'displayonindex' display the article on the index page
      * @author Mark West
      * @return bool true
      */
@@ -303,8 +303,8 @@ class News_Controller_Admin extends Zikula_AbstractController
                     'bodytext' => isset($story['bodytext']) ? $story['bodytext'] : '',
                     'bodytextcontenttype' => $story['bodytextcontenttype'],
                     'notes' => isset($story['notes']) ? $story['notes'] : '',
-                    'hideonindex' => isset($story['hideonindex']) ? $story['hideonindex'] : 0,
-                    'disallowcomments' => isset($story['disallowcomments']) ? $story['disallowcomments'] : 0,
+                    'displayonindex' => isset($story['displayonindex']) ? $story['displayonindex'] : 0,
+                    'allowcomments' => isset($story['allowcomments']) ? $story['allowcomments'] : 0,
                     'unlimited' => isset($story['unlimited']) ? $story['unlimited'] : null,
                     'from' => $story['from'],
                     'tonolimit' => isset($story['tonolimit']) ? $story['tonolimit'] : null,
@@ -548,12 +548,6 @@ class News_Controller_Admin extends Zikula_AbstractController
                 $item['status'] = $itemstatus[$item['published_status']];
             } else {
                 $item['status'] = $this->__('Unknown');
-            }
-
-            if ($item['hideonindex'] == 0) {
-                $item['hideonindex'] = $this->__('Yes');
-            } else {
-                $item['hideonindex'] = $this->__('No');
             }
 
             $item['infuture'] = DateUtil::getDatetimeDiff_AsField($item['from'], DateUtil::getDatetime(), 6) < 0;

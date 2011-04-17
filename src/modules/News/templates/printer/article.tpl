@@ -62,7 +62,7 @@
 {* the next code is to display any hooks (e.g. comments, ratings). All hooks are stored in $hooks and called individually. EZComments is not called when Commenting is not allowed *}
 {notifydisplayhooks eventname='news.hook.articles.ui.view' area='modulehook_area.news.articles' subject=$info id=$info.sid assign='hooks'}
 {foreach from=$hooks key='provider_area' item='hook'}
-{if $provider_area neq 'modulehook_area.ezcomments.comments' or $info.disallowcomments eq 0}
+{if !(($provider_area eq 'modulehook_area.ezcomments.comments') and ($info.allowcomments eq 0))}
 {$hook}
 {/if}
 {/foreach}

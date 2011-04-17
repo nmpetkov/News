@@ -30,7 +30,7 @@ class News_Controller_User extends Zikula_AbstractController
     public function main()
     {
         $args = array(
-            'hideonindex' => 0,
+            'displayonindex' => 1,
             'itemsperpage' => $this->getVar('storyhome', 10)
         );
         $this->redirect(ModUtil::url('News', 'user', 'view', $args));
@@ -66,9 +66,9 @@ class News_Controller_User extends Zikula_AbstractController
         $item['bodytext'] = isset($sess_item['bodytext']) ? $sess_item['bodytext'] : '';
         $item['bodytextcontenttype'] = isset($sess_item['bodytextcontenttype']) ? $sess_item['bodytextcontenttype'] : '';
         $item['notes'] = isset($sess_item['notes']) ? $sess_item['notes'] : '';
-        $item['hideonindex'] = isset($sess_item['hideonindex']) ? $sess_item['hideonindex'] : 1;
+        $item['displayonindex'] = isset($sess_item['displayonindex']) ? $sess_item['displayonindex'] : 1;
         $item['language'] = isset($sess_item['language']) ? $sess_item['language'] : '';
-        $item['disallowcomments'] = isset($sess_item['disallowcomments']) ? $sess_item['disallowcomments'] : 1;
+        $item['allowcomments'] = isset($sess_item['allowcomments']) ? $sess_item['allowcomments'] : 1;
         $item['from'] = isset($sess_item['from']) ? $sess_item['from'] : DateUtil::getDatetime(null, '%Y-%m-%d %H:%M');
         $item['to'] = isset($sess_item['to']) ? $sess_item['to'] : DateUtil::getDatetime(null, '%Y-%m-%d %H:%M');
         $item['tonolimit'] = isset($sess_item['tonolimit']) ? $sess_item['tonolimit'] : 1;
@@ -144,7 +144,7 @@ class News_Controller_User extends Zikula_AbstractController
      * @param int 'bodytextcontenttype' the content type of the body text
      * @param string 'notes' any administrator notes
      * @param int 'published_status' the published status of the item
-     * @param int 'hideonindex' hide the article on the index page
+     * @param int 'displayonindex' display the article on the index page
      * @return bool true
      */
     public function create($args)
@@ -165,8 +165,8 @@ class News_Controller_User extends Zikula_AbstractController
             'bodytext' => isset($story['bodytext']) ? $story['bodytext'] : '',
             'bodytextcontenttype' => $story['bodytextcontenttype'],
             'notes' => $story['notes'],
-            'hideonindex' => isset($story['hideonindex']) ? $story['hideonindex'] : 0,
-            'disallowcomments' => isset($story['disallowcomments']) ? $story['disallowcomments'] : 0,
+            'displayonindex' => isset($story['displayonindex']) ? $story['displayonindex'] : 0,
+            'allowcomments' => isset($story['allowcomments']) ? $story['allowcomments'] : 0,
             'from' => isset($story['from']) ? $story['from'] : null,
             'tonolimit' => isset($story['tonolimit']) ? $story['tonolimit'] : null,
             'to' => isset($story['to']) ? $story['to'] : null,
@@ -186,8 +186,8 @@ class News_Controller_User extends Zikula_AbstractController
         // Disable the non accessible fields for non editors
         if (!SecurityUtil::checkPermission('News::', '::', ACCESS_ADD)) {
             $item['notes'] = '';
-            $item['hideonindex'] = 1;
-            $item['disallowcomments'] = 1;
+            $item['displayonindex'] = 1;
+            $item['allowcomments'] = 1;
             $item['from'] = null;
             $item['tonolimit'] = true;
             $item['to'] = null;
@@ -327,15 +327,13 @@ class News_Controller_User extends Zikula_AbstractController
         $prop = isset($args['prop']) ? $args['prop'] : (string) FormUtil::getPassedValue('prop', null, 'GET');
         $cat = isset($args['cat']) ? $args['cat'] : (string) FormUtil::getPassedValue('cat', null, 'GET');
         $itemsperpage = isset($args['itemsperpage']) ? $args['itemsperpage'] : (int) FormUtil::getPassedValue('itemsperpage', $modvars['itemsperpage'], 'GET');
-        $hideonindex = isset($args['hideonindex']) ? (int) $args['hideonindex'] : null;
+        $displayonindex = isset($args['displayonindex']) ? (int) $args['displayonindex'] : FormUtil::getPassedValue('displayonindex', null, 'GET');
 
         $allowedThemes = array('user', 'rss', 'atom');
         $theme = in_array($theme, $allowedThemes) ? $theme : 'user';
 
         // work out page size from page number
         $startnum = (($page - 1) * $itemsperpage) + 1;
-
-        // default hideonindex argument
 
         $lang = ZLanguage::getLanguageCode();
 
@@ -375,7 +373,7 @@ class News_Controller_User extends Zikula_AbstractController
                         array('startnum' => $startnum,
                             'numitems' => $itemsperpage,
                             'status' => 0,
-                            'hideonindex' => $hideonindex,
+                            'displayonindex' => $displayonindex,
                             'filterbydate' => true,
                             'category' => isset($catFilter) ? $catFilter : null,
                             'catregistry' => isset($catregistry) ? $catregistry : null));
@@ -400,9 +398,9 @@ class News_Controller_User extends Zikula_AbstractController
         // Loop through each item and display it
         foreach ($items as $item)
         {
-            // display if it's published and the hideonindex match (if set)
+            // display if it's published and the displayonindex match (if set)
             if (($item['published_status'] == 0) &&
-                    (!isset($hideonindex) || $item['hideonindex'] == $hideonindex)) {
+                    (!isset($displayonindex) || $item['displayonindex'] == $displayonindex)) {
 
                 // $info is array holding raw information.
                 // Used below and also passed to the theme - jgm
@@ -440,7 +438,7 @@ class News_Controller_User extends Zikula_AbstractController
         $this->view->assign('pager', array('numitems' => ModUtil::apiFunc('News', 'user', 'countitems',
                     array('status' => 0,
                         'filterbydate' => true,
-                        'hideonindex' => $hideonindex,
+                        'displayonindex' => $displayonindex,
                         'category' => isset($catFilter) ? $catFilter : null)),
             'itemsperpage' => $itemsperpage));
 

@@ -433,7 +433,7 @@ function news_publication_init()
     $('news_publication_collapse').observe('click', news_publication_click);
     $('news_publication_collapse').addClassName('z-toggle-link');
     // show the publication details when a variable is not set to default
-    if ($('news_unlimited').checked == true && $('news_hideonindex').checked == true && $('news_disallowcomments').checked == true) {
+    if ($('news_unlimited').checked == true && $('news_displayonindex').checked == true && $('news_allowcomments').checked == true) {
         $('news_publication_collapse').removeClassName('z-toggle-link-open');
         $('news_publication_showhide').update(Zikula.__('Show','module_News'));
         $('news_publication_details').hide();

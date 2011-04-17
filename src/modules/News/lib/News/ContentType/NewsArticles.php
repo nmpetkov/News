@@ -118,12 +118,12 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
         switch ($this->show)
         {
             case 3: // non index page articles
-                $apiargs['hideonindex'] = 1;
+                $apiargs['displayonindex'] = 0;
                 break;
             case 2: // index page articles
-                $apiargs['hideonindex'] = 0;
+                $apiargs['displayonindex'] = 1;
                 break;
-            // all - doesn't need hideonindex
+            // all - doesn't need displayonindex
         }
         $apiargs['numitems'] = $this->limit; // Nr of articles to obtain
         $apiargs['status'] = (int) $this->status; // Published status

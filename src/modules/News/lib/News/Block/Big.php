@@ -70,7 +70,7 @@ class News_Block_Big extends Zikula_Controller_AbstractBlock
         // call the API
         $articles = ModUtil::apiFunc('News', 'user', 'getall',
                 array('tdate' => $tdate,
-                'hideonindex' => 0,
+                'displayonindex' => 0,
                 'order' => 'counter',
                 'status' => 0,
                 'numitems' => 1));

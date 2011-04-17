@@ -65,7 +65,7 @@ class News_Api_Admin extends Zikula_AbstractApi
      * @param int $args['bodytextcontenttype'] the content type of the body text
      * @param string $args['notes'] any administrator notes
      * @param int $args['published_status'] the published status of the item
-     * @param int $args['hideonindex'] hide the article on the index page
+     * @param int $args['displayonindex'] display the article on the index page
      * @return bool true on update success, false on failiure
      */
     public function update($args)
@@ -118,20 +118,6 @@ class News_Api_Admin extends Zikula_AbstractApi
         // define the lowercase permalink, using the title as slug, if not present
         if (!isset($args['urltitle']) || empty($args['urltitle'])) {
             $args['urltitle'] = strtolower(DataUtil::formatPermalink($args['title']));
-        }
-
-        // The hideonindex table is inverted from what would seem logical
-        if (!isset($args['hideonindex']) || $args['hideonindex'] == 1) {
-            $args['hideonindex'] = 0;
-        } else {
-            $args['hideonindex'] = 1;
-        }
-
-        // Invert the value of disallowcomments, 1 in db means no comments allowed
-        if (!isset($args['disallowcomments']) || $args['disallowcomments'] == 1) {
-            $args['disallowcomments'] = 0;
-        } else {
-            $args['disallowcomments'] = 1;
         }
 
         // check the publishing date options

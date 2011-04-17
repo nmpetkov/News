@@ -130,8 +130,8 @@
     <legend><a id="news_publication_collapse" href="javascript:void(0);"><span id="news_publication_showhide">{gt text='Show'}</span> {gt text='Publishing options'}</a></legend>
     <div id="news_publication_details">
         <div class="z-formrow">
-            <label for="news_hideonindex">{gt text='Publish on news index page'}</label>
-            <input id="news_hideonindex" name="story[hideonindex]" type="checkbox" value="1" {if $item.hideonindex eq 0}checked="checked" {/if}/>
+            <label for="news_displayonindex">{gt text='Display on news index page'}</label>
+            <input id="news_displayonindex" name="story[displayonindex]" type="checkbox" value="1" {if $item.displayonindex eq 1}checked="checked" {/if}/>
         </div>
         <div class="z-formrow">
             <label for="news_weight">{gt text='Article weight'}</label>
@@ -164,8 +164,8 @@
             </div>
         </div>
         <div class="z-formrow">
-            <label for="news_disallowcomments">{gt text='Allow comments on this article'}</label>
-            <input id="news_disallowcomments" name="story[disallowcomments]" type="checkbox" value="1" {if $item.disallowcomments eq 0}checked="checked" {/if}/>
+            <label for="news_allowcomments">{gt text='Allow comments on this article'}</label>
+            <input id="news_allowcomments" name="story[allowcomments]" type="checkbox" value="1" {if $item.allowcomments eq 1}checked="checked" {/if}/>
         </div>
     </div>
 </fieldset>

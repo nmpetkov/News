@@ -72,13 +72,13 @@ class News_Block_Stories extends Zikula_Controller_AbstractBlock
         {
             case 1:
             // non index page articles
-                $apiargs['hideonindex'] = 1;
+                $apiargs['displayonindex'] = 0;
                 break;
             case 3:
             // index page articles
-                $apiargs['hideonindex'] = 0;
+                $apiargs['displayonindex'] = 1;
                 break;
-            // all - doesn't need hideonindex
+            // all - doesn't need displayonindex
         }
 
         $apiargs['numitems'] = $vars['limit'];

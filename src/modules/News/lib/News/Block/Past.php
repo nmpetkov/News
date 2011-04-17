@@ -68,7 +68,7 @@ class News_Block_Past extends Zikula_Controller_AbstractBlock
 
         // call the API
         $articles = ModUtil::apiFunc('News', 'user', 'getall',
-                array('hideonindex'    => 0,
+                array('displayonindex'    => 0,
                 'order'    => 'from',
                 'status'   => 0,
                 'startnum' => $storyhome,

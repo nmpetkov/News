@@ -322,6 +322,7 @@ class News_Installer extends Zikula_AbstractInstaller
                 if (ModUtil::available('Content')) {
                     Content_Installer::updateContentType('News');
                 }
+                $this->_invertHideAndComments();
             case '3.0.0':
                 // future plans
         }
@@ -383,9 +384,9 @@ class News_Installer extends Zikula_AbstractInstaller
                 'contributor'      => $uname,
                 'approver'         => $uid,
                 'notes'            => '',
-                'hideonindex'      => 0,
+                'displayonindex'   => 1,
                 'language'         => '',
-                'disallowcomments' => 1,
+                'allowcomments'    => 0,
                 'format_type'      => 0,
                 'published_status' => 0,
                 'from'             => $now,
@@ -403,6 +404,23 @@ class News_Installer extends Zikula_AbstractInstaller
         }
     }
 
+    /**
+     * convert old 'hideonindex' to 'displayonindex' by inverting the values
+     * convert old 'disallowcomments' to 'allowcomments' by inverting the values
+     * 
+     * @return boolean
+     */
+    private function _invertHideAndComments()
+    {
+        $stories = DBUtil::selectObjectArray('news');
+        foreach ($stories as $key => $story) {
+            $stories[$key]['displayonindex'] = $story['displayonindex'] == 0 ? 1 : 0;
+            $stories[$key]['allowcomments'] = $story['allowcomments'] == 0 ? 1 : 0;
+        }
+        $res = DBUtil::updateObjectArray($stories, 'news', 'sid');
+        return $res;
+    }
+    
     /**
      * migrate old local categories to the categories module
      * TODO
