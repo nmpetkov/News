@@ -171,7 +171,7 @@ class News_Installer extends Zikula_AbstractInstaller
                 $this->setVar('enablecategorization', true);
                 ModUtil::dbInfoLoad('News', 'News', true);
 
-                if (!$this->migratecategories()) {
+                if (!$this->_news_migratecategories()) {
                     LogUtil::registerError($this->__('Error! Could not migrate categories.'));
                     return '2.1';
                 }
@@ -423,8 +423,6 @@ class News_Installer extends Zikula_AbstractInstaller
     
     /**
      * migrate old local categories to the categories module
-     * TODO
-     * NOTE: as of this commit 22 Nov 2010, I cannot find any use of this function in the module.
      */
     private function _news_migratecategories()
     {
@@ -504,8 +502,9 @@ class News_Installer extends Zikula_AbstractInstaller
         $pages = array();
         for (; !$result->EOF; $result->MoveNext()) {
             $pages[] = array('sid' => $result->fields[0],
-                    '__CATEGORIES__' => array('Main' => $categorymap[$result->fields[1]],
-                            'Topic' => $topicsmap[$result->fields[2]]),
+                    '__CATEGORIES__' => array(
+                        'Main' => $categorymap[$result->fields[1]],
+                        'Topic' => $topicsmap[$result->fields[2]]),
                     '__META__' => array('module' => 'News'));
         }
         foreach ($pages as $page) {
