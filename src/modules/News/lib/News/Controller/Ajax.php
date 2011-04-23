@@ -272,6 +272,9 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                             array('lockName' => "Newsnews{$story['sid']}"));
         }
 
+	// clear article and view caches
+	News_Controller_User::clearArticleCaches($story, $this);
+
         return new Zikula_Response_Ajax(array('result' => $output,
             'action' => $action,
             'reloadurl' => $reloadurl));

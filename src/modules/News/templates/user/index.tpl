@@ -31,10 +31,7 @@
           {$preformat.readmore}
           <span class="text_separator">|</span>
         {/if}
-        {*
-        {recommend modname='News' itemid=$info.sid}
-        <span class="text_separator">|</span>
-        *}
+
         {$preformat.print}
         {if $modvars.News.pdflink}
         <span class="text_separator">|</span>

@@ -326,7 +326,9 @@ class News_Controller_Admin extends Zikula_AbstractController
                 array('lockName' => "Newsnews{$story['sid']}"));
         }
 
-        $this->view->clear_cache();
+	// clear article and view caches
+	News_Controller_User::clearArticleCaches($story, $this);
+
         return $this->redirect(ModUtil::url('News', 'admin', 'view'));
     }
 

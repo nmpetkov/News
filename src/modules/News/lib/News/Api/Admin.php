@@ -136,11 +136,6 @@ class News_Api_Admin extends Zikula_AbstractApi
             return LogUtil::registerError($this->__('Error! Could not save your changes.'));
         }
 
-        // The item has been modified, so we clear all cached pages of this item.
-        $render = Zikula_View::getInstance('News');
-        $render->clear_cache(null, $args['sid']);
-        $render->clear_cache('user/view.tpl');
-
         // Let the calling process know that we have finished successfully
         return true;
     }
