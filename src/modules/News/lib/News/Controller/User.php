@@ -832,9 +832,6 @@ class News_Controller_User extends Zikula_AbstractController
         // User functions of this type can be called by other modules
         extract($args);
 
-        // get all module vars for later use
-        $modvars = $this->getVars();
-
         // At this stage we check to see if we have been passed $objectid, the
         // generic item identifier
         if ($objectid) {
@@ -849,52 +846,58 @@ class News_Controller_User extends Zikula_AbstractController
             unset($sid);
         }
 
-        // Get the news story
         if (isset($sid)) {
-            $item = ModUtil::apiFunc('News', 'user', 'get',
-                    array('sid' => $sid,
-                        'status' => 0));
+            $this->view->setCache_Id($sid);
         } else {
-            $item = ModUtil::apiFunc('News', 'user', 'get',
-                    array('title' => $title,
-                        'year' => $year,
-                        'monthname' => $monthname,
-                        'monthnum' => $monthnum,
-                        'day' => $day,
-                        'status' => 0));
-            $sid = $item['sid'];
-            System::queryStringSetVar('sid', $sid);
+            $this->view->setCache_Id($title);
         }
-        if ($item === false) {
-            return LogUtil::registerError($this->__('Error! No such article found.'), 404);
+        $template = 'user/articlepdf.tpl';
+        if (!$this->view->is_cached($template)) {
+            // NOTE: this is only caching the template for retrieval
+            // it doesn't cache the actual PDF file
+
+            // get all module vars for later use
+            $modvars = $this->getVars();
+
+            // Get the news story
+            if (isset($sid)) {
+                $item = ModUtil::apiFunc('News', 'user', 'get',
+                        array('sid' => $sid,
+                            'status' => 0));
+            } else {
+                $item = ModUtil::apiFunc('News', 'user', 'get',
+                        array('title' => $title,
+                            'year' => $year,
+                            'monthname' => $monthname,
+                            'monthnum' => $monthnum,
+                            'day' => $day,
+                            'status' => 0));
+                $sid = $item['sid'];
+                System::queryStringSetVar('sid', $sid);
+            }
+            if ($item === false) {
+                return LogUtil::registerError($this->__('Error! No such article found.'), 404);
+            }
+
+            // $info is array holding raw information.
+            $info = ModUtil::apiFunc('News', 'user', 'getArticleInfo', $item);
+
+            // $links is an array holding pure URLs to specific functions for this article.
+            $links = ModUtil::apiFunc('News', 'user', 'getArticleLinks', $info);
+
+            // $preformat is an array holding chunks of preformatted text for this article.
+            $preformat = ModUtil::apiFunc('News', 'user', 'getArticlePreformat',
+                    array('info' => $info,
+                        'links' => $links));
+
+            // Assign the story info arrays
+            $this->view->assign(array('info' => $info,
+                'links' => $links,
+                'preformat' => $preformat));
         }
-
-        // Explode the review into an array of seperate pages
-        $allpages = explode('<!--pagebreak-->', $item['bodytext']);
-
-        // Set the item hometext to be the required page
-        // nb arrays start from zero, pages from one
-        //$item['bodytext'] = $allpages[$page-1];
-        $numpages = count($allpages);
-        //unset($allpages);
-        // $info is array holding raw information.
-        $info = ModUtil::apiFunc('News', 'user', 'getArticleInfo', $item);
-
-        // $links is an array holding pure URLs to specific functions for this article.
-        $links = ModUtil::apiFunc('News', 'user', 'getArticleLinks', $info);
-
-        // $preformat is an array holding chunks of preformatted text for this article.
-        $preformat = ModUtil::apiFunc('News', 'user', 'getArticlePreformat',
-                array('info' => $info,
-                    'links' => $links));
-
-        // Assign the story info arrays
-        $this->view->assign(array('info' => $info,
-            'links' => $links,
-            'preformat' => $preformat));
 
         // Store output in variable
-        $articlehtml = $this->view->fetch('user/articlepdf.tpl');
+        $articlehtml = $this->view->fetch($template);
 
         // Include and configure the TCPDF class
         define('K_TCPDF_EXTERNAL_CONFIG', true);
@@ -1093,6 +1096,8 @@ class News_Controller_User extends Zikula_AbstractController
             $view->view->clear_cache('user/article.tpl', $cacheid_title);
             $view->view->clear_cache('printer/article.tpl', $cacheid);
             $view->view->clear_cache('printer/article.tpl', $cacheid_title);
+            $view->view->clear_cache('user/articlepdf.tpl', $sid); // pdf only uses sid
+            $view->view->clear_cache('user/articlepdf.tpl', $item['title']); // pdf only uses title
         }
     }
 
