@@ -272,8 +272,8 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                             array('lockName' => "Newsnews{$story['sid']}"));
         }
 
-	// clear article and view caches
-	News_Controller_User::clearArticleCaches($story, $this);
+        // clear article and view caches
+        News_Controller_User::clearArticleCaches($story, $this);
 
         return new Zikula_Response_Ajax(array('result' => $output,
             'action' => $action,
@@ -417,9 +417,9 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
         $title = $this->request->getPost()->get('title', '');
 
         // define the lowercase permalink, using the title as slug, if not present
-//    if (!isset($args['urltitle']) || empty($args['urltitle'])) {
-//        $args['urltitle'] = strtolower(DataUtil::formatPermalink($args['title']));
-//    }
+        //    if (!isset($args['urltitle']) || empty($args['urltitle'])) {
+        //        $args['urltitle'] = strtolower(DataUtil::formatPermalink($args['title']));
+        //    }
         // Construct the lowercase permalink, using the title as slug
         $permalink = strtolower(DataUtil::formatPermalink($title));
 
