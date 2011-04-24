@@ -398,6 +398,7 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
 
     public function getTemplate()
     {
+        $this->view->setCache_Id($this->contentId);
         if (!empty($this->customtemplate)) {
             $template = 'contenttype/' . $this->customtemplate;
         } else {
