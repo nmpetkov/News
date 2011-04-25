@@ -513,11 +513,6 @@ class News_Controller_User extends Zikula_AbstractController
             $this->view->setCache_Id($title . $page);
         }
 
-        // check out if the content is cached.
-        if ($this->view->is_cached($theme . '/article.tpl')) {
-            return $this->view->fetch($theme . '/article.tpl');
-        }
-
         // Get the news story
         if (!SecurityUtil::checkPermission('News::', "::", ACCESS_ADD)) {
             if (isset($sid)) {
