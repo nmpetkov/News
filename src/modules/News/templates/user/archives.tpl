@@ -1,7 +1,8 @@
+{nocache}
 {pageaddvar name='javascript' value='modules/News/javascript/simpletree.js'}
 {pageaddvar name='stylesheet' value='modules/News/style/news_treeview.css'}
-
-{nocache}{include file='user/menu.tpl'}{/nocache}
+{include file='user/menu.tpl'}
+{/nocache}
 {insert name='getstatusmsg'}
 
 {* Check if overview display is needed or detail display for a month *}
