@@ -311,7 +311,14 @@ class News_Installer extends Zikula_AbstractInstaller
                 // register handlers
                 EventUtil::registerPersistentModuleHandler('News', 'get.pending_content', array('News_Handlers', 'pendingContent'));
                 EventUtil::registerPersistentModuleHandler('News', 'module.content.gettypes', array('News_Handlers', 'getTypes'));
-                // update the table
+                // rename columns (not done by changetable) and update the table 
+                $columns = array_keys(DBUtil::metaColumns('news', true));
+                if (in_array('PN_HIDEONINDEX', $columns) && !DBUtil::renameColumn('news', 'pn_hideonindex', 'displayonindex')) {
+                    return '2.6.2';
+                }
+                if (in_array('PN_DISALLOWCOMMENTS', $columns) && !DBUtil::renameColumn('news', 'pn_disallowcomments', 'allowcomments')) {
+                    return '2.6.2';
+                }
                 if (!DBUtil::changeTable('news')) {
                     return '2.6.2';
                 }
