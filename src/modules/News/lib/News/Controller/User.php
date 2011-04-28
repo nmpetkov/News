@@ -1079,9 +1079,9 @@ class News_Controller_User extends Zikula_AbstractController
     /**
      * clear caches for a particular story
      * @param array $item the story item
-     * @param object $view Zikula_AbstractController instance
+     * @param object $controller Zikula_AbstractController instance
      */
-    public static function clearArticleCaches($item, $view)
+    public static function clearArticleCaches($item, $controller)
     {
         // clear appropriate caches
         // view.tpl templates are not cached
@@ -1092,12 +1092,12 @@ class News_Controller_User extends Zikula_AbstractController
         for ($i = 1; $i <= $pagecount; $i++) {
             $cacheid = $sid . $i;
             $cacheid_title = $item['title'] . $i;
-            $view->view->clear_cache('user/article.tpl', $cacheid);
-            $view->view->clear_cache('user/article.tpl', $cacheid_title);
-            $view->view->clear_cache('printer/article.tpl', $cacheid);
-            $view->view->clear_cache('printer/article.tpl', $cacheid_title);
-            $view->view->clear_cache('user/articlepdf.tpl', $sid); // pdf only uses sid
-            $view->view->clear_cache('user/articlepdf.tpl', $item['title']); // pdf only uses title
+            $controller->view->clear_cache('user/article.tpl', $cacheid);
+            $controller->view->clear_cache('user/article.tpl', $cacheid_title);
+            $controller->view->clear_cache('printer/article.tpl', $cacheid);
+            $controller->view->clear_cache('printer/article.tpl', $cacheid_title);
+            $controller->view->clear_cache('user/articlepdf.tpl', $sid); // pdf only uses sid
+            $controller->view->clear_cache('user/articlepdf.tpl', $item['title']); // pdf only uses title
         }
     }
 
