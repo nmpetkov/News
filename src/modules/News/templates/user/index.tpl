@@ -33,7 +33,8 @@
         {/if}
 
         {$preformat.print}
-        {if $modvars.News.pdflink}
+        {checkpermission component="News::" instance=".*" level="ACCESS_READ" assign="readaccess"}
+        {if $modvars.News.pdflink && $readaccess}
         <span class="text_separator">|</span>
         <a title="PDF" href="{modurl modname='News' type='user' func='displaypdf' sid=$info.sid}" target="_blank">PDF <img src="modules/News/images/pdf.gif" width="16" height="16" alt="PDF" /></a>
         {/if}
