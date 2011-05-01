@@ -3,7 +3,7 @@ This file contains a list of vendor libraries distributed with News
 
 PHP LIBRARIES
 -------------
-tcpdf 5_9_034
+tcpdf 5.9.074
     Vendor website: http://www.tcpdf.org/
     Downloaded from: https://sourceforge.net/projects/tcpdf/files/
     License: GPL v3
