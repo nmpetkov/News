@@ -85,7 +85,7 @@ class News_Installer extends Zikula_AbstractInstaller
         // register handlers
         EventUtil::registerPersistentModuleHandler('News', 'get.pending_content', array('News_Handlers', 'pendingContent'));
         EventUtil::registerPersistentModuleHandler('News', 'module.content.gettypes', array('News_Handlers', 'getTypes'));
-        HookUtil::registerHookSubscriberBundles($this->version);
+        HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
 
         // Initialisation successful
         return true;
@@ -323,7 +323,7 @@ class News_Installer extends Zikula_AbstractInstaller
                 if (!DBUtil::changeTable('news')) {
                     return '2.6.2';
                 }
-                HookUtil::registerHookSubscriberBundles($this->version);
+                HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
                 $this->delVar('pdflink_tcpdfpath');
                 $this->delVar('pdflink_tcpdflang');
                 $this->setVar('itemsperadminpage', 15);
