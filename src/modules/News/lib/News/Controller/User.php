@@ -834,54 +834,54 @@ class News_Controller_User extends Zikula_AbstractController
             unset($sid);
         }
 
+        // we set TEMPLATE caching to false because we will utilize
+        // FILE caching of pdf files instead
+        $this->view->setCaching(false);
+
+        // Get the news story
         if (isset($sid)) {
-            $this->view->setCache_Id($sid);
+            $item = ModUtil::apiFunc('News', 'user', 'get', array('sid' => $sid,
+                        'status' => 0));
         } else {
-            $this->view->setCache_Id($title);
+            $item = ModUtil::apiFunc('News', 'user', 'get', array('title' => $title,
+                        'year' => $year,
+                        'monthname' => $monthname,
+                        'monthnum' => $monthnum,
+                        'day' => $day,
+                        'status' => 0));
+            $sid = $item['sid'];
+            System::queryStringSetVar('sid', $sid);
         }
-        $template = 'user/articlepdf.tpl';
-        if (!$this->view->is_cached($template)) {
-            // NOTE: this is only caching the template for retrieval
-            // it doesn't cache the actual PDF file
-            // get all module vars for later use
-            $modvars = $this->getVars();
-
-            // Get the news story
-            if (isset($sid)) {
-                $item = ModUtil::apiFunc('News', 'user', 'get', array('sid' => $sid,
-                            'status' => 0));
-            } else {
-                $item = ModUtil::apiFunc('News', 'user', 'get', array('title' => $title,
-                            'year' => $year,
-                            'monthname' => $monthname,
-                            'monthnum' => $monthnum,
-                            'day' => $day,
-                            'status' => 0));
-                $sid = $item['sid'];
-                System::queryStringSetVar('sid', $sid);
-            }
-            if ($item === false) {
-                return LogUtil::registerError($this->__('Error! No such article found.'), 404);
-            }
-
-            // $info is array holding raw information.
-            $info = ModUtil::apiFunc('News', 'user', 'getArticleInfo', $item);
-
-            // $links is an array holding pure URLs to specific functions for this article.
-            $links = ModUtil::apiFunc('News', 'user', 'getArticleLinks', $info);
-
-            // $preformat is an array holding chunks of preformatted text for this article.
-            $preformat = ModUtil::apiFunc('News', 'user', 'getArticlePreformat', array('info' => $info,
-                        'links' => $links));
-
-            // Assign the story info arrays
-            $this->view->assign(array('info' => $info,
-                'links' => $links,
-                'preformat' => $preformat));
+        if ($item === false) {
+            return LogUtil::registerError($this->__('Error! No such article found.'), 404);
         }
+
+        // check for cached pdf file
+        if ($this->getVar('pdflink_enablecache', true)) {
+            $cachedPdf = $this->pdfIsCached($item['urltitle']);
+            if ($cachedPdf) {
+                $this->outputCachedPdf($cachedPdf);
+                return true;
+            }
+        }
+
+        // $info is array holding raw information.
+        $info = ModUtil::apiFunc('News', 'user', 'getArticleInfo', $item);
+
+        // $links is an array holding pure URLs to specific functions for this article.
+        $links = ModUtil::apiFunc('News', 'user', 'getArticleLinks', $info);
+
+        // $preformat is an array holding chunks of preformatted text for this article.
+        $preformat = ModUtil::apiFunc('News', 'user', 'getArticlePreformat', array('info' => $info,
+                    'links' => $links));
+
+        // Assign the story info arrays
+        $this->view->assign(array('info' => $info,
+            'links' => $links,
+            'preformat' => $preformat));
 
         // Store output in variable
-        $articlehtml = $this->view->fetch($template);
+        $articlehtml = $this->view->fetch('user/articlepdf.tpl');
 
         // Include and configure the TCPDF class
         define('K_TCPDF_EXTERNAL_CONFIG', true);
@@ -916,7 +916,7 @@ class News_Controller_User extends Zikula_AbstractController
           $modvars['pdflink_headerlogo_width'],
           $this->__f('Article %1$s by %2$s', array($info['title'], $info['contributor'])),
           $sitename . ' :: ' . $this->__('News publisher')); */
-        $pdf->SetHeaderData($modvars['pdflink_headerlogo'], $modvars['pdflink_headerlogo_width'], '', $sitename . ' :: ' . $info['cattitle'] . ' :: ' . $info['topicname']);
+        $pdf->SetHeaderData($this->getVar('pdflink_headerlogo'), $this->getVar('pdflink_headerlogo_width'), '', $sitename . ' :: ' . $info['cattitle'] . ' :: ' . $info['topicname']);
         // set header and footer fonts
         $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
         $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -931,8 +931,7 @@ class News_Controller_User extends Zikula_AbstractController
         //set image scale factor
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
         //set some language-dependent strings
-        $pdf->setLanguageArray($l);
-
+        $pdf->setLanguageArray($l); // $l is undefined??? TODO
         // set font, freeserif is big !
         //$pdf->SetFont('freeserif', '', 10);
         // For Unicode data put dejavusans in tcpdf_config.php
@@ -946,9 +945,17 @@ class News_Controller_User extends Zikula_AbstractController
 
         // reset pointer to the last page
         $pdf->lastPage();
-
+        
+        if ($this->getVar('pdflink_enablecache', true)) {
+            $pdfMode = "FI";
+            $dir = CacheUtil::getLocalDir('NewsPDF');
+            $pdfFileName = $dir . '/' . $info['urltitle'] . '.pdf';
+        } else {
+            $pdfMode = "I";
+            $pdfFileName = $info['urltitle'] . '.pdf';
+        }
         //Close and output PDF document
-        $pdf->Output($info['urltitle'] . '.pdf', 'I');
+        $pdf->Output($pdfFileName, $pdfMode);
 
         // Since the output doesn't need the theme wrapped around it,
         // let the theme know that the function is already finished
@@ -1081,6 +1088,57 @@ class News_Controller_User extends Zikula_AbstractController
             $controller->view->clear_cache('user/articlepdf.tpl', $sid); // pdf only uses sid
             $controller->view->clear_cache('user/articlepdf.tpl', $item['title']); // pdf only uses title
         }
+    }
+
+    /**
+     * Check to see if file is cached and current
+     * return false if !exists or !current
+     * return full filepath if exists and current
+     * 
+     * @param string $title
+     * @return mixed boolean/string 
+     */
+    private function pdfIsCached($title)
+    {
+        $dir = CacheUtil::getLocalDir('NewsPDF');
+        if (!is_dir($dir)) {
+            CacheUtil::createLocalDir('NewsPDF', 0755, true);
+        }
+        $title = $title . '.pdf';
+        // modify title like the tcpdf::Output() method does
+        $title = preg_replace('/[\s]+/', '_', $title);
+        $title = preg_replace('/[^a-zA-Z0-9_\.-]/', '', $title);
+        $fullpath = $dir . '/' . $title;
+        if (file_exists($fullpath)) {
+            // check if expired
+            if ((time() - filemtime($fullpath)) > ModUtil::getVar('Theme', 'render_lifetime')) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return $fullpath;
+    }
+
+    /**
+     * output the cached file to the browser
+     * @param string $fullpath
+     * @return void 
+     */
+    private function outputCachedPdf($fullpath)
+    {
+        // this code copied directly from tcpdf lib
+        // send headers to browser
+        header('Content-Type: application/pdf');
+        header('Cache-Control: public, must-revalidate, max-age=0'); // HTTP/1.1
+        header('Pragma: public');
+        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Content-Length: ' . filesize($fullpath));
+        header('Content-Disposition: inline; filename="' . basename($fullpath) . '";');
+        // send document to the browser
+        echo file_get_contents($fullpath);
+        return;
     }
 
 }

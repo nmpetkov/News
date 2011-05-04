@@ -61,6 +61,7 @@ class News_Installer extends Zikula_AbstractInstaller
         $this->setVar('pdflink', false);
         $this->setVar('pdflink_headerlogo', 'tcpdf_logo.jpg');
         $this->setVar('pdflink_headerlogo_width', '30');
+        $this->setVar('pdflink_enablecache', true);
 
         // picture uploading
         $this->setVar('picupload_enabled', false);
@@ -326,6 +327,7 @@ class News_Installer extends Zikula_AbstractInstaller
                 $this->delVar('pdflink_tcpdfpath');
                 $this->delVar('pdflink_tcpdflang');
                 $this->setVar('itemsperadminpage', 15);
+                $this->setVar('pdflink_enablecache', true);
                 if (ModUtil::available('Content')) {
                     Content_Installer::updateContentType('News');
                 }

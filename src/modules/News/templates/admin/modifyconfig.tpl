@@ -155,6 +155,10 @@
                         <label for="news_pdflink_headerlogo_width">{gt text='TCPDF header logo width in mm'}</label>
                         <input id="news_pdflink_headerlogo_width" type="text" name="pdflink_headerlogo_width" value="{$modvars.News.pdflink_headerlogo_width|safetext}" />
                     </div>
+                    <div class="z-formrow">
+                        <label for="news_pdflink_enablecache">{gt text='Enable caching for pdfs'}</label>
+                        <input id="news_pdflink_enablecache" type="checkbox" name="pdflink_enablecache"{if $modvars.News.pdflink_enablecache} checked="checked"{/if} />
+                    </div>
                 </div>
             </fieldset>
 
