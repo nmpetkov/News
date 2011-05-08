@@ -201,7 +201,7 @@ class News_Controller_User extends Zikula_AbstractController
         $validationerror = News_Util::validateArticle($item);
         // check hooked modules for validation
         $sid = isset($item['sid']) ? $item['sid'] : null;
-        $hookvalidators = $this->notifyHooks('news.hook.articles.validate.edit', $item, $sid, array(), new Zikula_Hook_ValidationProviders())->getData();
+        $hookvalidators = $this->notifyHooks(new Zikula_ValidationHook('news.hook.articles.validate.edit', new Zikula_Hook_ValidationProviders()))->getValidators();
         if ($hookvalidators->hasErrors()) {
             $validationerror .= $this->__('Error! Hooked content does not validate.') . "\n";
         }
@@ -260,7 +260,7 @@ class News_Controller_User extends Zikula_AbstractController
                 // Success
                 LogUtil::registerStatus($this->__('Done! Created new article.'));
                 // Let any hooks know that we have created a new item
-                $this->notifyHooks('news.hook.articles.process.edit', $item, $sid);
+                $this->notifyHooks(new Zikula_ProcessHook('news.hook.articles.process.edit', $sid, new Zikula_ModUrl('News', 'User', 'view', ZLanguage::getLanguageCode(), array('sid' => $sid))));
                 $this->notify($item); // send notification email
             } else {
                 // fail! story not created
@@ -504,9 +504,9 @@ class News_Controller_User extends Zikula_AbstractController
 
         // For caching reasons you must pass a cache ID
         if (isset($sid)) {
-            $this->view->setCache_Id($sid . $page);
+            $this->view->setCacheId($sid . $page);
         } else {
-            $this->view->setCache_Id($title . $page);
+            $this->view->setCacheId($title . $page);
         }
 
         // Get the news story
@@ -655,7 +655,7 @@ class News_Controller_User extends Zikula_AbstractController
 
         // Create output object
         $cacheid = "$month|$year";
-        $this->view->setCache_Id($cacheid);
+        $this->view->setCacheId($cacheid);
 
         $template = 'user/archives.tpl';
         if ($this->view->is_cached($template)) {
@@ -945,7 +945,7 @@ class News_Controller_User extends Zikula_AbstractController
 
         // reset pointer to the last page
         $pdf->lastPage();
-        
+
         if ($this->getVar('pdflink_enablecache', true)) {
             $pdfMode = "FI";
             $dir = CacheUtil::getLocalDir('NewsPDF');
@@ -1094,9 +1094,9 @@ class News_Controller_User extends Zikula_AbstractController
      * Check to see if file is cached and current
      * return false if !exists or !current
      * return full filepath if exists and current
-     * 
+     *
      * @param string $title
-     * @return mixed boolean/string 
+     * @return mixed boolean/string
      */
     private function pdfIsCached($title)
     {
@@ -1123,7 +1123,7 @@ class News_Controller_User extends Zikula_AbstractController
     /**
      * output the cached file to the browser
      * @param string $fullpath
-     * @return void 
+     * @return void
      */
     private function outputCachedPdf($fullpath)
     {

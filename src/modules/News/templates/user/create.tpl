@@ -251,7 +251,7 @@
         {/if}
         {/if}{* /if $accesspubdetails *}
 
-        {notifydisplayhooks eventname='news.hook.articles.ui.edit' area='modulehook_area.news.articles' subject=null id=null caller="News"}
+        {notifydisplayhooks eventname='news.hook.articles.ui.edit' id=null caller="News"}
 
         <div id='news_picture_warning' class='z-center' style='padding: .5em;'>
             <span class='z-warningmsg' id="news_picture_warning_text">text</span>
