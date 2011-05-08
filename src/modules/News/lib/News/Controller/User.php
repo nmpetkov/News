@@ -260,7 +260,7 @@ class News_Controller_User extends Zikula_AbstractController
                 // Success
                 LogUtil::registerStatus($this->__('Done! Created new article.'));
                 // Let any hooks know that we have created a new item
-                $this->notifyHooks(new Zikula_ProcessHook('news.hook.articles.process.edit', $sid, new Zikula_ModUrl('News', 'User', 'view', ZLanguage::getLanguageCode(), array('sid' => $sid))));
+                $this->notifyHooks(new Zikula_ProcessHook('news.hook.articles.process.edit', $sid, new Zikula_ModUrl('News', 'User', 'display', ZLanguage::getLanguageCode(), array('sid' => $sid))));
                 $this->notify($item); // send notification email
             } else {
                 // fail! story not created
