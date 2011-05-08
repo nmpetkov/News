@@ -251,7 +251,7 @@
         {/if}
         {/if}{* /if $accesspubdetails *}
 
-        {notifydisplayhooks eventname='news.hook.articles.ui.edit' id=null caller="News"}
+        {notifydisplayhooks eventname='news.hook.articles.ui.edit' id=null}
 
         <div id='news_picture_warning' class='z-center' style='padding: .5em;'>
             <span class='z-warningmsg' id="news_picture_warning_text">text</span>

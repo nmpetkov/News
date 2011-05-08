@@ -225,4 +225,4 @@
     </div>
 </fieldset>
 
-{notifydisplayhooks eventname='news.hook.articles.ui.edit'id=$item.sid caller="News"}
+{notifydisplayhooks eventname='news.hook.articles.ui.edit'id=$item.sid}
