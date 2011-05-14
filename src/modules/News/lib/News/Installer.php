@@ -421,13 +421,19 @@ class News_Installer extends Zikula_AbstractInstaller
      */
     private function _invertHideAndComments()
     {
-        $stories = DBUtil::selectObjectArray('news');
-        foreach ($stories as $key => $story) {
-            $stories[$key]['displayonindex'] = $story['displayonindex'] == 0 ? 1 : 0;
-            $stories[$key]['allowcomments'] = $story['allowcomments'] == 0 ? 1 : 0;
+        $tables = DBUtil::getTables();
+        $sql = "SELECT pn_sid, pn_displayonindex, pn_allowcomments FROM {$tables['news']}";
+        $result = DBUtil::executeSQL($sql);
+        $objectArray = DBUtil::marshallObjects($result);
+        $result->Close();
+        foreach ($objectArray as $row) {
+            $sid = $row['pn_sid'];
+            $doi = ($row['pn_displayonindex']) == 0 ? 1 : 0;
+            $ac = ($row['pn_allowcomments']) == 0 ? 1 : 0;
+            $sql = "UPDATE {$tables['news']} SET pn_displayonindex='$doi', pn_allowcomments='$ac' WHERE pn_sid=$sid";
+            DBUtil::executeSQL($sql);
         }
-        $res = DBUtil::updateObjectArray($stories, 'news', 'sid');
-        return $res;
+        return true;
     }
     
     /**
