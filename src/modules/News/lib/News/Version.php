@@ -45,7 +45,7 @@ class News_Version extends Zikula_AbstractVersion
 
     protected function setupHookBundles()
     {
-        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'modulehook_area.news.articles', 'ui', $this->__('News Articles Hooks'));
+        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber_area.ui.news.articles', 'ui', $this->__('News Articles Hooks'));
         $bundle->addType('ui.view', 'news.hook.articles.ui.view');
         $bundle->addType('ui.edit', 'news.hook.articles.ui.edit');
         $bundle->addType('ui.delete', 'news.hook.articles.ui.delete');
@@ -55,7 +55,7 @@ class News_Version extends Zikula_AbstractVersion
         $bundle->addType('process.delete', 'news.hook.articles.process.delete');
         $this->registerHookSubscriberBundle($bundle);
 
-        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'modulehook_area.news.articlesfilter', 'filter', $this->__('News Display Hooks'));
+        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber_area.filter.news.articlesfilter', 'filter', $this->__('News Display Hooks'));
         $bundle->addType('ui.filter', 'news.hook.articlesfilter.ui.filter');
         $this->registerHookSubscriberBundle($bundle);
     }
