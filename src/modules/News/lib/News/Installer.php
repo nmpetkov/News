@@ -332,6 +332,7 @@ class News_Installer extends Zikula_AbstractInstaller
                     Content_Installer::updateContentType('News');
                 }
                 $this->_invertHideAndComments();
+                $this->fixStartSettings();
             case '3.0.0':
                 // future plans
         }
@@ -432,6 +433,29 @@ class News_Installer extends Zikula_AbstractInstaller
             $ac = ($row['pn_allowcomments']) == 0 ? 1 : 0;
             $sql = "UPDATE {$tables['news']} SET pn_displayonindex='$doi', pn_allowcomments='$ac' WHERE pn_sid=$sid";
             DBUtil::executeSQL($sql);
+        }
+        return true;
+    }
+    
+    /**
+     * fix core start page settings if set to News
+     * @return boolean
+     */
+    private function fixStartSettings()
+    {
+        if ((System::getVar('startpage') == 'News') && (System::getVar('entrypoint') == 'index.php')) {
+            $starttype = System::getVar('starttype', '');
+            if (empty($starttype)) {
+                System::setVar('starttype', 'user');
+            }
+            $startfunc = System::getVar('startfunc', '');
+            if (empty($startfunc) || ($startfunc == 'main')) {
+                System::setVar('startfunc', 'view');
+            }
+            $startargs = System::getVar('startargs', '');
+            if (empty($startargs)) {
+                System::setVar('startargs', 'displayonindex=1');
+            }
         }
         return true;
     }
