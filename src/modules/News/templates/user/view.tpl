@@ -9,5 +9,5 @@
 {/section}
 
 {if $newsitems}
-{pager display='page' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='page'}
+{pager display='page' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='page' maxpages='10'}
 {/if}
