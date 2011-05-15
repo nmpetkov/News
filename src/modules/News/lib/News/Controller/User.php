@@ -327,7 +327,9 @@ class News_Controller_User extends Zikula_AbstractController
         $page = isset($args['page']) ? $args['page'] : (int)FormUtil::getPassedValue('page', 1, 'GET');
         $prop = isset($args['prop']) ? $args['prop'] : (string)FormUtil::getPassedValue('prop', null, 'GET');
         $cat = isset($args['cat']) ? $args['cat'] : (string)FormUtil::getPassedValue('cat', null, 'GET');
-        $itemsperpage = isset($args['itemsperpage']) ? $args['itemsperpage'] : (int)FormUtil::getPassedValue('itemsperpage', $modvars['itemsperpage'], 'GET');
+        $displayModule = FormUtil::getPassedValue('module', 'X', 'GET');
+        $defaultItemsPerPage = ($displayModule == 'X') ? $modvars['storyhome'] : $modvars['itemsperpage'];
+        $itemsperpage = isset($args['itemsperpage']) ? $args['itemsperpage'] : (int)FormUtil::getPassedValue('itemsperpage', $defaultItemsPerPage, 'GET');
         $displayonindex = isset($args['displayonindex']) ? (int)$args['displayonindex'] : FormUtil::getPassedValue('displayonindex', null, 'GET');
 
         $allowedThemes = array('user', 'rss', 'atom', 'printer');
