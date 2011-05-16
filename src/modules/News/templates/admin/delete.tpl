@@ -9,7 +9,7 @@
     <div class="z-adminpageicon">{icon type="delete" size="large"}</div>
     <h2>{$templatetitle}</h2>
     <p class="z-warningmsg">{gt text='Do you really want to delete this news article?'}</p>
-    {notifydisplayhooks eventname='news.hook.articles.ui.delete' id=$sid}
+    
     <form class="z-form" action="{modurl modname='News' type='admin' func='delete'}" method="post" enctype="application/x-www-form-urlencoded">
         <div>
             <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
@@ -23,5 +23,6 @@
                 </div>
             </fieldset>
         </div>
+{notifydisplayhooks eventname='news.ui_hooks.articles.form_delete' id=$sid}
     </form>
 </div>

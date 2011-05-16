@@ -201,7 +201,7 @@ class News_Controller_User extends Zikula_AbstractController
         $validationerror = News_Util::validateArticle($item);
         // check hooked modules for validation
         $sid = isset($item['sid']) ? $item['sid'] : null;
-        $hookvalidators = $this->notifyHooks(new Zikula_ValidationHook('news.hook.articles.validate.edit', new Zikula_Hook_ValidationProviders()))->getValidators();
+        $hookvalidators = $this->notifyHooks(new Zikula_ValidationHook('news.ui_hooks.articles.validate_edit', new Zikula_Hook_ValidationProviders()))->getValidators();
         if ($hookvalidators->hasErrors()) {
             $validationerror .= $this->__('Error! Hooked content does not validate.') . "\n";
         }
@@ -260,7 +260,7 @@ class News_Controller_User extends Zikula_AbstractController
                 // Success
                 LogUtil::registerStatus($this->__('Done! Created new article.'));
                 // Let any hooks know that we have created a new item
-                $this->notifyHooks(new Zikula_ProcessHook('news.hook.articles.process.edit', $sid, new Zikula_ModUrl('News', 'User', 'display', ZLanguage::getLanguageCode(), array('sid' => $sid))));
+                $this->notifyHooks(new Zikula_ProcessHook('news.ui_hooks.articles.process_edit', $sid, new Zikula_ModUrl('News', 'User', 'display', ZLanguage::getLanguageCode(), array('sid' => $sid))));
                 $this->notify($item); // send notification email
             } else {
                 // fail! story not created

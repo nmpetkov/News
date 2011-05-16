@@ -45,18 +45,18 @@ class News_Version extends Zikula_AbstractVersion
 
     protected function setupHookBundles()
     {
-        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber_area.ui.news.articles', 'ui', $this->__('News Articles Hooks'));
-        $bundle->addType('ui.view', 'news.hook.articles.ui.view');
-        $bundle->addType('ui.edit', 'news.hook.articles.ui.edit');
-        $bundle->addType('ui.delete', 'news.hook.articles.ui.delete');
-        $bundle->addType('validate.edit', 'news.hook.articles.validate.edit');
-        $bundle->addType('validate.delete', 'news.hook.articles.validate.delete');
-        $bundle->addType('process.edit', 'news.hook.articles.process.edit');
-        $bundle->addType('process.delete', 'news.hook.articles.process.delete');
+        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.ui_hooks.news.articles', 'ui_hooks', $this->__('News Articles Hooks'));
+        $bundle->addEvent('display_view', 'news.ui_hooks.articles.display_view');
+        $bundle->addEvent('form_edit', 'news.ui_hooks.articles.form_edit');
+        $bundle->addEvent('form_delete', 'news.ui_hooks.articles.form_delete');
+        $bundle->addEvent('validate_edit', 'news.ui_hooks.articles.validate_edit');
+        $bundle->addEvent('validate_delete', 'news.ui_hooks.articles.validate_delete');
+        $bundle->addEvent('process_edit', 'news.ui_hooks.articles.process_edit');
+        $bundle->addEvent('process_delete', 'news.ui_hooks.articles.process_delete');
         $this->registerHookSubscriberBundle($bundle);
 
-        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber_area.filter.news.articlesfilter', 'filter', $this->__('News Display Hooks'));
-        $bundle->addType('ui.filter', 'news.hook.articlesfilter.ui.filter');
+        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.filter_hooks.news.articles.filter', 'filter', $this->__('News Display Hooks'));
+        $bundle->addEvent('ui.filter', 'news.filter_hooks.articles.filter');
         $this->registerHookSubscriberBundle($bundle);
     }
 

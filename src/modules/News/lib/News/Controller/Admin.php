@@ -241,7 +241,7 @@ class News_Controller_Admin extends Zikula_AbstractController
 
         // Validate the input
         $validationerror = News_Util::validateArticle($story);
-        $hookvalidators = $this->notifyHooks(new Zikula_ValidationHook('news.hook.articles.validate.edit', new Zikula_Hook_ValidationProviders()))->getValidators();
+        $hookvalidators = $this->notifyHooks(new Zikula_ValidationHook('news.ui_hooks.articles.validate_edit', new Zikula_Hook_ValidationProviders()))->getValidators();
         if ($hookvalidators->hasErrors()) {
             $validationerror .= $this->__('Error! Hooked content does not validate.') . "\n";
         }
@@ -317,7 +317,7 @@ class News_Controller_Admin extends Zikula_AbstractController
 
         // Let any hooks know that we have edited an item.
         $url = new Zikula_ModUrl('News', 'user', 'display', ZLanguage::getLanguageCode(), array('sid' => $story['sid']));
-        $this->notifyHooks(new Zikula_ValidationHook('news.hook.articles.process.edit', $story['sid'], $url));
+        $this->notifyHooks(new Zikula_ValidationHook('news.ui_hooks.articles.process_edit', $story['sid'], $url));
 
         // release pagelock
         if (ModUtil::available('PageLock')) {
@@ -382,7 +382,7 @@ class News_Controller_Admin extends Zikula_AbstractController
             LogUtil::registerStatus($this->__('Done! Deleted article.'));
 
             // Let any hooks know that we have deleted an item
-            $this->notifyHooks('news.hook.articles.process.delete', $item, $sid);
+            $this->notifyHooks('news.ui_hooks.articles.process_delete', $item, $sid);
         }
 
         return $this->redirect(ModUtil::url('News', 'admin', 'view'));

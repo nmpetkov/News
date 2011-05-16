@@ -309,7 +309,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
         $validationerror = News_Util::validateArticle($story);
         // check hooked modules for validation
         $sid = isset($story['sid']) ? $story['sid'] : null;
-        $hookvalidators = $this->notifyHooks('news.hook.articles.validate.edit', $story, $sid, array(), new Zikula_Hook_ValidationProviders())->getData();
+        $hookvalidators = $this->notifyHooks('news.ui_hooks.articles.validate_edit', $story, $sid, array(), new Zikula_Hook_ValidationProviders())->getData();
         if ($hookvalidators->hasErrors()) {
             $validationerror .= $this->__('Error! Hooked content does not validate.') . "\n";
         }
