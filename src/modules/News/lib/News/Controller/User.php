@@ -1081,13 +1081,13 @@ class News_Controller_User extends Zikula_AbstractController
             $pagecount = 1;
         }
         for ($i = 1; $i <= $pagecount; $i++) {
-            $cacheid = $sid . $i;
+            $cacheid = $item['sid'] . $i;
             $cacheid_title = $item['title'] . $i;
             $controller->view->clear_cache('user/article.tpl', $cacheid);
             $controller->view->clear_cache('user/article.tpl', $cacheid_title);
             $controller->view->clear_cache('printer/article.tpl', $cacheid);
             $controller->view->clear_cache('printer/article.tpl', $cacheid_title);
-            $controller->view->clear_cache('user/articlepdf.tpl', $sid); // pdf only uses sid
+            $controller->view->clear_cache('user/articlepdf.tpl', $item['sid']); // pdf only uses sid
             $controller->view->clear_cache('user/articlepdf.tpl', $item['title']); // pdf only uses title
         }
     }
