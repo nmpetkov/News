@@ -64,7 +64,7 @@
                 {gt text='Choose category' assign='lblDef'}
                 {nocache}
                 {foreach from=$catregistry key='property' item='category'}
-                {array_field assign='selectedValue' array=$item.__CATEGORIES__ field=$property returnValue=1}
+                {array_field assign='selectedValue' array=$item.__CATEGORIES__ field=$property}
                 <div class="z-formnote">{selector_category category=$category name="story[__CATEGORIES__][$property]" field='id' selectedValue=$selectedValue defaultValue='0' defaultText=$lblDef}</div>
                 {/foreach}
                 {/nocache}

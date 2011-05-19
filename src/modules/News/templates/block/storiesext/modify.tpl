@@ -15,7 +15,7 @@
         <label>{gt text='Choose categories'} (<a href="{modurl modname='Categories' type='admin' func='editregistry'}">{gt text='Category registry'}</a>)</label>
         {nocache}
         {foreach from=$catregistry key='prop' item='cat'}
-        {array_field assign='selectedValue' array=$category field=$prop returnValue=1}
+        {array_field assign='selectedValue' array=$category field=$prop}
         <div class="z-formnote">
             {selector_category category=$cat name="category[$prop]" multipleSize=5 selectedValue=$selectedValue}
             <input type="button" value="{gt text='All'}" onclick="news_storiesextblock_selectAllOptions(this.form.category_{$prop}___, true);">
