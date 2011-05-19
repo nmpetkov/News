@@ -290,7 +290,7 @@ height:50px;
                 // set the path of the topic
                 $item['topicpath']  = $item['__CATEGORIES__'][$topicField]['path_relative'];
                 // set the url to search for this topic
-                if (System::getVar('shorturls') && System::getVar('shorturlstype') == 0) {
+                if (System::getVar('shorturls', false)) {
                     $item['topicsearchurl'] = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'view', array('prop' => $topicField, 'cat' => $item['topicpath'])));
                 } else {
                     $item['topicsearchurl'] = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'view', array('prop' => $topicField, 'cat' => $item['topicid'])));

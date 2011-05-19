@@ -189,7 +189,7 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
                     // set the path of the topic
                     $items[$k]['topicpath'] = isset($items[$k]['__CATEGORIES__'][$topicField]['path_relative']) ? $items[$k]['__CATEGORIES__'][$topicField]['path_relative'] : '';
                     // set the url to search for this topic
-                    if (System::getVar('shorturls') && System::getVar('shorturlstype') == 0) {
+                    if (System::getVar('shorturls', false)) {
                         $items[$k]['topicsearchurl'] = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'view', array('prop' => $topicField, 'cat' => $items[$k]['topicpath'])));
                     } else {
                         $items[$k]['topicsearchurl'] = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'view', array('prop' => $topicField, 'cat' => $items[$k]['topicid'])));
@@ -262,7 +262,7 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
         $this->view->assign('linktosubmit', $this->linktosubmit);
         $this->view->assign('stories', $items);
         $this->view->assign('title', $this->title);
-        $this->view->assign('useshorturls', (System::getVar('shorturls') && System::getVar('shorturlstype') == 0));
+        $this->view->assign('useshorturls', System::getVar('shorturls', false));
 
         return $this->view->fetch($this->getTemplate());
     }

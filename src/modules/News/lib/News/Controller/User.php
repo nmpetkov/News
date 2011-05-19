@@ -791,8 +791,7 @@ class News_Controller_User extends Zikula_AbstractController
 
         // Assign the config vars
         $this->view->assign('enablecategorization', $enablecategorization);
-        $this->view->assign('shorturls', System::getVar('shorturls'));
-        $this->view->assign('shorturlstype', System::getVar('shorturlstype'));
+        $this->view->assign('shorturls', System::getVar('shorturls', false));
         $this->view->assign('lang', ZLanguage::getLanguageCode());
         $this->view->assign('catimagepath', $this->getVar('catimagepath'));
 

@@ -363,7 +363,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                 $slug = $item['urltitle'];
                 $fullpermalink = DataUtil::formatForDisplayHTML(ModUtil::url('News', 'user', 'display', array('sid' => $story['sid'])));
                 // Only show "edit the slug" if the shorturls are active
-                $showslugedit = (System::getVar('shorturls') && System::getVar('shorturlstype') == 0);
+                $showslugedit = (System::getVar('shorturls', false));
             }
             $sid = $story['sid'];
         } else {
@@ -381,7 +381,7 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
                     $slug = $item['urltitle'];
                     $fullpermalink = DataUtil::formatForDisplayHTML(ModUtil::url('News', 'user', 'display', array('sid' => $sid)));
                     // Only show "edit the slug" if the shorturls are active
-                    $showslugedit = (System::getVar('shorturls') && System::getVar('shorturlstype') == 0);
+                    $showslugedit = (System::getVar('shorturls', false));
                 }
             } else {
                 $output = DataUtil::formatForDisplayHTML($this->__('Error! Could not save your changes.'));

@@ -361,7 +361,7 @@ class News_Api_User extends Zikula_AbstractApi
         }
 
         // check which variable to use for the category
-        if (System::getVar('shorturls') && System::getVar('shorturlstype') == 0) {
+        if (System::getVar('shorturls', false)) {
             $info['catvar'] = $info['catpath'];
         } else {
             $info['catvar'] = $info['catid'];
@@ -402,12 +402,11 @@ class News_Api_User extends Zikula_AbstractApi
      */
     public function getArticleLinks($info)
     {
-        $shorturls = System::getVar('shorturls');
-        $shorturlstype = System::getVar('shorturlstype');
+        $shorturls = System::getVar('shorturls', false);
 
         // Allowed to comment?
         if (ModUtil::available('EZComments') && $info['allowcomments'] == 1) {
-            if ($shorturls && $shorturlstype == 0) {
+            if ($shorturls) {
                 $comment = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'display', array('sid' => $info['sid'], 'from' => $info['from'], 'urltitle' => $info['urltitle'], '__CATEGORIES__' => $info['categories']), null, 'comments'));
             } else {
                 $comment = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'display', array('sid' => $info['sid']), null, 'comments'));
@@ -418,7 +417,7 @@ class News_Api_User extends Zikula_AbstractApi
 
         // Allowed to read full article?
         if (SecurityUtil::checkPermission('News::', "{$info['cr_uid']}::{$info['sid']}", ACCESS_READ)) {
-            if ($shorturls && $shorturlstype == 0) {
+            if ($shorturls) {
                 $fullarticle = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'display', array('sid' => $info['sid'], 'from' => $info['from'], 'urltitle' => $info['urltitle'], '__CATEGORIES__' => $info['categories'])));
             } else {
                 $fullarticle = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'display', array('sid' => $info['sid'])));
@@ -431,7 +430,7 @@ class News_Api_User extends Zikula_AbstractApi
         if (!empty($info['topicpath'])) {
             $topicField = $this->getTopicField();
             // check which variable to use for the topic
-            if ($shorturls && $shorturlstype == 0) {
+            if ($shorturls) {
                 $searchtopic = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'view', array('prop' => $topicField, 'cat' => $info['topicpath'])));
             } else {
                 $searchtopic = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'view', array('prop' => $topicField, 'cat' => $info['topicid'])));
@@ -444,7 +443,7 @@ class News_Api_User extends Zikula_AbstractApi
         $categories = array();
         if (!empty($info['categories']) && is_array($info['categories']) && $this->getVar('enablecategorization')) {
             // check which variable to use for the category
-            if ($shorturls && $shorturlstype == 0) {
+            if ($shorturls) {
                 $field = 'path_relative';
             } else {
                 $field = 'id';
@@ -456,7 +455,7 @@ class News_Api_User extends Zikula_AbstractApi
         }
 
         // Set up the array itself
-        if ($shorturls && $shorturlstype == 0) {
+        if ($shorturls) {
             $links = array ('category' => DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'view', array('prop' => 'Main', 'cat' => $info['catvar']))),
                     'categories'       => $categories,
                     'permalink'        => DataUtil::formatForDisplayHTML(ModUtil::url('News', 'user', 'display', array('sid' => $info['sid'], 'from' => $info['from'], 'urltitle' => $info['urltitle'], '__CATEGORIES__' => $info['categories']), null, null, true)),

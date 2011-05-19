@@ -513,7 +513,7 @@ class News_Controller_Admin extends Zikula_AbstractController
         foreach ($items as $item)
         {
             $options = array();
-            if (System::getVar('shorturls') && System::getVar('shorturlstype') == 0) {
+            if (System::getVar('shorturls', false)) {
                 $options[] = array('url' => ModUtil::url('News', 'user', 'display', array('sid' => $item['sid'], 'from' => $item['from'], 'urltitle' => $item['urltitle'])),
                     'image' => '14_layer_visible.png',
                     'title' => $this->__('View'));
