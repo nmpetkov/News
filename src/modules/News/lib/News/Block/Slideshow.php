@@ -63,10 +63,10 @@ public function display($blockinfo)
         $vars['limit'] = 4;
     }
 
-    // work out the paraemters for the api all
+    // work out the parameters for the api all
     $apiargs = array();
     $apiargs['numitems'] = $vars['limit'];
-    $apiargs['status'] = 0;
+    $apiargs['status'] = News_Api_User::STATUS_PUBLISHED;
     $apiargs['ignorecats'] = true;
 
     if (isset($vars['category']) && !empty($vars['category'])) {
@@ -109,7 +109,6 @@ public function display($blockinfo)
 
     // assign the results
     $this->view->assign('slideshow', $slideshowoutput);
-    $this->view->assign('dom');
 
     $blockinfo['content'] = $this->view->fetch('block/slideshow.tpl');
 

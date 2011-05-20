@@ -117,8 +117,6 @@ class News_Block_Past extends Zikula_Controller_AbstractBlock
 
         $this->view->assign('news', $news);
 
-        $this->view->assign('dom');
-
         if (empty($blockinfo['title'])) {
             //! default past block title
             $blockinfo['title'] = $this->__('Past articles');

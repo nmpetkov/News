@@ -82,7 +82,7 @@ class News_Block_Stories extends Zikula_Controller_AbstractBlock
         }
 
         $apiargs['numitems'] = $vars['limit'];
-        $apiargs['status'] = 0;
+        $apiargs['status'] = News_Api_User::STATUS_PUBLISHED;
         $apiargs['ignorecats'] = true;
 
         if (isset($vars['category']) && !empty($vars['category'])) {
@@ -122,8 +122,6 @@ class News_Block_Stories extends Zikula_Controller_AbstractBlock
 
         // assign the results
         $this->view->assign('stories', $storiesoutput);
-
-        $this->view->assign('dom');
 
         $blockinfo['content'] = $this->view->fetch('block/stories.tpl');
 

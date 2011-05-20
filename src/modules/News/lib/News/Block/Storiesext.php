@@ -374,8 +374,6 @@ height:50px;
         $this->view->assign('bid', $blockinfo['bid']);
         $this->view->assign('stories', $storiesoutput);
 
-        $this->view->assign('dom');
-
         $blockinfo['content'] = $this->view->fetch($blocktemplate);
 
         return BlockUtil::themeBlock($blockinfo);

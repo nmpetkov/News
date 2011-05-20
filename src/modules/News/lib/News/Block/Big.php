@@ -68,12 +68,12 @@ class News_Block_Big extends Zikula_Controller_AbstractBlock
         $tdate = "$year-$month-$day";
 
         // call the API
-        $articles = ModUtil::apiFunc('News', 'user', 'getall',
-                array('tdate' => $tdate,
-                'displayonindex' => 0,
-                'order' => 'counter',
-                'status' => 0,
-                'numitems' => 1));
+        $articles = ModUtil::apiFunc('News', 'user', 'getall', array(
+                    'tdate' => $tdate,
+                    'displayonindex' => 1,
+                    'order' => 'counter',
+                    'status' => News_Api_User::STATUS_PUBLISHED,
+                    'numitems' => 1));
 
         if (empty($articles)) {
             return;
@@ -90,8 +90,6 @@ class News_Block_Big extends Zikula_Controller_AbstractBlock
         if (empty($blockinfo['title'])) {
             $blockinfo['title'] = $this->__('Today\'s most-read article');
         }
-
-        $this->view->assign('dom');
 
         $this->view->assign(array('info' => $info,
                 'links' => $links,
