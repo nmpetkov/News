@@ -374,10 +374,10 @@ class News_Controller_User extends Zikula_AbstractController
         // get matching news articles
         $items = ModUtil::apiFunc('News', 'user', 'getall', array('startnum' => $startnum,
                     'numitems' => $itemsperpage,
-                    'status' => 0,
+                    'status' => News_Api_User::STATUS_PUBLISHED,
                     'displayonindex' => $displayonindex,
                     'filterbydate' => true,
-                    'category' => isset($catFilter) ? $catFilter : null,
+                    'category' => isset($catFilter) ? $catFilter : null, // get all method doesn't appear to want a category arg
                     'catregistry' => isset($catregistry) ? $catregistry : null));
 
         if ($items == false) {

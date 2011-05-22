@@ -857,6 +857,12 @@ class News_Api_User extends Zikula_AbstractApi
             }
             // check the permalink structure and obtain any missing vars
             $permalinkformat = $this->getVar('permalinkformat');
+            // insanity check for permalink format incase of corruption
+            if (!isset($permalinkformat) || is_array($permalinkformat) || empty($permalinkformat)) {
+                $this->setVar('permalinkformat', '%year%/%monthnum%/%day%/%articletitle%');
+                $permalinkformat = $this->getVar('permalinkformat');
+            }
+
             if (isset($args['args']['from']) && isset($args['args']['urltitle'])) {
                 $date = getdate(strtotime($args['args']['from']));
                 $in = array('%category%', '%articleid%', '%articletitle%', '%year%', '%monthnum%', '%monthname%', '%day%');
