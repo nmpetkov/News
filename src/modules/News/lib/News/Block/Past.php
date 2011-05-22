@@ -66,13 +66,17 @@ class News_Block_Past extends Zikula_Controller_AbstractBlock
             $vars['limit'] = 10;
         }
 
+        if ($this->getVar('enablecategorization')) {
+            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('News', 'news');
+        }
         // call the API
         $articles = ModUtil::apiFunc('News', 'user', 'getall', array(
                     'displayonindex' => 1,
                     'order' => 'from',
                     'status' => News_Api_User::STATUS_PUBLISHED,
                     'startnum' => $storyhome + 1,
-                    'numitems' => $vars['limit']));
+                    'numitems' => $vars['limit'],
+                    'catregistry' => isset($catregistry) ? $catregistry : null));
 
         if (($articles === false) || (empty($articles))) {
             return;
