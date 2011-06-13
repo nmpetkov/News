@@ -746,7 +746,7 @@ class News_Api_User extends Zikula_AbstractApi
         }
 
         // define the available user functions
-        $funcs = array('newitem', 'create', 'view', 'archives', 'display', 'categorylist', 'displaypdf');
+        $funcs = array('main', 'newitem', 'create', 'view', 'archives', 'display', 'categorylist', 'displaypdf');
         // set the correct function name based on our input
         if (empty($args['vars'][2])) {
             System::queryStringSetVar('func', 'view');
@@ -900,11 +900,6 @@ class News_Api_User extends Zikula_AbstractApi
             } else {
                 $vars = "page/{$args['args']['page']}";
             }
-        }
-
-        // don't display the function name if either displaying an article or the normal overview
-        if ($args['func'] == 'main' || $args['func'] == 'display') {
-            $args['func'] = '';
         }
 
         // construct the custom url part
