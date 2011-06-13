@@ -263,7 +263,7 @@
                 <div class="z-formrow">
                     <label for="news_permalink_custom">{gt text='Custom format'}</label>
                     <div>
-                        <input id="news_permalink_custom" onclick="news_permalink_onclick()" name="permalinkformat" type="radio" value="custom" {if $modvars.News.permalinkformat neq '%articleid%' and $permalinkformat neq '%year%/%monthnum%/%day%/%articletitle%'}checked="checked"{/if} />
+                        <input id="news_permalink_custom" onclick="news_permalink_onclick()" name="permalinkformat" type="radio" value="custom" {if $modvars.News.permalinkformat neq '%articleid%' and $modvars.News.permalinkformat neq '%year%/%monthnum%/%day%/%articletitle%'}checked="checked"{/if} />
                     </div>
                 </div>
                 <div id="news_permalink_custom_details">
