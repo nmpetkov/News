@@ -86,6 +86,7 @@
                             <span title='{$publisheddata}' class='z-icon-es-info tooltips'></span>{$newsitem.title|strip_tags|safetext}
                             {if $newsitem.published_status eq 2}<strong><em> - {gt text='Pending Review'}</em></strong>{/if}
                             {if $newsitem.published_status eq 4}<strong><em> - {gt text='Draft'}</em></strong>{/if}
+                            {if $modvars.ZConfig.multilingual && !empty($newsitem.language) && empty($selected_language)}({$newsitem.language|safetext}){/if}
                         </td>
                         <td>{$newsitem.contributor|safetext}</td>
                         {if $modvars.News.enablecategorization}
