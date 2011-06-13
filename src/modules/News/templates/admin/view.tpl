@@ -30,7 +30,7 @@
             &nbsp;
             <label for="news_language">{gt text='Language'}</label>
             {nocache}
-            {html_select_languages id="news_language" name="story[language]" installed=1 all=1 selected=$modvars.ZConfig.language_i18n|default:''}
+            {html_select_languages id="news_language" name="news_language" installed=1 all=1 selected=$selected_language}
             {/nocache}
             {/if}
             &nbsp;&nbsp;
@@ -45,7 +45,7 @@
         <div id="news_multicategory_filter">
             <label for="news_language">{gt text='Language'}</label>
             {nocache}
-            {html_select_languages id="news_language" name="story[language]" installed=1 all=1 selected=$modvars.ZConfig.language_i18n|default:''}
+            {html_select_languages id="news_language" name="news_language" installed=1 all=1 selected=$modvars.ZConfig.language_i18n|default:''}
             {/nocache}
             <label for="news_status">{gt text='Status'}</label>
             {html_options name='news_status' id='news_status' options=$itemstatus selected=$status}

@@ -407,7 +407,7 @@ class News_Controller_Admin extends Zikula_AbstractController
 
         $startnum = FormUtil::getPassedValue('startnum', isset($args['startnum']) ? $args['startnum'] : null, 'GETPOST');
         $news_status = FormUtil::getPassedValue('news_status', isset($args['news_status']) ? $args['news_status'] : null, 'GETPOST');
-        $language = FormUtil::getPassedValue('language', isset($args['language']) ? $args['language'] : null, 'GETPOST');
+        $language = FormUtil::getPassedValue('news_language', isset($args['news_language']) ? $args['news_language'] : null, 'GETPOST');
         $purge = FormUtil::getPassedValue('purge', false, 'GET');
         $order = FormUtil::getPassedValue('order', isset($args['order']) ? $args['order'] : 'from', 'GETPOST');
         $original_sdir = FormUtil::getPassedValue('sdir', isset($args['sdir']) ? $args['sdir'] : 1, 'GETPOST');
@@ -415,7 +415,8 @@ class News_Controller_Admin extends Zikula_AbstractController
         $this->view->assign('startnum', $startnum);
         $this->view->assign('order', $order);
         $this->view->assign('sdir', $original_sdir);
-
+        $this->view->assign('selected_language', (isset($language)) ? $language : '');
+        
         $sdir = $original_sdir ? 0 : 1; //if true change to false, if false change to true
         // change class for selected 'orderby' field to asc/desc
         if ($sdir == 0) {
@@ -435,14 +436,14 @@ class News_Controller_Admin extends Zikula_AbstractController
         foreach ($fields as $field) {
             $sort['url'][$field] = ModUtil::url('News', 'admin', 'view', array(
                         'news_status' => $news_status,
-                        'language' => $language,
+                        'news_language' => $language,
                         'filtercats_serialized' => serialize($filtercats),
                         'order' => $field,
                         'sdir' => $sdir));
         }
         $this->view->assign('sort', $sort);
 
-        $this->view->assign('filter_active', (empty($language) && !isset($news_status) && empty($filtercats)) ? false : true);
+        $this->view->assign('filter_active', (!isset($language) && !isset($news_status) && empty($filtercats)) ? false : true);
 
         if ($purge) {
             if (ModUtil::apiFunc('News', 'admin', 'purgepermalinks')) {
@@ -485,7 +486,7 @@ class News_Controller_Admin extends Zikula_AbstractController
         $getallargs = array('startnum' => $startnum,
             'status' => $status,
             'numitems' => $modvars['itemsperadminpage'],
-            'ignoreml' => ($multilingual ? false : true),
+            'ignoreml' => true,
             'language' => $language,
             'order' => isset($order) ? $order : 'from',
             'orderdir' => isset($orderdir) ? $orderdir : 'DESC',
@@ -557,9 +558,6 @@ class News_Controller_Admin extends Zikula_AbstractController
         // Assign the items to the template
         $this->view->assign('newsitems', $newsitems);
         $this->view->assign('total_articles', $total_articles);
-
-        // Assign the default and selected language
-        $this->view->assign('lang', ZLanguage::getLanguageCode());
 
         // Assign the current status filter and the possible ones
         $this->view->assign('news_status', $news_status);
