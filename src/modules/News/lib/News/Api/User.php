@@ -761,7 +761,8 @@ class News_Api_User extends Zikula_AbstractApi
             System::queryStringSetVar('func', $args['vars'][2]);
             $nextvar = 3;
         }
-
+        System::queryStringSetVar('type', 'user');
+        
         $func = FormUtil::getPassedValue('func', 'view', 'GET');
 
         // for now let the core handle the view function
@@ -845,6 +846,9 @@ class News_Api_User extends Zikula_AbstractApi
         if (!isset($args['type'])) {
             $args['type'] = 'user';
         }
+        if (empty($args['func'])) {
+            $args['func'] = 'view';
+        }
 
         // create an empty string ready for population
         $vars = '';
@@ -903,11 +907,7 @@ class News_Api_User extends Zikula_AbstractApi
         }
 
         // construct the custom url part
-        if (empty($args['func']) && empty($vars)) {
-            return $args['modname'] . '/';
-        } elseif (empty($args['func'])) {
-            return $args['modname'] . '/' . $vars . '/';
-        } elseif (empty($vars)) {
+        if (empty($vars)) {
             return $args['modname'] . '/' . $args['func'] . '/';
         } else {
             return $args['modname'] . '/' . $args['func'] . '/' . $vars . '/';
