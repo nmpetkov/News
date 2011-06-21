@@ -154,7 +154,8 @@ class News_Api_User extends Zikula_AbstractApi
         // step 2 - convert to a timestamp and back to a db format
         if (isset($args['year']) && !empty($args['year']) && isset($args['monthnum']) &&
                 !empty($args['monthnum']) && isset($args['day']) && !empty($args['day'])) {
-            $timestring = DateUtil::getDatetime(mktime(0, 0, 0, $args['monthnum'], $args['day'], $args['year']), '%Y-%m-%d');
+            // use PHP strftime directly, since DateUtil translates dateformat strings, which is not ok in this case
+            $timestring = strftime('%Y-%m-%d', mktime(0, 0, 0, $args['monthnum'], $args['day'], $args['year']));
         }
 
         $permFilter = array();
