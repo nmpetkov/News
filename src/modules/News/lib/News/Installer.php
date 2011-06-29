@@ -426,7 +426,6 @@ class News_Installer extends Zikula_AbstractInstaller
         $sql = "SELECT pn_sid, pn_displayonindex, pn_allowcomments FROM {$tables['news']}";
         $result = DBUtil::executeSQL($sql);
         $objectArray = DBUtil::marshallObjects($result);
-        $result->Close();
         foreach ($objectArray as $row) {
             $sid = $row['pn_sid'];
             $doi = ($row['pn_displayonindex']) == 0 ? 1 : 0;
