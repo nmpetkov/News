@@ -318,8 +318,7 @@ class News_Controller_Admin extends Zikula_AbstractController
 
         // Let any hooks know that we have edited an item.
         $url = new Zikula_ModUrl('News', 'user', 'display', ZLanguage::getLanguageCode(), array('sid' => $story['sid']));
-        $this->notifyHooks(new Zikula_ValidationHook('news.ui_hooks.articles.process_edit', new Zikula_Hook_ValidationProviders()));
-
+        $this->notifyHooks(new Zikula_ProcessHook('postcalendar.ui_hooks.events.process_edit', $story['sid'], $url));
         // release pagelock
         if (ModUtil::available('PageLock')) {
             ModUtil::apiFunc('PageLock', 'user', 'releaseLock', array('lockName' => "Newsnews{$story['sid']}"));
@@ -383,7 +382,7 @@ class News_Controller_Admin extends Zikula_AbstractController
             LogUtil::registerStatus($this->__('Done! Deleted article.'));
 
             // Let any hooks know that we have deleted an item
-            $this->notifyHooks('news.ui_hooks.articles.process_delete', $item, $sid);
+            $this->notifyHooks(new Zikula_ProcessHook('news.ui_hooks.articles.process_delete', $sid));
         }
 
         return $this->redirect(ModUtil::url('News', 'admin', 'view'));
