@@ -318,7 +318,7 @@ class News_Controller_Admin extends Zikula_AbstractController
 
         // Let any hooks know that we have edited an item.
         $url = new Zikula_ModUrl('News', 'user', 'display', ZLanguage::getLanguageCode(), array('sid' => $story['sid']));
-        $this->notifyHooks(new Zikula_ProcessHook('postcalendar.ui_hooks.events.process_edit', $story['sid'], $url));
+        $this->notifyHooks(new Zikula_ProcessHook('news.ui_hooks.articles.process_edit', $story['sid'], $url));
         // release pagelock
         if (ModUtil::available('PageLock')) {
             ModUtil::apiFunc('PageLock', 'user', 'releaseLock', array('lockName' => "Newsnews{$story['sid']}"));
