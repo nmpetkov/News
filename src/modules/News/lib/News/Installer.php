@@ -358,8 +358,8 @@ class News_Installer extends Zikula_AbstractInstaller
 
         // Delete entries from category registry
         ModUtil::dbInfoLoad ('Categories');
-        DBUtil::deleteWhere('categories_registry', "crg_modname='News'");
-        DBUtil::deleteWhere('categories_mapobj', "cmo_modname='News'");
+        DBUtil::deleteWhere('categories_registry', "modname='News'");
+        DBUtil::deleteWhere('categories_mapobj', "modname='News'");
 
         // unregister handlers
         EventUtil::unregisterPersistentModuleHandlers('News');
