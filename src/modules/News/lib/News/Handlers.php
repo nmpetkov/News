@@ -12,7 +12,9 @@ class News_Handlers
     {
         $dom = ZLanguage::getModuleDomain('News');
         ModUtil::dbInfoLoad('News');
-        $count = DBUtil::selectObjectCount('news', 'WHERE pn_published_status=2');
+        $dbtables = DBUtil::getTables();
+        $columns = $dbtables['news_column'];
+        $count = DBUtil::selectObjectCount('news', "WHERE $columns[published_status]=2");
         if ($count > 0) {
             $collection = new Zikula_Collection_Container('News');
             $collection->add(new Zikula_Provider_AggregateItem('submission', _n('News article', 'News articles', $count, $dom), $count, 'admin', 'view', array('news_status'=>2)));

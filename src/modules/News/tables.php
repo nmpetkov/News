@@ -26,26 +26,26 @@ function News_tables()
     $tables = array();
 
     // Full table definition
-    $tables['news'] = DBUtil::getLimitedTablename('news');
+    $tables['news'] = 'news';
     $tables['news_column'] = array(
-        'sid'              => 'pn_sid',
-        'title'            => 'pn_title',
-        'urltitle'         => 'pn_urltitle',
-        'hometext'         => 'pn_hometext',
-        'bodytext'         => 'pn_bodytext',
-        'counter'          => 'pn_counter',
-        'contributor'      => 'pn_contributor',
-        'approver'         => 'pn_approver',
-        'notes'            => 'pn_notes',
-        'displayonindex'   => 'pn_displayonindex',
-        'language'         => 'pn_language',
-        'allowcomments'    => 'pn_allowcomments',
-        'format_type'      => 'pn_format_type',
-        'published_status' => 'pn_published_status',
-        'from'             => 'pn_from',
-        'to'               => 'pn_to',
-        'weight'           => 'pn_weight',
-        'pictures'         => 'pn_pictures'
+        'sid'              => 'sid',
+        'title'            => 'title',
+        'urltitle'         => 'urltitle',
+        'hometext'         => 'hometext',
+        'bodytext'         => 'bodytext',
+        'counter'          => 'counter',
+        'contributor'      => 'contributor',
+        'approver'         => 'approver',
+        'notes'            => 'notes',
+        'displayonindex'   => 'displayonindex',
+        'language'         => 'language',
+        'allowcomments'    => 'allowcomments',
+        'format_type'      => 'format_type',
+        'published_status' => 'published_status',
+        'from'             => 'ffrom', //not a typo! from is a reserved sql word
+        'to'               => 'tto', //not a typo! to is a reserved sql word
+        'weight'           => 'weight',
+        'pictures'         => 'pictures'
     );
     $tables['news_column_def'] = array(
         'sid'              => 'I NOTNULL AUTO PRIMARY',
@@ -76,7 +76,7 @@ function News_tables()
     $tables['news_db_extra_enable_attribution'] = ModUtil::getVar('News', 'enableattribution');
 
     // add standard data fields
-    ObjectUtil::addStandardFieldsToTableDefinition ($tables['news_column'], 'pn_');
+    ObjectUtil::addStandardFieldsToTableDefinition ($tables['news_column']);
     ObjectUtil::addStandardFieldsToTableDataDefinition($tables['news_column_def']);
 
     // old tables for upgrading

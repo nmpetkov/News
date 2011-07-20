@@ -312,14 +312,45 @@ class News_Installer extends Zikula_AbstractInstaller
                 // register handlers
                 EventUtil::registerPersistentModuleHandler('News', 'get.pending_content', array('News_Handlers', 'pendingContent'));
                 EventUtil::registerPersistentModuleHandler('News', 'module.content.gettypes', array('News_Handlers', 'getTypes'));
-                // rename columns (not done by changetable) and update the table 
-                $columns = array_keys(DBUtil::metaColumns('news', true));
-                if (in_array('PN_HIDEONINDEX', $columns) && !DBUtil::renameColumn('news', 'pn_hideonindex', 'displayonindex')) {
-                    return '2.6.2';
+                $prefix = $this->serviceManager['prefix'];
+                $connection = Doctrine_Manager::getInstance()->getConnection('default');
+                $sqlStatements = array();
+                // N.B. statements generated with PHPMyAdmin
+                $sqlStatements[] = 'RENAME TABLE ' . $prefix . '_news' . " TO `news`";
+                // this removes the prefixes but also changes hideonindex to displayonindex and disallowcomments to allowcomments
+                // because 'from' and 'to' are reserved sql words, the column names are changed to ffrom and tto respectively
+                $sqlStatements[] = "ALTER TABLE `news` 
+CHANGE `pn_sid` `sid` INT( 11 ) NOT NULL AUTO_INCREMENT ,
+CHANGE `pn_title` `title` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+CHANGE `pn_hometext` `hometext` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `pn_bodytext` `bodytext` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `pn_counter` `counter` INT( 11 ) NULL DEFAULT '0',
+CHANGE `pn_contributor` `contributor` VARCHAR( 25 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `pn_notes` `notes` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `pn_hideonindex` `displayonindex` TINYINT( 4 ) NOT NULL DEFAULT '0',
+CHANGE `pn_language` `language` VARCHAR( 30 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `pn_disallowcomments` `allowcomments` TINYINT( 4 ) NOT NULL DEFAULT '0' , 
+CHANGE `pn_format_type` `format_type` TINYINT( 4 ) NOT NULL DEFAULT '0',
+CHANGE `pn_urltitle` `urltitle` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+CHANGE `pn_published_status` `published_status` TINYINT( 4 ) NULL DEFAULT '0',
+CHANGE `pn_from` `ffrom` DATETIME NULL DEFAULT NULL ,
+CHANGE `pn_to` `tto` DATETIME NULL DEFAULT NULL ,
+CHANGE `pn_obj_status` `obj_status` VARCHAR( 1 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'A',
+CHANGE `pn_cr_date` `cr_date` DATETIME NOT NULL DEFAULT '1970-01-01 00:00:00' , 
+CHANGE `pn_cr_uid` `cr_uid` INT( 11 ) NOT NULL DEFAULT '0',
+CHANGE `pn_lu_date` `lu_date` DATETIME NOT NULL DEFAULT '1970-01-01 00:00:00',
+CHANGE `pn_lu_uid` `lu_uid` INT( 11 ) NOT NULL DEFAULT '0',
+CHANGE `pn_approver` `approver` INT( 11 ) NULL DEFAULT '0',
+CHANGE `pn_weight` `weight` TINYINT( 4 ) NULL DEFAULT '0',
+CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
+                foreach ($sqlStatements as $sql) {
+                    $stmt = $connection->prepare($sql);
+                    try {
+                        $stmt->execute();
+                    } catch (Exception $e) {
+                    }   
                 }
-                if (in_array('PN_DISALLOWCOMMENTS', $columns) && !DBUtil::renameColumn('news', 'pn_disallowcomments', 'allowcomments')) {
-                    return '2.6.2';
-                }
+
                 if (!DBUtil::changeTable('news')) {
                     return '2.6.2';
                 }
