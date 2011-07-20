@@ -454,14 +454,15 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
     private function _invertHideAndComments()
     {
         $tables = DBUtil::getTables();
-        $sql = "SELECT pn_sid, pn_displayonindex, pn_allowcomments FROM {$tables['news']}";
+        $columns = $tables['news_column'];
+        $sql = "SELECT $columns[sid], $columns[displayonindex], $columns[allowcomments] FROM {$tables['news']}";
         $result = DBUtil::executeSQL($sql);
         $objectArray = DBUtil::marshallObjects($result);
         foreach ($objectArray as $row) {
-            $sid = $row['pn_sid'];
-            $doi = ($row['pn_displayonindex']) == 0 ? 1 : 0;
-            $ac = ($row['pn_allowcomments']) == 0 ? 1 : 0;
-            $sql = "UPDATE {$tables['news']} SET pn_displayonindex='$doi', pn_allowcomments='$ac' WHERE pn_sid=$sid";
+            $sid = $row['sid'];
+            $doi = ($row['displayonindex']) == 0 ? 1 : 0;
+            $ac = ($row['allowcomments']) == 0 ? 1 : 0;
+            $sql = "UPDATE {$tables['news']} SET $columns[displayonindex]='$doi', $columns[allowcomments]='$ac' WHERE $columns[sid]=$sid";
             DBUtil::executeSQL($sql);
         }
         return true;
@@ -498,13 +499,14 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
         // load the admin language file
         // pull all data from the old tables
         $tables = DBUtil::getTables();
-        $sql = "SELECT pn_catid, pn_title FROM {$tables[stories_cat]}";
+        $columns = $tables['news_column'];
+        $sql = "SELECT $columns[catid], $columns[title] FROM {$tables[stories_cat]}";
         $result = DBUtil::executeSQL($sql);
         $categories = array(array(0, 'Articles'));
         for (; !$result->EOF; $result->MoveNext()) {
             $categories[] = $result->fields;
         }
-        $sql = "SELECT pn_topicid, pn_topicname, pn_topicimage, pn_topictext FROM {$tables[topics]}";
+        $sql = "SELECT $columns[topicid], $columns[topicname], $columns[topicimage], $columns[topictext] FROM {$tables[topics]}";
         $result = DBUtil::executeSQL($sql);
         $topics = array();
         for (; !$result->EOF; $result->MoveNext()) {
@@ -566,7 +568,7 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
         $this->setVar('topicproperty', 'Topic');
 
         // migrate page category assignments
-        $sql = "SELECT pn_sid, pn_catid, pn_topic FROM {$tables[stories]}";
+        $sql = "SELECT $columns[sid], $columns[catid], $columns[topic] FROM {$tables[stories]}";
         $result = DBUtil::executeSQL($sql);
         $pages = array();
         for (; !$result->EOF; $result->MoveNext()) {
@@ -587,8 +589,8 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
         // we don't drop the topics table - this is the job of the topics module
 
         // finally drop the secid column
-        DBUtil::dropColumn('stories', 'pn_catid');
-        DBUtil::dropColumn('stories', 'pn_topic');
+        DBUtil::dropColumn('stories', $columns['catid']);
+        DBUtil::dropColumn('stories', $columns['topic']);
 
         return true;
     }
@@ -689,6 +691,7 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
     private function _import_autonews_queue()
     {
         $tables = DBUtil::getTables();
+        $columns = $tables['news_column'];
         $shorturlsep = System::getVar('shorturlsseparator');
 
         // pull all data from the autonews table and import into stories
@@ -733,7 +736,7 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
             $res = DBUtil::insertObject($objj, 'stories', 'sid', true);
 
             // Manually update the topic and catid, since those are not in pntables and still needed for category migration
-            $sql = "UPDATE $tables[stories] SET pn_catid = '".$obj['catid']."', pn_topic = '".$obj['topic']."' WHERE pn_sid = ".$objj['sid'];
+            $sql = "UPDATE $tables[stories] SET $columns[catid] = '".$obj['catid']."', $columns[topic] = '".$obj['topic']."' WHERE $columns[sid] = ".$objj['sid'];
             if (!DBUtil::executeSQL($sql)) {
                 return LogUtil::registerError($this->__('Error! Could not update table.'));
             }
@@ -782,7 +785,7 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
             $res = DBUtil::insertObject($objj, 'stories', 'sid', true);
 
             // Manually update the topic and catid, since those are not in pntables and still needed for category migration
-            $sql = "UPDATE $tables[stories] SET pn_catid = '0', pn_topic = '".$obj['topic']."' WHERE pn_sid = ".$objj['sid'];
+            $sql = "UPDATE $tables[stories] SET $columns[catid] = '0', $columns[topic] = '".$obj['topic']."' WHERE $columns[sid] = ".$objj['sid'];
             if (!DBUtil::executeSQL($sql)) {
                 return LogUtil::registerError($this->__('Error! Could not update table.'));
             }
