@@ -9,7 +9,7 @@
 {if $modvars.News.enablecategorization}
 <form class="z-form" id="news_filter" action="{modurl modname='News' type='admin' func='view'}" method="post" enctype="application/x-www-form-urlencoded">
     <fieldset id="news_multicategory_filter"{if $filter_active} class='filteractive'{/if}>
-        {if $filter_active}{gt text='active' assign=filteractive}{else}{gt text='inactive" assign=filteractive}{/if}
+        {if $filter_active}{gt text='active' assign=filteractive}{else}{gt text='inactive' assign=filteractive}{/if}
         <legend>{gt text='Filter %1$s, %2$s article listed' plural='Filter %1$s, %2$s articles listed' count=$total_articles tag1=$filteractive tag2=$total_articles}</legend>
         <input type="hidden" name="startnum" value="{$startnum}" />
         <input type="hidden" name="order" value="{$order}" />
