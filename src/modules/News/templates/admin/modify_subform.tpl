@@ -101,15 +101,17 @@
 {if $modvars.News.picupload_enabled}
 <fieldset>
     <legend>{gt text='Pictures'}</legend>
-    <label id="label_for_news_files_element" for="news_files_element">{gt text='Select a picture (max. %s kB per picture)' tag1="`$modvars.News.picupload_maxfilesize/1000`"}</label>
-    <input type="hidden" name="MAX_FILE_SIZE" value="{$modvars.News.picupload_maxfilesize|safetext}" />
-    {if $modvars.News.picupload_maxpictures eq 1}
-    <input id="news_files_element" name="news_files[0]" type="file" />
-    {else}
-    <input id="news_files_element" name="news_files" type="file" />
-    <br />
-    <span class="z-sub">{gt text='(max files %s, first picture is used as thumbnail in the index teaser page for this article.)' tag1=$modvars.News.picupload_maxpictures}</span>
-    <div id="news_files_list"></div>
+    <div class="z-formrow">
+        <label id="label_for_news_files_element" for="news_files_element">{gt text='Select a picture (max. %s kB per picture)' tag1="`$modvars.News.picupload_maxfilesize/1000`"}</label>
+        <input type="hidden" name="MAX_FILE_SIZE" value="{$modvars.News.picupload_maxfilesize|safetext}" />
+        {if $modvars.News.picupload_maxpictures eq 1}
+        <input id="news_files_element" name="news_files[0]" type="file" />
+        {else}
+        <input id="news_files_element" name="news_files" type="file" />
+    </div>
+    <p class="z-formnote z-sub">{gt text='(max files %s, first picture is used as thumbnail in the index teaser page for this article.)' tag1=$modvars.News.picupload_maxpictures}</p>
+
+    <div id="news_files_list" class="z-formnote"></div>
     <script type="text/javascript">
         // <![CDATA[
         var multi_selector = new MultiSelector(document.getElementById('news_files_list'), {{$modvars.News.picupload_maxpictures}}, {{$item.pictures}});
@@ -117,13 +119,15 @@
         // ]]>
     </script>
     {/if}
+
     {if $item.pictures gt 0}
-    <div>
-    <br />
         {section name=counter start=0 loop=$item.pictures step=1}
-        <img src="{$modvars.News.picupload_uploaddir}/pic_sid{$item.sid}-{$smarty.section.counter.index}-thumb.jpg" width="80" alt="{gt text='news picture'} #{$smarty.section.counter.index}" /> <input type="checkbox" id="story_del_picture_{$smarty.section.counter.index}" name="story[del_pictures][]" value="pic_sid{$item.sid}-{$smarty.section.counter.index}"><label for="story_del_picture_{$smarty.section.counter.index}">{gt text='Delete this picture'}</label><br />
+        <div class="z-formnote news_thumbs">
+            <img src="{$modvars.News.picupload_uploaddir}/pic_sid{$item.sid}-{$smarty.section.counter.index}-thumb.jpg" width="80" alt="{gt text='news picture'} #{$smarty.section.counter.index}" style="vertical-align: middle;" /> 
+            <input type="checkbox" id="story_del_picture_{$smarty.section.counter.index}" name="story[del_pictures][]" value="pic_sid{$item.sid}-{$smarty.section.counter.index}" />
+            <label for="story_del_picture_{$smarty.section.counter.index}">{gt text='Delete this picture'}</label>
+        </div>
         {/section}
-    </div>
     {/if}
 </fieldset>
 {/if}
