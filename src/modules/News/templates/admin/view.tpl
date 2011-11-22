@@ -76,8 +76,10 @@
                     <td><input type="checkbox" name="news_selected_articles[]" value="{$newsitem.sid}" class="news_checkbox" /></td>
                     <td>{$newsitem.sid|safetext}</td>
                     <td>
-                        {include file='admin/publisheddata.tpl' assign='publisheddata'}
-                        <span title='{$publisheddata}' class='z-icon-es-info tooltips'></span>{$newsitem.title|strip_tags|safetext}
+                        <div id="tooltip_{$newsitem.sid}_content" style="display: none;">
+                        {include file='admin/publisheddata.tpl'}
+                        </div>
+                        <span id='tooltip_{$newsitem.sid}' title='tooltip_{$newsitem.sid}_content' class='z-icon-es-info tooltips'>{$newsitem.title|strip_tags|safetext}</span>
                         {if $newsitem.published_status eq 2}<strong><em> - {gt text='Pending Review'}</em></strong>{/if}
                         {if $newsitem.published_status eq 4}<strong><em> - {gt text='Draft'}</em></strong>{/if}
                         {if $modvars.ZConfig.multilingual && !empty($newsitem.language) && empty($selected_language)}({$newsitem.language|safetext}){/if}
