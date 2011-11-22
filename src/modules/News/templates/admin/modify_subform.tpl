@@ -104,9 +104,10 @@
     <label id="label_for_news_files_element" for="news_files_element">{gt text='Select a picture (max. %s kB per picture)' tag1="`$modvars.News.picupload_maxfilesize/1000`"}</label>
     <input type="hidden" name="MAX_FILE_SIZE" value="{$modvars.News.picupload_maxfilesize|safetext}" />
     {if $modvars.News.picupload_maxpictures eq 1}
-    <input id="news_files_element" name="news_files[0]" type="file">
+    <input id="news_files_element" name="news_files[0]" type="file" />
     {else}
-    <input id="news_files_element" name="news_files" type="file"><br>
+    <input id="news_files_element" name="news_files" type="file" />
+    <br />
     <span class="z-sub">{gt text='(max files %s, first picture is used as thumbnail in the index teaser page for this article.)' tag1=$modvars.News.picupload_maxpictures}</span>
     <div id="news_files_list"></div>
     <script type="text/javascript">
@@ -117,7 +118,8 @@
     </script>
     {/if}
     {if $item.pictures gt 0}
-    <div><br />
+    <div>
+    <br />
         {section name=counter start=0 loop=$item.pictures step=1}
         <img src="{$modvars.News.picupload_uploaddir}/pic_sid{$item.sid}-{$smarty.section.counter.index}-thumb.jpg" width="80" alt="{gt text='news picture'} #{$smarty.section.counter.index}" /> <input type="checkbox" id="story_del_picture_{$smarty.section.counter.index}" name="story[del_pictures][]" value="pic_sid{$item.sid}-{$smarty.section.counter.index}"><label for="story_del_picture_{$smarty.section.counter.index}">{gt text='Delete this picture'}</label><br />
         {/section}
