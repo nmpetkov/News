@@ -1,11 +1,13 @@
 <div id="news_articlecontent">
     {* Remove this line to show links to the categories as well
+    {if !empty($preformat.categories)}
     <span class="news_category">
     {foreach name='categorylinks' from=$preformat.categories item='categorylink'}
     {$categorylink}
     {if $smarty.foreach.categorylinks.last neq true}<span class="text_separator"> | </span>{/if}
     {/foreach}
     </span>
+    {/if}
     *}
     <h3 class="news_title">{$info.catandtitle}</h3>
 
