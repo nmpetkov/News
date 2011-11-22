@@ -45,6 +45,8 @@
             {else}
             <button id="news_button_draft" type="submit" name="story[action]" value="6" title="{gt text='Save this article as draft'}">{img src='edit.png' modname='core' set='icons/extrasmall' __alt='Save as draft' __title='Save this article as draft'} {gt text='Save as draft'}</button>
             {/if}
+        </div>
+        <div class="z-buttonrow z-buttons z-center">
             {if $item.published_status neq 2}
             <button id="news_button_pending" type="submit" name="story[action]" value="4" title="{gt text='Mark this article as pending'}">{img src='clock.png' modname='core' set='icons/extrasmall' __alt='Pending' __title='Mark this article as pending'} {gt text='Pending'}</button>
             {/if}

@@ -136,9 +136,10 @@
             <label for="news_files_element">{gt text='Select a picture (max. %s kB per picture)' tag1="`$modvars.News.picupload_maxfilesize/1000`"}</label>
             <input type="hidden" name="MAX_FILE_SIZE" value="{$modvars.News.picupload_maxfilesize|safetext}" />
             {if $modvars.News.picupload_maxpictures eq 1}
-            <input id="news_files_element" name="news_files[0]" type="file">
+            <input id="news_files_element" name="news_files[0]" type="file" />
             {else}
-            <input id="news_files_element" name="news_files" type="file"><br>
+            <input id="news_files_element" name="news_files" type="file" />
+            <br />
             <span class="z-sub">{gt text='(max files %s, first picture is used as thumbnail in the index teaser page for this article.)' tag1=$modvars.News.picupload_maxpictures}</span>
             <div id="news_files_list"></div>
             <script type="text/javascript">
@@ -271,6 +272,8 @@
                 </a>
             </span>
             <button id="news_button_fulldraft" type="submit" name="story[action]" value="8" title="{gt text='Save full draft'}">{img src='edit.png' modname='core' set='icons/extrasmall' __alt='Save full draft' __title='Save full draft'} {gt text='Save full draft'}</button>
+        </div>
+        <div class="z-buttonrow z-buttons z-center">
             <button id="news_button_pending" type="submit" name="story[action]" value="4" title="{gt text='Mark this article as pending'}">{img src='clock.png' modname='core' set='icons/extrasmall' __alt='Pending' __title='Mark this article as pending'} {gt text='Pending'}</button>
             {/if}
             <button id="news_button_preview" type="submit" name="story[action]" value="0" title="{gt text='Preview this article'}">{img src='14_layer_visible.png' modname='core' set='icons/extrasmall' __alt='Preview' __title='Preview this article'} {gt text='Preview'}</button>
