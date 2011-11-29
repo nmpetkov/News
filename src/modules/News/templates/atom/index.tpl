@@ -9,6 +9,6 @@
         {if $modvars.News.picupload_enabled AND $info.pictures gt 0}
             &lt;img src="{$modvars.News.picupload_uploaddir}/pic_sid{$info.sid}-0-thumb.jpg" alt="{gt text='Picture %1$s for %2$s' tag1='0' tag2=$info.title}" /&gt;
         {/if}
-        {$info.hometext|notifyfilters:'news.hook.articlesfilter.ui.filter'|safehtml|htmlentities}
+        {$info.hometext|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|htmlentities}
     </summary>
 </entry>
