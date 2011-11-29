@@ -12,11 +12,11 @@
             {/if}
         </div>
         {/if}
-        {$preformat.hometext|notifyfilters:'news.hook.articlesfilter.ui.filter'|safehtml}
+        {$preformat.hometext|notifyfilters:'news.filter_hooks.articles.filter'|safehtml}
     </div>
 
     {if $preformat.notes neq ''}
-    <p class="news_meta">{$preformat.notes|notifyfilters:'news.hook.articlesfilter.ui.filter'|safehtml}</p>
+    <p class="news_meta">{$preformat.notes|notifyfilters:'news.filter_hooks.articles.filter'|safehtml}</p>
     {/if}
 
     <p class="news_footer">
