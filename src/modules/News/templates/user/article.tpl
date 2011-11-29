@@ -7,7 +7,7 @@
 {/if}
 
 {if $modvars.News.enabledescriptionvar}
-{setmetatag name='description' value=$info.hometext|notifyfilters:'news.hook.articlesfilter.ui.filter'|strip_tags|trim|truncate:$modvars.News.descriptionvarchars}
+{setmetatag name='description' value=$info.hometext|notifyfilters:'news.filter_hooks.articles.filter'|strip_tags|trim|truncate:$modvars.News.descriptionvarchars}
 {/if}
 
 {nocache}{include file='user/menu.tpl'}{/nocache}
