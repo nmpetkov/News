@@ -35,9 +35,9 @@
     </div>
     {/if}
     <div class="news_hometext">
-        {$preformat.hometext|notifyfilters:'news.hook.articlesfilter.ui.filter'|safehtml}
+        {$preformat.hometext|notifyfilters:'news.filter_hooks.articles.filter'|safehtml}
     </div>
-    {$preformat.bodytext|notifyfilters:'news.hook.articlesfilter.ui.filter'|safehtml}
+    {$preformat.bodytext|notifyfilters:'news.filter_hooks.articles.filter'|safehtml}
 
     <p class="news_footer">
         {$preformat.print}
@@ -60,7 +60,7 @@
 </div>
 
 {if $preformat.notes neq ''}
-<span id="news_notes" class="news_meta">{$preformat.notes|notifyfilters:'news.hook.articlesfilter.ui.filter'|safehtml}</span>
+<span id="news_notes" class="news_meta">{$preformat.notes|notifyfilters:'news.filter_hooks.articles.filter'|safehtml}</span>
 {/if}
 
 {* the next code is to display the pager *}
