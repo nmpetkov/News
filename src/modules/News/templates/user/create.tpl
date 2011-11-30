@@ -91,6 +91,7 @@
                 <label for="news_hometext"><strong>{gt text='Index page teaser text'}</strong></label>
                 <textarea id="news_hometext" name="story[hometext]" cols="40" rows="10">{$item.hometext|safetext}</textarea>
                 {if $formattedcontent eq 0}<span id="news_hometext_remaining" class="z-formnote z-sub">{gt text='(Limit: %s characters)' tag1='4,294,967,295'}</span>{/if}
+                {notifydisplayhooks eventname='news.ui_hooks.articles.display_view' id='news_hometext'}
             </div>
 
             {if $formattedcontent eq 0}
@@ -107,6 +108,7 @@
                 <label for="news_bodytext"><strong>{gt text='Article body text'}</strong></label>
                 <textarea id="news_bodytext" name="story[bodytext]" cols="40" rows="10">{$item.bodytext|safetext}</textarea>
                 {if $formattedcontent eq 0}<span id="news_bodytext_remaining" class="z-formnote z-sub">{gt text='#{chars} characters out of 4,294,967,295'}</span>{/if}
+                {notifydisplayhooks eventname='news.ui_hooks.articles.display_view' id='news_bodytext'}
             </div>
 
             {if $formattedcontent eq 0}
