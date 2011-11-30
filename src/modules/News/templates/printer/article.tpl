@@ -24,9 +24,9 @@
         </div>
         {/if}
         <div class="news_hometext">
-            {$preformat.hometext|notifyfilters:'news.filter_hooks.articles.filter'|safehtml}
+            {$preformat.hometext|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}
         </div>
-        {$preformat.bodytext|notifyfilters:'news.filter_hooks.articles.filter'|safehtml}
+        {$preformat.bodytext|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}
 
         {if $picupload_enabled AND $info.pictures gt 1}
         <div class="news_pictures"><div><strong>{gt text='Picture gallery'}</strong></div>
@@ -40,7 +40,7 @@
     </div>
 
     {if $preformat.notes neq ''}
-    <span id="news_notes" class="news_meta">{$preformat.notes|notifyfilters:'news.filter_hooks.articles.filter'|safehtml}</span>
+    <span id="news_notes" class="news_meta">{$preformat.notes|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}</span>
     {/if}
 
     {* the next code is to display the pager *}
