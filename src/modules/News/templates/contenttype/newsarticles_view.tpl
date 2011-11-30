@@ -33,9 +33,9 @@
         {if $disphometext}
         <div class="content_newsarticles_hometext">
             {if $story.hometextwrapped}
-                {$story.hometext|notifyfilters:'news.hook.articlesfilter.ui.filter'|truncatehtml:$maxhometextlength:''|safehtml|paragraph}
+                {$story.hometext|notifyfilters:'news.filter_hooks.articles.filter'|truncatehtml:$maxhometextlength:''|safehtml|paragraph}
             {else}
-                {$story.hometext|notifyfilters:'news.hook.articlesfilter.ui.filter'|safehtml|paragraph}
+                {$story.hometext|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}
             {/if}
             {if ($story.hometextwrapped || strlen($story.bodytext) > 0) && $story.readperm}
                 <a href="{modurl modname='News' type='user' func='display' sid=$story.sid}">{$hometextwraptext|safehtml}</a>
