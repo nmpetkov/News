@@ -7,7 +7,7 @@
 </div>
 
 {if $preview.notes neq ''}
-<span id="news_notes" class="news_meta">{$preview.notes|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}</span>
+<div id="news_notes" class="news_meta">{$preview.notes|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}</div>
 {/if}
 {if $preview.pictures > 0}
 {include file='user/preview_pics.tpl'}

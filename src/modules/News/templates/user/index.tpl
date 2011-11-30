@@ -16,7 +16,7 @@
     </div>
 
     {if $preformat.notes neq ''}
-    <p class="news_meta">{$preformat.notes|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}</p>
+    <div class="news_meta">{$preformat.notes|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}</div>
     {/if}
 
     <p class="news_footer">

@@ -11,5 +11,5 @@
     {$preformat.bodytext|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}
 </div>
 {if $preformat.notes neq ''}
-<span id="news_notes" class="news_meta">{$preformat.notes|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}</span>
+<div id="news_notes" class="news_meta">{$preformat.notes|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}</div>
 {/if}
