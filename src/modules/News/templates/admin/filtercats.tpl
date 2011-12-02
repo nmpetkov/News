@@ -20,7 +20,7 @@
         var news___CATEGORIES____{{$property}}_ = new Zikula.UI.SelectMultiple(
             'news___CATEGORIES____{{$property}}_',
             {opener: 'news___CATEGORIES____{{$property}}__open',
-            okLabel: Zikula.__('Done!','module_News'),
+            okLabel: Zikula.__('Done!','module_news'),
             value: '{{news_implode value=$selectedValue}}',
             excludeValues: ['0']}
         );
