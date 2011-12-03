@@ -21,10 +21,11 @@ class News_Version extends Zikula_AbstractVersion
         $meta = array();
         $meta['displayname'] = $this->__('News publisher');
         $meta['description'] = $this->__('Provides the ability to publish and manage news articles contributed by site users, with support for news categories and various associated blocks.');
-        $meta['version'] = '3.0.0';
+        $meta['version'] = '3.0.1';
         //! this defines the module's url
         $meta['url'] = $this->__('news');
         $meta['core_min'] = '1.3.0'; // requires minimum 1.3.0 or later
+        $meta['core_max'] = '1.3.99'; // Fixed to 1.3.x range
         $meta['capabilities'] = array(HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true));
         $meta['securityschema'] = array('News::' => 'Contributor ID::Article ID',
                 'News:pictureupload:' => '::',
