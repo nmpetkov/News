@@ -1,3 +1,4 @@
+{pageaddvar name="jsgettext" value="module_news_js:News"}
 <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
 <input type="hidden" name="story[sid]" id='news_sid' value="{$item.sid|safetext}" />
 <input type="hidden" name="page" value="{$page|safetext}" />
@@ -215,7 +216,7 @@
                 {gt text='Contributed by'} <span id='news_contributor'>{$item.contributor}</span> {gt text='on'} {$item.cr_date|dateformat} <a id="news_cr_uid_edit" href="{modurl modname='News' type='admin' func='selectuser' id=$item.cr_uid}">{img modname='core' set='icons/extrasmall' src='xedit.png' __title='Edit' __alt='Edit'}</a>
                 <input type="hidden" id="news_cr_uid" name="story[cr_uid]" value="{$item.cr_uid}" />
                 <script type="text/javascript">
-                    var options = {modal:true,draggable:false,resizable:false,initMaxHeight:220,title:Zikula.__('Article Author','module_news')};
+                    var options = {modal:true,draggable:false,resizable:false,initMaxHeight:220,title:Zikula.__('Article Author','module_news_js')};
                     var userselectwindow = new Zikula.UI.FormDialog($('news_cr_uid_edit'),executeuserselectform,options);
                 </script>
             </li>

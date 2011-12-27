@@ -1,3 +1,4 @@
+{pageaddvar name="jsgettext" value="module_news_js:News"}
 {ajaxheader module="News" ui=true}
 {gt text="All These Categories" assign="allText"}
 {nocache}
@@ -20,7 +21,7 @@
         var news___CATEGORIES____{{$property}}_ = new Zikula.UI.SelectMultiple(
             'news___CATEGORIES____{{$property}}_',
             {opener: 'news___CATEGORIES____{{$property}}__open',
-            okLabel: Zikula.__('Done!','module_news'),
+            okLabel: Zikula.__('Done!','module_news_js'),
             value: '{{news_implode value=$selectedValue}}',
             excludeValues: ['0']}
         );

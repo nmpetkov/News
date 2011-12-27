@@ -1,4 +1,5 @@
 {ajaxheader modname='News' filename='news_admin.js' ui=true}
+{pageaddvar name="jsgettext" value="module_news_js:News"}
 
 {adminheader}
 <div class="z-admin-content-pagetitle">
