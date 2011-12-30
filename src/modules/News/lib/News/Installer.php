@@ -309,6 +309,7 @@ class News_Installer extends Zikula_AbstractInstaller
                 $this->setVar('enabledescriptionvar', false);
                 $this->setVar('descriptionvarchars', 250);
             case '2.6.2':
+            case '2.6.3':
                 // register handlers
                 EventUtil::registerPersistentModuleHandler('News', 'get.pending_content', array('News_Handlers', 'pendingContent'));
                 EventUtil::registerPersistentModuleHandler('News', 'module.content.gettypes', array('News_Handlers', 'getTypes'));
@@ -352,7 +353,7 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
                 }
 
                 if (!DBUtil::changeTable('news')) {
-                    return '2.6.2';
+                    return '2.6.3';
                 }
                 HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
                 $this->delVar('pdflink_tcpdfpath');
