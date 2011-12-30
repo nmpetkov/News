@@ -258,8 +258,6 @@
         {/if}
         {/if}{* /if $accesspubdetails *}
 
-        {notifydisplayhooks eventname='news.ui_hooks.articles.form_edit' id=null}
-
         <div id='news_picture_warning' class='z-center' style='padding: .5em;'>
             <span class='z-warningmsg' id="news_picture_warning_text">text</span>
         </div>
