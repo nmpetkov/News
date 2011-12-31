@@ -328,8 +328,8 @@ function savedraft()
 
     $('news_status_info').show();
     $('news_saving_draft').show();
-    $('news_status_text').update(Zikula.__('Saving quick draft...','module_news'));
-    $('news_button_text_draft').update(Zikula.__('Saving quick draft...','module_news'));
+    $('news_status_text').update(Zikula.__('Saving quick draft...','module_news_js'));
+    $('news_button_text_draft').update(Zikula.__('Saving quick draft...','module_news_js'));
     new Zikula.Ajax.Request(
         'ajax.php?module=news&func=savedraft',
         {
@@ -342,15 +342,15 @@ function savedraft_update(req)
 {
     $('news_saving_draft').hide();
     if(!req.isSuccess()) {
-        $('news_button_text_draft').update(Zikula.__('Save quick draft','module_news'));
-        $('news_status_text').update(Zikula.__('Save quick draft failed','module_news'));
+        $('news_button_text_draft').update(Zikula.__('Save quick draft','module_news_js'));
+        $('news_status_text').update(Zikula.__('Save quick draft failed','module_news_js'));
         Zikula.showajaxerror(req.getMessage());
         return;
     }
     var data = req.getData();
 
     draftsaved = true;
-    $('news_button_text_draft').update(Zikula.__('Update quick draft','module_news'));
+    $('news_button_text_draft').update(Zikula.__('Update quick draft','module_news_js'));
     $('news_status_text').update(data.result);
     $('news_urltitle').value = data.slug;
     $('news_sid').value = data.sid;
@@ -367,7 +367,7 @@ function showfilesaddedwarning()
     if (filecount>0) {
         $('news_button_fulldraft').addClassName('z-btgreen');
         $('news_picture_warning').show();
-        $('news_picture_warning_text').update(Zikula.__("Picture/file operations not supported in 'Quick draft' mode. You must click the 'Save full draft' button to complete these operations.",'module_news'));
+        $('news_picture_warning_text').update(Zikula.__("Picture/file operations not supported in 'Quick draft' mode. You must click the 'Save full draft' button to complete these operations.",'module_news_js'));
     }
 }
 
@@ -376,7 +376,7 @@ function news_isdraft()
     var sid = $F('news_sid');
     if (sid != '') {
         draftsaved = true;
-        $('news_button_text_draft').update(Zikula.__('Update quick draft','module_news'));
+        $('news_button_text_draft').update(Zikula.__('Update quick draft','module_news_js'));
     }
     return;
 }
@@ -406,7 +406,7 @@ function news_expiration_init()
     if ($('news_unlimited').checked == true) {
         $('news_expiration_details').hide();
     } else if ($('news_button_text_publish')) {
-        $('news_button_text_publish').update(Zikula.__('Schedule','module_news'));
+        $('news_button_text_publish').update(Zikula.__('Schedule','module_news_js'));
     }
     $('news_unlimited').observe('click', news_unlimited_onchange);
     $('news_tonolimit').observe('click', news_tonolimit_onchange);
@@ -416,9 +416,9 @@ function news_unlimited_onchange()
 {
     switchdisplaystate('news_expiration_details');
     if ($('news_button_text_publish') && $('news_expiration_details').style.display != "none") {
-        $('news_button_text_publish').update(Zikula.__('Publish','module_news'));
+        $('news_button_text_publish').update(Zikula.__('Publish','module_news_js'));
     } else {
-        $('news_button_text_publish').update(Zikula.__('Schedule','module_news'));
+        $('news_button_text_publish').update(Zikula.__('Schedule','module_news_js'));
     }
 }
 
@@ -435,14 +435,14 @@ function news_publication_init()
     // show the publication details when a variable is not set to default
     if ($('news_unlimited').checked == true && $('news_displayonindex').checked == true && $('news_allowcomments').checked == true) {
         $('news_publication_collapse').removeClassName('z-toggle-link-open');
-        $('news_publication_showhide').update(Zikula.__('Show','module_news'));
+        $('news_publication_showhide').update(Zikula.__('Show','module_news_js'));
         $('news_publication_details').hide();
     } else {
         $('news_publication_collapse').addClassName('z-toggle-link-open');
-        $('news_publication_showhide').update(Zikula.__('Hide','module_news'));
+        $('news_publication_showhide').update(Zikula.__('Hide','module_news_js'));
     }
     if ($('news_button_text_publish') && $('news_unlimited').checked == false) {
-        $('news_button_text_publish').update(Zikula.__('Schedule','module_news'));
+        $('news_button_text_publish').update(Zikula.__('Schedule','module_news_js'));
     }
 }
 
@@ -450,10 +450,10 @@ function news_publication_click()
 {
     if ($('news_publication_details').style.display != "none") {
         Element.removeClassName.delay(0.9, $('news_publication_collapse'), 'z-toggle-link-open');
-        $('news_publication_showhide').update(Zikula.__('Show','module_news'));
+        $('news_publication_showhide').update(Zikula.__('Show','module_news_js'));
     } else {
         $('news_publication_collapse').addClassName('z-toggle-link-open');
-        $('news_publication_showhide').update(Zikula.__('Hide','module_news'));
+        $('news_publication_showhide').update(Zikula.__('Hide','module_news_js'));
     }
     switchdisplaystate('news_publication_details');
 }
@@ -466,10 +466,10 @@ function news_attributes_init()
     // show attributes if they already exist
     if ($F('attributecount') > 0) {
         $('news_attributes_collapse').addClassName('z-toggle-link-open');
-        $('news_attributes_showhide').update(Zikula.__('Hide','module_news'));
+        $('news_attributes_showhide').update(Zikula.__('Hide','module_news_js'));
     } else {
         $('news_attributes_collapse').removeClassName('z-toggle-link-open');
-        $('news_attributes_showhide').update(Zikula.__('Show','module_news'));
+        $('news_attributes_showhide').update(Zikula.__('Show','module_news_js'));
         $('news_attributes_details').hide();
     }
 }
@@ -478,10 +478,10 @@ function news_attributes_click()
 {
     if ($('news_attributes_details').style.display != "none") {
         Element.removeClassName.delay(0.9, $('news_attributes_collapse'), 'z-toggle-link-open');
-        $('news_attributes_showhide').update(Zikula.__('Show','module_news'));
+        $('news_attributes_showhide').update(Zikula.__('Show','module_news_js'));
     } else {
         $('news_attributes_collapse').addClassName('z-toggle-link-open');
-        $('news_attributes_showhide').update(Zikula.__('Hide','module_news'));
+        $('news_attributes_showhide').update(Zikula.__('Hide','module_news_js'));
     }
     switchdisplaystate('news_attributes_details');
 }
@@ -492,7 +492,7 @@ function news_notes_init()
     $('news_notes_collapse').addClassName('z-toggle-link');
     if ($('news_notes_details').style.display != "none") {
         $('news_notes_collapse').removeClassName('z-toggle-link-open');
-        $('news_notes_showhide').update(Zikula.__('Show','module_news'));
+        $('news_notes_showhide').update(Zikula.__('Show','module_news_js'));
         $('news_notes_details').hide();
     }
 }
@@ -501,10 +501,10 @@ function news_notes_click()
 {
     if ($('news_notes_details').style.display != "none") {
         Element.removeClassName.delay(0.9, $('news_notes_collapse'), 'z-toggle-link-open');
-        $('news_notes_showhide').update(Zikula.__('Show','module_news'));
+        $('news_notes_showhide').update(Zikula.__('Show','module_news_js'));
     } else {
         $('news_notes_collapse').addClassName('z-toggle-link-open');
-        $('news_notes_showhide').update(Zikula.__('Hide','module_news'));
+        $('news_notes_showhide').update(Zikula.__('Hide','module_news_js'));
     }
     switchdisplaystate('news_notes_details');
 }

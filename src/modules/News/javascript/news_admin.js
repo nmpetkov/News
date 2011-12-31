@@ -37,14 +37,14 @@ function news_admin_bulkaction_init()
         var action=$F('news_bulkaction_select');
         var actionmap=new Array(6);
         actionmap[0]=null;
-        actionmap[1]=Zikula.__('delete','module_news');
-        actionmap[2]=Zikula.__('archive','module_news');
-        actionmap[3]=Zikula.__('publish','module_news');
-        actionmap[4]=Zikula.__('reject','module_news');
-        actionmap[5]=Zikula.__('change categories for','module_news');
+        actionmap[1]=Zikula.__('delete','module_news_js');
+        actionmap[2]=Zikula.__('archive','module_news_js');
+        actionmap[3]=Zikula.__('publish','module_news_js');
+        actionmap[4]=Zikula.__('reject','module_news_js');
+        actionmap[5]=Zikula.__('change categories for','module_news_js');
         var actionword=actionmap[action];
         if (actionword=='delete') {
-            var deletemessage='<br /><br /><strong class="z-warningmsg">'+Zikula.__('You cannot undo this operation!','module_news')+'</strong>';
+            var deletemessage='<br /><br /><strong class="z-warningmsg">'+Zikula.__('You cannot undo this operation!','module_news_js')+'</strong>';
         } else {
             var deletemessage='';
         }
@@ -66,8 +66,8 @@ function news_admin_bulkaction_init()
                         'Are you sure you want to %s the following articles',
                         valuescount,
                         ['<strong>'+actionword+'</strong>'],
-                        'module_news')+': '+values+deletemessage,
-                    Zikula.__('Confirm Bulk Action','module_news'),
+                        'module_news_js')+': '+values+deletemessage,
+                    Zikula.__('Confirm Bulk Action','module_news_js'),
                     executeform,
                     options
                 );
@@ -84,8 +84,8 @@ function news_admin_bulkaction_init()
             // no articles selected
             $('news_bulkaction_select').selectedIndex=0;
             Zikula.UI.Alert(
-                Zikula.__f('Please select at least one article to %s.',actionword,'module_news'),
-                Zikula.__('Bulk action error','module_news')
+                Zikula.__f('Please select at least one article to %s.',actionword,'module_news_js'),
+                Zikula.__('Bulk action error','module_news_js')
             );
         }
     });

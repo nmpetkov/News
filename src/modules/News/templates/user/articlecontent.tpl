@@ -1,6 +1,7 @@
+{pageaddvar name="jsgettext" value="module_news_js:News"}
 <script type="text/javascript">
     // <![CDATA[
-    var bytesused = Zikula.__f('%s characters out of 4,294,967,295','#{chars}','module_news');
+    var bytesused = Zikula.__f('%s characters out of 4,294,967,295','#{chars}','module_news_js');
     // ]]>
 </script>
 

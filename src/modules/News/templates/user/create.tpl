@@ -2,6 +2,7 @@
 {insert name='getstatusmsg'}
 
 {ajaxheader modname='News' filename='news.js'}
+{pageaddvar name="jsgettext" value="module_news_js:News"}
 {pageaddvar name='javascript' value='modules/News/javascript/sizecheck.js'}
 {pageaddvar name='javascript' value='modules/News/javascript/prototype-base-extensions.js'}
 {pageaddvar name='javascript' value='modules/News/javascript/prototype-date-extensions.js'}
@@ -14,7 +15,7 @@
 
 <script type="text/javascript">
     // <![CDATA[
-    var bytesused = Zikula.__f('%s characters out of 4,294,967,295','#{chars}','module_news');
+    var bytesused = Zikula.__f('%s characters out of 4,294,967,295','#{chars}','module_news_js');
     // ]]>
 </script>
 
@@ -256,8 +257,6 @@
         </fieldset>
         {/if}
         {/if}{* /if $accesspubdetails *}
-
-        {notifydisplayhooks eventname='news.ui_hooks.articles.form_edit' id=null}
 
         <div id='news_picture_warning' class='z-center' style='padding: .5em;'>
             <span class='z-warningmsg' id="news_picture_warning_text">text</span>
