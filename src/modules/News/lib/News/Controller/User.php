@@ -593,7 +593,7 @@ class News_Controller_User extends Zikula_AbstractController
             // check how many articles to display
             if ($modvars['morearticlesincat'] > 0 && !empty($info['categories'])) {
                 $morearticlesincat = $modvars['morearticlesincat'];
-            } elseif ($modvars['morearticlesincat'] == 0 && array_key_exists('morearticlesincat', $info['attributes'])) {
+            } elseif ($modvars['morearticlesincat'] == 0 && is_array($info['attributes']) && array_key_exists('morearticlesincat', $info['attributes'])) {
                 $morearticlesincat = $info['attributes']['morearticlesincat'];
             } else {
                 $morearticlesincat = 0;
