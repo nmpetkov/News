@@ -312,6 +312,7 @@ function News_upgrade($oldversion)
             pnModSetVar('News', 'descriptionvarchars', 250);
 
         case '2.6.2':
+        case '2.6.3':
             // migration routines
     }
 

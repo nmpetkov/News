@@ -4,7 +4,7 @@
  *
  * @copyright  (c) Zikula Development Team
  * @link       http://www.zikula.org
- * @version    $Id: encodeurl.php 433 2010-08-22 17:38:43Z espaan $
+ * @version    $Id: encodeurl.php 408 2010-08-03 16:19:12Z espaan $
  * @license    GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @author     Mark West <mark@zikula.org>
  * @category   Zikula_3rdParty_Modules

@@ -237,6 +237,8 @@ function News_ajax_update()
                 if ($item == false) {
                     AjaxUtil::error(DataUtil::formatForDisplayHTML(__('Error! No such article found.', $dom)));
                 }
+                
+                pnModFunc('News', 'user', 'clearArticleCaches', $item);
 
                 // Explode the news article into an array of seperate pages
                 $allpages = explode('<!--pagebreak-->', $item['bodytext']);

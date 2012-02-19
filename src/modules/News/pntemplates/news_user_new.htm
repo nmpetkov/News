@@ -14,7 +14,7 @@
 <!--[pnpageaddvar name='stylesheet' value='modules/News/pnstyle/datepicker.css']-->
 <!--[browserhack condition="if lte IE 7" assign="iebuttonfix"]--><script type="text/javascript" src="modules/News/pnjavascript/buttonfix.js"></script><!--[/browserhack]-->
 <!--[pnpageaddvar name='rawtext' value=$iebuttonfix]-->
-<!--[if $picupload_enabled AND $picupload_maxpictures gt 1]-->
+<!--[if $picupload_enabled AND $accesspicupload AND $picupload_maxpictures gt 1]-->
 <!--[pnpageaddvar name='javascript' value='modules/News/pnjavascript/multifile.js']-->
 <!--[/if]-->
 
@@ -157,7 +157,7 @@
             <!--[/if]-->
         </fieldset>
 
-        <!--[if $picupload_enabled]-->
+        <!--[if $picupload_enabled AND $accesspicupload]-->
         <fieldset>
             <legend><!--[gt text='Pictures']--></legend>
 			<label for="news_files_element"><!--[gt text='Select a picture (max. %s kB per picture)' tag1="`$picupload_maxfilesize/1000`"]--></label>

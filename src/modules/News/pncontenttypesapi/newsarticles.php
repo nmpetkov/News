@@ -280,6 +280,8 @@ class News_contenttypesapi_NewsArticlesPlugin extends contentTypeBase
         
     }
     $render->assign('catimagepath', pnModGetVar('News', 'catimagepath'));
+    $render->assign('picupload_uploaddir', pnModGetVar('News', 'picupload_uploaddir'));
+    $render->assign('picupload_index_float', pnModGetVar('News', 'picupload_index_float'));
     $render->assign('linktosubmit', $this->linktosubmit);
     $render->assign('stories', $items);
     $render->assign('title', $this->title);

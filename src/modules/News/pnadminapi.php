@@ -49,10 +49,10 @@ function News_adminapi_delete($args)
 	if ($modvars['picupload_enabled'] && $item['pictures'] > 0){
         $uploaddir = $modvars['picupload_uploaddir'] . '/';
 		for ($i=0; $i<$item['pictures']; $i++){
-			unlink($uploaddir.'pic_sid'.$item['sid']."-".$i."-norm.png");
-			unlink($uploaddir.'pic_sid'.$item['sid']."-".$i."-thumb.png");
+			unlink($uploaddir.'pic_sid'.$item['sid']."-".$i."-norm.jpg");
+			unlink($uploaddir.'pic_sid'.$item['sid']."-".$i."-thumb.jpg");
 			if ($i==0) {
-                unlink($uploaddir.'pic_sid'.$item['sid']."-".$i."-thumb2.png");
+                unlink($uploaddir.'pic_sid'.$item['sid']."-".$i."-thumb2.jpg");
             }
 		}
 	}
@@ -171,11 +171,6 @@ function News_adminapi_update($args)
 
     // Let any hooks know that we have updated an item.
     pnModCallHooks('item', 'update', $args['sid'], array('module' => 'News'));
-
-    // The item has been modified, so we clear all cached pages of this item.
-    $render = & pnRender::getInstance('News');
-    $render->clear_cache(null, $args['sid']);
-    $render->clear_cache('news_user_view.htm');
 
     // Let the calling process know that we have finished successfully
     return true;

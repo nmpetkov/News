@@ -5,6 +5,10 @@
     <link><!--[pnmodurl modname=News type=user func=display sid=$info.sid title=$info.urltitle fqurl=true]--></link>
     <!--[if $showdescription eq 1]-->
     <description><!--[$info.hometext|pnvarprepfordisplay]--></description>
+    <description><!--[if $picupload_enabled AND $info.pictures gt 0]-->
+    <div><img src="<!--[$picupload_uploaddir]-->/pic_sid<!--[$info.sid]-->-0-thumb.jpg" alt="<!--[gt text='Picture %s for %s' tag1='0' tag2=$info.title]-->" /></div>
+	<!--[/if]-->
+	<!--[$info.hometext|pnvarprepfordisplay]--></description>
     <!--[/if]-->
     <pubDate><!--[$info.from|updated|published]--></pubDate>
     <guid><!--[pnmodurl modname=News type=user func=display sid=$info.sid title=$info.urltitle fqurl=true]--></guid>

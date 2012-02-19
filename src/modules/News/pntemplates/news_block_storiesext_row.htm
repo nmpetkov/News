@@ -13,6 +13,11 @@
 
 <!--[if $disphometext]-->
 <div class="storiesext_hometext">
+    <!--[if $pictures gt 0]-->
+    <div class="news_photoindex news_thumbsindex" style="float:<!--[$picupload_index_float]-->">
+        <img src="<!--[$picupload_uploaddir]-->/pic_sid<!--[$sid]-->-0-thumb.jpg" alt="<!--[gt text='Picture %s for %s' tag1='0' tag2=$title]-->" />
+    </div>
+    <!--[/if]-->
     <!--[if $hometextwrapped]-->
     <!--[$hometext|truncatehtml:$maxhometextlength:''|pnvarprephtmldisplay]-->
     <!--[if $readperm]--><a href="<!--[pnmodurl modname='News' func='display' sid=$sid]-->"><!--[/if]-->

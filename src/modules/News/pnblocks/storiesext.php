@@ -351,6 +351,8 @@ height:50px;
         $render->assign('readperm',(bool)SecurityUtil::checkPermission('News::', "$item[cr_uid]::$item[sid]", ACCESS_READ));
         $render->assign($vars);
         $render->assign($item);
+        $render->assign('picupload_uploaddir', pnModGetVar('News', 'picupload_uploaddir'));
+        $render->assign('picupload_index_float', pnModGetVar('News', 'picupload_index_float'));
         // Get the cached output per row
         $storiesoutput[] = $render->fetch($rowtemplate, $item['sid']);
     }

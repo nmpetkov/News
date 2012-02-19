@@ -2,6 +2,8 @@
 
 /* Based upon http://www.queness.com/post/152/simple-jquery-image-slide-show-with-semi-transparent-caption 
    Adjusted to prototype.js, E.Spaan, Jul 10 */
+   
+/* TODO update to the newer version: http://www.queness.com/post/1450/jquery-photo-slide-show-with-slick-caption-tutorial-revisited */
 
 function slideShow(speed) {
 	//set the opacity of all images to 0

@@ -394,6 +394,7 @@ Regards,
             }
         }
     }
+    pnModFunc('News', 'user', 'clearArticleCaches', $item);
 
     return pnRedirect(pnModURL('News', $referertype, 'view'));
 }
@@ -981,10 +982,12 @@ function News_user_displaypdf($args)
 
     // Get the news story
     if (isset($sid)) {
+        $render->cache_id = $sid;
         $item = pnModAPIFunc('News', 'user', 'get', 
                              array('sid'       => $sid, 
                                    'status'    => 0));
     } else {
+        $render->cache_id = $title;
         $item = pnModAPIFunc('News', 'user', 'get', 
                              array('title'     => $title,
                                    'year'      => $year,
@@ -998,38 +1001,44 @@ function News_user_displaypdf($args)
     if ($item === false) {
         return LogUtil::registerError(__('Error! No such article found.', $dom), 404);
     }
+    
+    $template = 'news_user_articlepdf.htm';
+    if (!$render->is_cached($template)) {
+        // Explode the review into an array of seperate pages
+        $allpages = explode('<!--pagebreak-->', $item['bodytext']);
 
-    // Explode the review into an array of seperate pages
-    $allpages = explode('<!--pagebreak-->', $item['bodytext']);
+        // Set the item hometext to be the required page
+        // nb arrays start from zero, pages from one
+        //$item['bodytext'] = $allpages[$page-1];
+        $numpages = count($allpages);
+        //unset($allpages);
 
-    // Set the item hometext to be the required page
-    // nb arrays start from zero, pages from one
-    //$item['bodytext'] = $allpages[$page-1];
-    $numpages = count($allpages);
-    //unset($allpages);
+        // $info is array holding raw information.
+        $info = pnModAPIFunc('News', 'user', 'getArticleInfo', $item);
 
-    // $info is array holding raw information.
-    $info = pnModAPIFunc('News', 'user', 'getArticleInfo', $item);
+        // $links is an array holding pure URLs to specific functions for this article.
+        $links = pnModAPIFunc('News', 'user', 'getArticleLinks', $info);
 
-    // $links is an array holding pure URLs to specific functions for this article.
-    $links = pnModAPIFunc('News', 'user', 'getArticleLinks', $info);
+        // $preformat is an array holding chunks of preformatted text for this article.
+        $preformat = pnModAPIFunc('News', 'user', 'getArticlePreformat',
+                                  array('info'  => $info,
+                                        'links' => $links));
 
-    // $preformat is an array holding chunks of preformatted text for this article.
-    $preformat = pnModAPIFunc('News', 'user', 'getArticlePreformat',
-                              array('info'  => $info,
-                                    'links' => $links));
+        // Assign the story info arrays
+        $render->assign(array('info'      => $info,
+                              'links'     => $links,
+                              'preformat' => $preformat));
 
-    // Assign the story info arrays
-    $render->assign(array('info'      => $info,
-                          'links'     => $links,
-                          'preformat' => $preformat));
-
-    $render->assign('enablecategorization', $modvars['enablecategorization']);
-    $render->assign('catimagepath', $modvars['catimagepath']);
-    $render->assign('pdflink', $modvars['pdflink']);
+        $render->assign('enablecategorization', $modvars['enablecategorization']);
+        $render->assign('catimagepath', $modvars['catimagepath']);
+        $render->assign('pdflink', $modvars['pdflink']);
+        $render->assign('picupload_enabled', $modvars['picupload_enabled']);
+        $render->assign('picupload_article_float', $modvars['picupload_article_float']);
+        $render->assign('picupload_uploaddir', $modvars['picupload_uploaddir']);
+    }
 
     // Store output in variable
-    $articlehtml = $render->fetch('news_user_articlepdf.htm');
+    $articlehtml = $render->fetch($template);
     
     // create new PDF document
     $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false); 
@@ -1149,3 +1158,29 @@ function _countcategories($category, $property, $catregistry, $uid)
 
     return $return;
 }
+
+    /**
+     * clear caches for a particular story
+     * @param array $item the story item
+     */
+    function News_user_clearArticleCaches($item)
+    {
+        $render = & pnRender::getInstance('News');
+        // clear appropriate caches
+        // view.tpl templates are not cached
+        $pagecount = count(explode('<!--pagebreak-->', $item['bodytext']));
+        if ($pagecount < 1) {
+            $pagecount = 1;
+        }
+        for ($i = 1; $i <= $pagecount; $i++) {
+            $cacheid = $sid . $i;
+            $cacheid_title = $item['title'] . $i;
+            $render->clear_cache('user/article.tpl', $cacheid);
+            $render->clear_cache('user/article.tpl', $cacheid_title);
+            $render->clear_cache('printer/article.tpl', $cacheid);
+            $render->clear_cache('printer/article.tpl', $cacheid_title);
+            $render->clear_cache('user/articlepdf.tpl', $sid); // pdf only uses sid
+            $render->clear_cache('user/articlepdf.tpl', $item['title']); // pdf only uses title
+        }
+        return true;
+    }
