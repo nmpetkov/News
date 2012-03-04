@@ -111,7 +111,7 @@ class News_Controller_User extends Zikula_AbstractController
         $this->view->assign('item', $item);
 
         // Assign the content format
-        $formattedcontent = ModUtil::apiFunc('News', 'user', 'isformatted', array('func' => 'new'));
+        $formattedcontent = ModUtil::apiFunc('News', 'user', 'isformatted', array('func' => 'newitem'));
         $this->view->assign('formattedcontent', $formattedcontent);
 
         $this->view->assign('accessadd', 0);
