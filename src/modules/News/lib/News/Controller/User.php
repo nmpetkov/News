@@ -1083,12 +1083,12 @@ class News_Controller_User extends Zikula_AbstractController
         }
         $accesslevels = array(ACCESS_READ, ACCESS_COMMENT, ACCESS_EDIT);
         for ($i = 1; $i <= $pagecount; $i++) {
-        	foreach ($accesslevels as $accesslevel) {
+            foreach ($accesslevels as $accesslevel) {
                 $pagedir = ($i>1) ? '|pg'. $i : '';
                 $cacheid = $item['sid'] .'|a'. $accesslevel . $pagedir;
                 $controller->view->clear_cache('user/index.tpl', $cacheid);
                 $controller->view->clear_cache('user/article.tpl', $cacheid);
-			}
+            }
         }
     }
 
