@@ -1080,7 +1080,7 @@ class News_Controller_User extends Zikula_AbstractController
 
         // Clear View_cache (module themplate cache) for given article Id
         $cacheid = $item['sid'];
-        $controller->view->clear_cache(null, $cacheid); // npetkov added !
+        $controller->view->clear_cache(null, $cacheid);
         // clear Theme_cache, if any
         $theme = Zikula_View_Theme::getInstance();
         if (Zikula_Core::VERSION_NUM >= '1.3.3') {
