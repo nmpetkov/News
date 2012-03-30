@@ -1077,18 +1077,28 @@ class News_Controller_User extends Zikula_AbstractController
     {
         // clear appropriate caches
         // view.tpl templates are not cached
-        $pagecount = count(explode('<!--pagebreak-->', $item['bodytext']));
-        if ($pagecount < 1) {
-            $pagecount = 1;
-        }
-        $accesslevels = array(ACCESS_READ, ACCESS_COMMENT, ACCESS_EDIT);
-        for ($i = 1; $i <= $pagecount; $i++) {
-            foreach ($accesslevels as $accesslevel) {
-                $pagedir = ($i>1) ? '|pg'. $i : '';
-                $cacheid = $item['sid'] .'|a'. $accesslevel . $pagedir;
-                $controller->view->clear_cache('user/index.tpl', $cacheid);
-                $controller->view->clear_cache('user/article.tpl', $cacheid);
+
+        // Clear View_cache (module themplate cache) for given article Id
+        $cacheid = $item['sid'];
+        $controller->view->clear_cache(null, $cacheid); // npetkov added !
+        // clear Theme_cache, if any
+        $theme = Zikula_View_Theme::getInstance();
+        if (Zikula_Core::VERSION_NUM >= '1.3.3') {
+            foreach (ThemeUtil::getAllThemes() as $themearr) {
+                $themedir = $themearr['directory'];
+                $theme->clear_cache(null, 'News/user/display/sid_'.$item['sid'], null, null, $themedir); // for given article Id, according to new cache_id structure in Zikula 1.3.2.dev (1.3.3)
+                $theme->clear_cache(null, 'homepage', null, null, $themedir); // for homepage (it can be adjustment in module settings)
+                $theme->clear_cache(null, 'News/user/view', null, null, $themedir); // view function (articles list)
+                $theme->clear_cache(null, 'News/user/main', null, null, $themedir); // main function
+                $theme->clear_cache(null, 'News/user/archives/month_'.DateUtil::getDatetime_Field($item['ffrom'], 2).'/year_'.DateUtil::getDatetime_Field($item['ffrom'], 1), null, null, $themedir); // archives
             }
+        } else {
+            // clear cache for current theme only
+            $theme->clear_cache(null, 'News/user/display/sid_'.$item['sid']); // for given article Id, according to new cache_id structure in Zikula 1.3.2.dev (1.3.3)
+            $theme->clear_cache(null, 'homepage'); // for homepage (it can be adjustment in module settings)
+            $theme->clear_cache(null, 'News/user/view'); // view function (articles list)
+            $theme->clear_cache(null, 'News/user/main'); // main function
+            $theme->clear_cache(null, 'News/user/archives/month_'.DateUtil::getDatetime_Field($item['ffrom'], 2).'/year_'.DateUtil::getDatetime_Field($item['ffrom'], 1)); // archives
         }
     }
 
