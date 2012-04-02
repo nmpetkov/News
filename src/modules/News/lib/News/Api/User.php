@@ -1073,5 +1073,44 @@ class News_Api_User extends Zikula_AbstractApi
         }
         return $catFilter;
     }
-}
 
+    /**
+     * Clear cache for given item. Can be called from other modules to clear an item cache.
+     *
+     * @param $item - the item: array with data or id of the item
+     */
+    public function clearItemCache($item)
+    {
+        if ($item && !is_array($item)) {
+            $item = ModUtil::apiFunc('News', 'user', 'get', array('sid' => $item));
+        }
+        if ($item) {
+            // Clear View_cache
+            $cache_ids = array();
+            $cache_ids[] = $item['sid'];
+            $view = Zikula_View::getInstance('News');
+            foreach ($cache_ids as $cache_id) {
+                $view->clear_cache(null, $cache_id);
+            }
+
+            // Clear Theme_cache
+            $cache_ids = array();
+            $cache_ids[] = 'News/user/display/sid_'.$item['sid']; // for given article Id, according to new cache_id structure in Zikula 1.3.2.dev (1.3.3)
+            $cache_ids[] = 'homepage'; // for homepage (it can be adjustment in module settings)
+            $cache_ids[] = 'News/user/view'; // view function (articles list)
+            $cache_ids[] = 'News/user/main'; // main function
+            $cache_ids[] = 'News/user/archives/month_'.DateUtil::getDatetime_Field($item['ffrom'], 2).'/year_'.DateUtil::getDatetime_Field($item['ffrom'], 1); // archives
+            $theme = Zikula_View_Theme::getInstance();
+            //if (Zikula_Core::VERSION_NUM > '1.3.2') {
+            if (method_exists($theme, 'clear_cacheid_allthemes')) {
+                $theme->clear_cacheid_allthemes($cache_ids);
+            } else {
+                // clear cache for current theme only
+                foreach ($cache_ids as $cache_id) {
+                    $theme->clear_cache(null, $cache_id);
+                }
+            }
+        }
+    }
+
+}
