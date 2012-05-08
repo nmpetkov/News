@@ -371,6 +371,9 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
                 $this->_invertHideAndComments();
                 $this->fixStartSettings();
             case '3.0.0':
+                // register hooks
+                HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
+                HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
             case '3.0.1':
                 // future plans
         }
