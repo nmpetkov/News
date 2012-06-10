@@ -1,5 +1,44 @@
+News (C) 2007-2011, News Development Team
+---------------------------
+http://github.com/zikula-modules/News
 
-  CHANGELOG
-    2.5
-      'stories' table renamed to 'news'
-      Blocks permission schemas changed to use the ID instead the Title
+Version 2.6.3
+-------------
+
+Summary of changes:
+- Cache clearing optimized
+- Pictureupload now uses jpg instead of png (large reduction in file size)
+- Pictureupload permissions updated
+- storiesext block, Content plugin and pdf output now also contain the uploaded images
+- hometext and bodytext changed to XL database type for UTF compatiblity.
+- Javascript code cleanup
+- fixex typo in mailz plugin template
+
+All tickets:
+* 
+
+
+Version 2.6.2
+-------------
+
+Summary of changes:
+
+
+Version 2.6.1
+-------------
+
+Summary of changes:
+
+
+Version 2.6.0
+-------------
+
+Summary of changes:
+
+
+Version 2.5
+-------------
+
+Summary of changes:
+- 'stories' table renamed to 'news'
+- Blocks permission schemas changed to use the ID instead the Title
