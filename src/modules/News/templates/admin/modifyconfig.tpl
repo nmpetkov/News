@@ -279,6 +279,10 @@
                     <li>%category% - {gt text='Article category'} </li>
                 </ul>
             </div>
+            <div class="z-formrow">
+                <label for="news_shorturls26x">{gt text='Use the News 26x shorturl scheme (main and display function not displayed)'}</label>
+                <input id="news_shorturls26x" type="checkbox" name="shorturls26x"{if $modvars.News.shorturls26x} checked="checked"{/if} />
+            </div>
         </fieldset>
         {/if}
 

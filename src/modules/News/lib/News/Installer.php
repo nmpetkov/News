@@ -79,6 +79,9 @@ class News_Installer extends Zikula_AbstractInstaller
         $this->setVar('picupload_thumb2maxheight', '200');
         $this->setVar('picupload_uploaddir', 'images/news_picupload');
 
+		// shorturl scheme for upgrading from 26x
+        $this->setVar('shorturls26x', false);
+
         // create the default data for the News module
         $this->_defaultdata();
 
@@ -360,12 +363,15 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
                 $this->delVar('pdflink_tcpdflang');
                 $this->setVar('itemsperadminpage', 15);
                 $this->setVar('pdflink_enablecache', true);
+				// enable variable for old shorturl scheme (display and main func not shown)
+				$this->setVar('shorturls26x', true);
                 if (ModUtil::available('Content')) {
                     Content_Installer::updateContentType('News');
                 }
                 $this->_invertHideAndComments();
                 $this->fixStartSettings();
             case '3.0.0':
+            case '3.0.1':
                 // future plans
         }
 

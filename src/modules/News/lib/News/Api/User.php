@@ -188,7 +188,7 @@ class News_Api_User extends Zikula_AbstractApi
                 return false;
             }
         }
-
+        
         // process the relative paths of the categories
         if ($this->getVar('enablecategorization') && !empty($item['__CATEGORIES__'])) {
             static $registeredCats;
@@ -299,7 +299,7 @@ class News_Api_User extends Zikula_AbstractApi
         } else {
             $info['categories'] = null;
         }
-
+        
         // also the __ATTRIBUTES__ field
         if (isset($info['__ATTRIBUTES__'])) {
             $info['attributes'] = $info['__ATTRIBUTES__'];
@@ -454,7 +454,7 @@ class News_Api_User extends Zikula_AbstractApi
                 $categories[$prop] = DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'view', array('prop' => $prop, 'cat' => $info['categories'][$prop][$field])));
             }
         }
-
+        
         // Set up the array itself
         if ($shorturls) {
             $links = array ('category' => DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'view', array('prop' => 'Main', 'cat' => $info['catvar']))),
@@ -907,11 +907,16 @@ class News_Api_User extends Zikula_AbstractApi
             }
         }
 
+		// optionally remove the function name (main and display func) from the shorturl
+		if ($this->getVar('shorturls26x') && ($args['func'] == 'main' || $args['func'] == 'display')) {
+			$args['func'] = '';
+		}
+		
         // construct the custom url part
         if (empty($vars)) {
-            return $args['modname'] . '/' . $args['func'] . '/';
+            return $args['modname'] . '/' . (!empty($args['func']) ? $args['func'] . '/' : '');
         } else {
-            return $args['modname'] . '/' . $args['func'] . '/' . $vars . '/';
+            return $args['modname'] . '/' . (!empty($args['func']) ? $args['func'] . '/' : '') . $vars . '/';
         }
     }
 

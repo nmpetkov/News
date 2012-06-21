@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Zikula Application Framework
  *
@@ -678,6 +677,7 @@ class News_Controller_Admin extends Zikula_AbstractController
             }
         }
 
+		
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('News', 'news');
         $properties = array_keys($catregistry);
         $topicproperty = FormUtil::getPassedValue('topicproperty', null, 'POST');
@@ -688,6 +688,7 @@ class News_Controller_Admin extends Zikula_AbstractController
             $permalinkformat = FormUtil::getPassedValue('permalinkstructure', null, 'POST');
         }
         $modvars['permalinkformat'] = $permalinkformat;
+        $modvars['shorturls26x'] = (bool)FormUtil::getPassedValue('shorturls26x', false, 'POST');
 
         $this->setVars($modvars);
 
