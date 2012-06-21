@@ -11,9 +11,9 @@
 class News_TaggedObjectMeta_News extends Tag_AbstractTaggedObjectMeta
 {
 
-    function __construct($objectId, $areaId, $module, $objectUrl)
+    function __construct($objectId, $areaId, $module, $urlString = null, Zikula_ModUrl $urlObject = null)
     {
-        parent::__construct($objectId, $areaId, $module, $objectUrl);
+        parent::__construct($objectId, $areaId, $module, $urlString, $urlObject);
 
         $newsItem = ModUtil::apiFunc('News', 'user', 'get', array('sid' => $this->getObjectId()));
         // the api takes care of the permissions check. we must check for pending/expiration & status
@@ -24,8 +24,6 @@ class News_TaggedObjectMeta_News extends Tag_AbstractTaggedObjectMeta
             $this->setObjectAuthor($newsItem['contributor']);
             $this->setObjectDate($newsItem['from']);
             $this->setObjectTitle($newsItem['title']);
-            // do not use default objectURL to compensate for shortUrl handling
-            $this->setObjectUrl(ModUtil::url('News', 'user', 'display', array('sid' => $this->getObjectId())));
         }
     }
 

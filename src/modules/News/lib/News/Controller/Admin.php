@@ -324,7 +324,7 @@ class News_Controller_Admin extends Zikula_AbstractController
         }
 
         // clear article and view caches
-        News_Controller_User::clearArticleCaches($story, $this);
+        ModUtil::apiFunc('News', 'user', 'clearItemCache', $story);
 
         return $this->redirect(ModUtil::url('News', 'admin', 'view'));
     }
@@ -382,6 +382,9 @@ class News_Controller_Admin extends Zikula_AbstractController
 
             // Let any hooks know that we have deleted an item
             $this->notifyHooks(new Zikula_ProcessHook('news.ui_hooks.articles.process_delete', $sid));
+
+            // clear article and view caches
+            ModUtil::apiFunc('News', 'user', 'clearItemCache', $item);
         }
 
         return $this->redirect(ModUtil::url('News', 'admin', 'view'));
