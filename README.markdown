@@ -1,4 +1,4 @@
-News 3.0.0
+News 3.x
 ==========
 
 A News module for the Zikula Application Framework. From News 3.0.0 onwards the module is a native Zikula 1.3 module. This means it will not work in Zikula 1.2.x any more.
