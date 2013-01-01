@@ -327,10 +327,16 @@ class News_Controller_User extends Zikula_AbstractController
         $prop = isset($args['prop']) ? $args['prop'] : (string)FormUtil::getPassedValue('prop', null, 'GET');
         $cat = isset($args['cat']) ? $args['cat'] : (string)FormUtil::getPassedValue('cat', null, 'GET');
         $displayModule = FormUtil::getPassedValue('module', 'X', 'GET');
+        // storyhome nrofitems is only used when News is the homepage module
         $defaultItemsPerPage = ($displayModule == 'X') ? $modvars['storyhome'] : $modvars['itemsperpage'];
         $itemsperpage = isset($args['itemsperpage']) ? $args['itemsperpage'] : (int)FormUtil::getPassedValue('itemsperpage', $defaultItemsPerPage, 'GET');
         $displayonindex = isset($args['displayonindex']) ? (int)$args['displayonindex'] : FormUtil::getPassedValue('displayonindex', null, 'GET');
         $giventemplate = isset($args['giventemplate']) ? $args['giventemplate'] : 'view.tpl';
+
+        // pages start at 1
+        if ($page < 1) {
+            LogUtil::registerError($this->__('Error! Invalid page passed.'));
+        }
 
         // work out page size from page number
         $startnum = (($page - 1) * $itemsperpage) + 1;
