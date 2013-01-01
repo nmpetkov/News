@@ -308,8 +308,13 @@ class News_Controller_User extends Zikula_AbstractController
      * view items
      *
      * @author Mark West
-     * @param 'page' starting number for paged view
-     * @param $args['giventemplate'] - Template file to use
+     * @param $args['prop']             category property
+     * @param $args['cat']              category id
+     * @param $args['page']             starting number for paged view
+     * @param $args['itemsperpage']     the number of items on a page
+     * @param $args['page']             starting number for paged view
+     * @param $args['displayonindex']   show only newsitems marked for display on the index page
+     * @param $args['giventemplate']    Template file to use
      * @return string HTML string
      */
     public function view($args = array())
@@ -323,9 +328,9 @@ class News_Controller_User extends Zikula_AbstractController
         $modvars = $this->getVars();
 
         // Get parameters from whatever input we need
-        $page = isset($args['page']) ? $args['page'] : (int)FormUtil::getPassedValue('page', 1, 'GET');
         $prop = isset($args['prop']) ? $args['prop'] : (string)FormUtil::getPassedValue('prop', null, 'GET');
         $cat = isset($args['cat']) ? $args['cat'] : (string)FormUtil::getPassedValue('cat', null, 'GET');
+        $page = isset($args['page']) ? $args['page'] : (int)FormUtil::getPassedValue('page', 1, 'GET');
         $displayModule = FormUtil::getPassedValue('module', 'X', 'GET');
         // storyhome nrofitems is only used when News is the homepage module
         $defaultItemsPerPage = ($displayModule == 'X') ? $modvars['storyhome'] : $modvars['itemsperpage'];
@@ -462,8 +467,14 @@ class News_Controller_User extends Zikula_AbstractController
      * display item
      *
      * @author Mark West
-     * @param 'sid' The article ID
-     * @param 'objectid' generic object id maps to sid if present
+     * @param 'sid'         The article ID
+     * @param 'objectid'    generic object id maps to sid if present
+     * @param 'page'        the starting page when pagebreak is used in the article
+     * @param 'title'       article title, when sid is not used
+     * @param 'year'        article year, when sid is not used
+     * @param 'monthnum'    article monthnum, when sid is not used
+     * @param 'monthname'   article monthname, when sid is not used
+     * @param 'day'         article day, when sid is not used
      * @return string HTML string
      */
     public function display($args)
