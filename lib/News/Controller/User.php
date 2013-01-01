@@ -76,7 +76,7 @@ class News_Controller_User extends Zikula_AbstractController
         $item['pictures'] = isset($sess_item['pictures']) ? $sess_item['pictures'] : 0;
         $item['tempfiles'] = isset($sess_item['tempfiles']) ? $sess_item['tempfiles'] : null;
         $item['temp_pictures'] = isset($sess_item['tempfiles']) ? unserialize($sess_item['tempfiles']) : null;
-
+        
         $preview = '';
         if (isset($sess_item['action']) && $sess_item['action'] == self::ACTION_PREVIEW) {
             $preview = $this->preview(array('title' => $item['title'],
@@ -151,6 +151,7 @@ class News_Controller_User extends Zikula_AbstractController
         // Get parameters from whatever input we need
         $story = FormUtil::getPassedValue('story', isset($args['story']) ? $args['story'] : null, 'POST');
         $files = News_ImageUtil::reArrayFiles(FormUtil::getPassedValue('news_files', null, 'FILES'));
+        $editoruse = $this->request->request->get('scribiteeditorused', null); // scribite 5.0
 
         // Create the item array for processing
         $item = array(
@@ -160,9 +161,9 @@ class News_Controller_User extends Zikula_AbstractController
             '__ATTRIBUTES__' => isset($story['attributes']) ? News_Util::reformatAttributes($story['attributes']) : null,
             'language' => isset($story['language']) ? $story['language'] : '',
             'hometext' => isset($story['hometext']) ? $story['hometext'] : '',
-            'hometextcontenttype' => $story['hometextcontenttype'],
+            'hometextcontenttype' => isset($story['hometextcontenttype']) ? $story['hometextcontenttype'] : isset($editoruse['hometext']),
             'bodytext' => isset($story['bodytext']) ? $story['bodytext'] : '',
-            'bodytextcontenttype' => $story['bodytextcontenttype'],
+            'bodytextcontenttype' => isset($story['bodytextcontenttype']) ? $story['bodytextcontenttype'] : isset($editoruse['bodytext']),
             'notes' => $story['notes'],
             'displayonindex' => isset($story['displayonindex']) ? $story['displayonindex'] : 0,
             'allowcomments' => isset($story['allowcomments']) ? $story['allowcomments'] : 0,
