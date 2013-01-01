@@ -54,11 +54,11 @@
                 </select>
             </div>
             <div class="z-formrow">
-                <label for="settings_storyhome">{gt text='Number of articles in news index page'}</label>
+                <label for="settings_storyhome">{gt text='Number of articles on news index page, when news is homepage'}</label>
                 <input id="settings_storyhome" type="text" name="storyhome" value="{$modvars.News.storyhome|safetext}" size="5" maxlength="5" />
             </div>
             <div class="z-formrow">
-                <label for="news_itemsperpage">{gt text='Number of articles in archive page'}</label>
+                <label for="news_itemsperpage">{gt text='Number of articles on other news pages'}</label>
                 <input id="news_itemsperpage" type="text" name="itemsperpage" size="3" value="{$modvars.News.itemsperpage|safetext}" />
             </div>
             <div class="z-formrow">
