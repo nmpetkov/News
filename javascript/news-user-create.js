@@ -1,5 +1,11 @@
 /**
- * News
+ * On the first keypress (only), this function checks if any textareas have been
+ * assigned a Javascript editor via scribite, which is indicated by an element
+ * with id='scribiteeditorused.<textareaid>'. If so, it sets the corresponding
+ * textarea's News 'contenttype' to 'html' and then disables the form field.
+ * This is to improve UI and prevent the user from mistakenly setting the field
+ * to 'text'. This value however is not passed (as it is disabled) so the value
+ * from the 'scribiteeditorused' element is used instead in the controller.
  */
 function initEditorCheck() 
 {
