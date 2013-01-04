@@ -2,7 +2,7 @@
 {if $stories}
 <ul class="content_stories">
     {foreach from=$stories item='story'}
-    <li>
+    <li class='z-clearfix'>
         {if $story.readperm}
             {if $useshorturls}
                 {modurl modname='News' type='user' func='display' sid=$story.sid from=$story.from urltitle=$story.urltitle assign='storylink'}
