@@ -131,6 +131,10 @@
         {formcheckbox id='disphometext' group='data'}
         {contentlabelhelp __text='Notice: When truncating the index page teaser text, incomplete HTML mark-up elements will be completed by the \'truncatehtml\' plug-in.'}
     </div>
+    <div class="z-formrow">
+        {formlabel for='displayStoryImage' __text='Include primary story image with teaser text.'}
+        {formcheckbox id='displayStoryImage' group='data'}
+    </div>
 
     <div id="news_contenttype_disphometext_container">
         <div class="z-formrow">

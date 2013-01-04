@@ -32,6 +32,15 @@
         {* Optional hometext display *}
         {if $disphometext}
         <div class="content_newsarticles_hometext">
+            {if $displayStoryImage AND $News.picupload_enabled AND $story.pictures gt 0}
+            <div class="news_photoindex news_thumbsindex" style="float:{$News.picupload_index_float}">
+                {if $useshorturls}
+                    <a href="{modurl modname='News' type='user' func='display' sid=$story.sid from=$story.from urltitle=$story.urltitle}"><img src="{$News.picupload_uploaddir}/pic_sid{$story.sid}-0-thumb.jpg" alt="{gt text='Picture %1$s for %2$s' tag1='0' tag2=$story.title}" /></a>
+                {else}
+                    <a href="{modurl modname='News' type='user' func='display' sid=$story.sid}"><img src="{$News.picupload_uploaddir}/pic_sid{$story.sid}-0-thumb.jpg" alt="{gt text='Picture %1$s for %2$s' tag1='0' tag2=$story.title}" /></a>
+                {/if}
+            </div>
+            {/if}
             {if $story.hometextwrapped}
                 {$story.hometext|notifyfilters:'news.filter_hooks.articles.filter'|truncatehtml:$maxhometextlength:''|safehtml|paragraph}
             {else}
@@ -48,7 +57,7 @@
         <div class="content_newsarticles_news_meta">
             <a href="{$story.topicsearchurl}">
                 {if $story.topicimage neq ''}
-                    <img src="{$catimagepath}{$story.topicimage}" alt="{$story.topicname|safehtml}" title="{$story.topicname|safehtml}" />
+                    <img src="{$News.catimagepath}{$story.topicimage}" alt="{$story.topicname|safehtml}" title="{$story.topicname|safehtml}" />
                 {else}
                     {$story.topicname|safehtml}
                 {/if}

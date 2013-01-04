@@ -44,6 +44,7 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
     public $newimagesrc;
     public $linktosubmit;
     public $customtemplate;
+    public $displayStoryImage;
 
     public function getTitle()
     {
@@ -101,6 +102,7 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
         $this->newimagesrc = $data['newimagesrc'];
         $this->linktosubmit = $data['linktosubmit'];
         $this->customtemplate = !empty($data['customtemplate']) ? $data['customtemplate']: '';
+        $this->displayStoryImage = isset($data['displayStoryImage']) ? $data['displayStoryImage'] : false;
     }
 
     /**
@@ -257,11 +259,12 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
             }
             $this->view->assign('titlewraptext', $this->titlewraptext);
         }
-        $this->view->assign('catimagepath', ModUtil::getVar('News', 'catimagepath'));
+        $this->view->assign('News', ModUtil::getVar('News'));
         $this->view->assign('dateformat', $this->dateformat);
         $this->view->assign('linktosubmit', $this->linktosubmit);
         $this->view->assign('stories', $items);
         $this->view->assign('title', $this->title);
+        $this->view->assign('displayStoryImage', $this->displayStoryImage);
         $this->view->assign('useshorturls', System::getVar('shorturls', false));
 
         return $this->view->fetch($this->getTemplate());
@@ -283,8 +286,11 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
             }
         }
         $catname = implode(' | ', $catnames);
+        if (empty($catname)) {
+            $catname = 'all';
+        }
         $output = '<h4>' . DataUtil::formatForDisplayHTML($this->title) . '</h4>';
-        $output .= '<p>' . $this->__f('News articles listed under the \'%s\' category', $catname) . '</p>';
+        $output .= '<p>' . $this->__f("News articles listed under <strong>%s</strong> category", $catname) . '</p>';
         return $output;
     }
 
@@ -317,7 +323,8 @@ class News_ContentType_NewsArticles extends Content_AbstractContentType
             'newimageset' => 'icons/extrasmall',
             'newimagesrc' => 'favorites.png',
             'linktosubmit' => true,
-            'customtemplate' => '');
+            'customtemplate' => '',
+            'displayStoryImage' => false);
         
         // Get the registered categories for the News module
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('News', 'news');
