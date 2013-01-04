@@ -13,3 +13,12 @@
 {if $preformat.notes neq ''}
 <div id="news_notes" class="news_meta">{$preformat.notes|notifyfilters:'news.filter_hooks.articles.filter'|safehtml|paragraph}</div>
 {/if}
+{* display all associated pictures in full size in the footer of the pdf *}
+{if $modvars.News.picupload_enabled AND $info.pictures gt 0}
+<div class="news_pictures">
+    <h4>{gt text='Article pictures'}</h4>
+    {section name=counter start=0 loop=$info.pictures step=1}
+    <img src="{$modvars.News.picupload_uploaddir}/pic_sid{$info.sid}-{$smarty.section.counter.index}-norm.jpg" alt="{gt text='Picture %1$s for %2$s' tag1=$smarty.section.counter.index tag2=$info.title}" /><br />
+    {/section}
+</div>
+{/if}
