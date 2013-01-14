@@ -373,6 +373,8 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
             case '3.0.0':
                 // nothing to do
             case '3.0.1':
+                // nothing to do
+            case '3.1.0':
                 // future plans
         }
 
