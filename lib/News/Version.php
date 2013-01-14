@@ -33,7 +33,7 @@ class News_Version extends Zikula_AbstractVersion
         // Module depedencies
         $meta['dependencies'] = array(
                 array('modname'    => 'Scribite',
-                      'minversion' => '4.2.1',
+                      'minversion' => '4.3.0',
                       'maxversion' => '',
                       'status'     => ModUtil::DEPENDENCY_RECOMMENDED),
                 array('modname'    => 'EZComments',
@@ -56,10 +56,6 @@ class News_Version extends Zikula_AbstractVersion
         $bundle->addEvent('process_delete', 'news.ui_hooks.articles.process_delete');
         $this->registerHookSubscriberBundle($bundle);
 
-        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.news.ui_hooks.editor', 'ui_hooks', $this->__('News Articles Editor'));
-        $bundle->addEvent('display_view', 'news.ui_hooks.editor.display_view');
-        $this->registerHookSubscriberBundle($bundle);
-        
         $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.news.filter_hooks.articles', 'filter_hooks', $this->__('News Display Hooks'));
         $bundle->addEvent('filter', 'news.filter_hooks.articles.filter');
         $this->registerHookSubscriberBundle($bundle);
