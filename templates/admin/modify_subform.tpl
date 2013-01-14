@@ -1,5 +1,4 @@
 {pageaddvar name="jsgettext" value="module_news_js:News"}
-{pageaddvar name='javascript' value='modules/News/javascript/news-user-create.js'}
 <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
 <input type="hidden" name="story[sid]" id='news_sid' value="{$item.sid|safetext}" />
 <input type="hidden" name="page" value="{$page|safetext}" />
@@ -54,14 +53,19 @@
 <fieldset class="z-linear">
     <legend>{gt text='Article'}</legend>
     <div class="z-formrow">
+        {if $formattedcontent eq 0}
         <div class="z-warningmsg">{gt text='Permitted HTML tags'}: {news_allowedhtml}</div>
+        {/if}
         <div class="z-informationmsg" style='margin-bottom:0 !important;'><span class="z-form-mandatory-flag">*</span> {gt text='You must enter either <strong>teaser text</strong> or <strong>body text</strong>.'}</div>
     </div>
     <div class="z-formrow">
         <label for="news_hometext"><strong>{gt text='Index page teaser text'}</strong></label>
+        {notifydisplayhooks eventname='news.ui_hooks.editor.display_view' id='news_hometext'}
         <textarea id="news_hometext" name="story[hometext]" cols="40" rows="10">{$item.hometext|safetext}</textarea>
+        {if $formattedcontent eq 0}<span id="news_hometext_remaining" class="z-formnote z-sub">{gt text='(Limit: %s characters)' tag1='4,294,967,295'}</span>{/if}
     </div>
 
+    {if $formattedcontent eq 0}
     <div class="z-formrow">
         <label for="news_hometextcontenttype">{gt text='Index page teaser format'}</label>
         <select id="news_hometextcontenttype" name="story[hometextcontenttype]">
@@ -69,12 +73,16 @@
             <option value="1"{if $item.hometextcontenttype eq 1} selected="selected"{/if}>{gt text='Text formatted with mark-up language'}</option>
         </select>
     </div>
+    {/if}
 
     <div class="z-formrow">
         <label for="news_bodytext"><strong>{gt text='Article body text'}</strong></label>
+        {notifydisplayhooks eventname='news.ui_hooks.editor.display_view' id='news_bodytext'}
         <textarea id="news_bodytext" name="story[bodytext]" cols="40" rows="10">{$item.bodytext|safetext}</textarea>
+        {if $formattedcontent eq 0}<span id="news_bodytext_remaining" class="z-formnote z-sub">{gt text='(Limit: %s characters)' tag1='4,294,967,295'}</span>{/if}
     </div>
 
+    {if $formattedcontent eq 0}
     <div class="z-formrow">
         <label for="news_bodytextcontenttype">{gt text='Article body format'}</label>
         <select id="news_bodytextcontenttype" name="story[bodytextcontenttype]">
@@ -82,6 +90,7 @@
             <option value="1"{if $item.bodytextcontenttype eq 1} selected="selected"{/if}>{gt text='Text formatted with mark-up language'}</option>
         </select>
     </div>
+    {/if}
 
     <div class="z-formrow">
         <label for="news_notes"><a id="news_notes_collapse" href="javascript:void(0);"><span id="news_notes_showhide">{gt text='Show'}</span> {gt text='Footnote'}</a></label>

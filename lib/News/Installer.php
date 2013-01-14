@@ -371,7 +371,12 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
                 $this->_invertHideAndComments();
                 $this->fixStartSettings();
             case '3.0.0':
-                // nothing to do
+                // register new hook area
+                $bundles = array();
+                $bundle = new Zikula_HookManager_SubscriberBundle('News', 'subscriber.news.ui_hooks.editor', 'ui_hooks', __('News Articles Editor'));
+                $bundle->addEvent('display_view', 'news.ui_hooks.editor.display_view');
+                $bundles[$bundle->getArea()] = $bundle;
+                HookUtil::registerSubscriberBundles($bundles);
             case '3.0.1':
                 // future plans
         }

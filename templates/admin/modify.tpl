@@ -1,5 +1,6 @@
 {ajaxheader modname='News' filename='news.js'}
 {pageaddvar name="jsgettext" value="module_news_js:News"}
+{pageaddvar name='javascript' value='modules/News/javascript/sizecheck.js'}
 {pageaddvar name='javascript' value='modules/News/javascript/prototype-base-extensions.js'}
 {pageaddvar name='javascript' value='modules/News/javascript/prototype-date-extensions.js'}
 {pageaddvar name='javascript' value='modules/News/javascript/datepicker.js'}

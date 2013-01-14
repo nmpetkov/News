@@ -694,11 +694,7 @@ class News_Api_User extends Zikula_AbstractApi
         }
 
         if (ModUtil::available('scribite')) {
-            $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('Scribite'));
-            if (version_compare($modinfo['version'], '5.0', '>=')) {
-                // Scribite 5.0 onwards has editor on by default, otherwise detect in JS in template
-                return true;
-            } 
+            $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('scribite'));
             if (version_compare($modinfo['version'], '2.2', '>=')) {
                 $apiargs = array('modulename' => 'News'); // parameter handling corrected in 2.2
             } else {
