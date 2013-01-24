@@ -86,7 +86,7 @@
     <div class="z-formrow">
         <label for="news_notes"><a id="news_notes_collapse" href="javascript:void(0);"><span id="news_notes_showhide">{gt text='Show'}</span> {gt text='Footnote'}</a></label>
         <p id="news_notes_details">
-            <textarea id="news_notes" name="story[notes]" cols="40" rows="10">{$item.notes|safetext}</textarea>
+            <textarea id="news_notes" class='noeditor' name="story[notes]" cols="40" rows="10">{$item.notes|safetext}</textarea>
             <span class="z-formnote z-sub">{gt text='(Limit: %s characters)' tag1='65,536'}</span>
         </p>
     </div>
