@@ -448,6 +448,8 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
         // Insert the default article and preserve the standard fields
         if (!($obj = DBUtil::insertObject($article, 'news', 'sid'))) {
             LogUtil::registerStatus($this->__('Warning! Could not create the default News introductory article.'));
+        } else {
+            LogUtil::registerStatus($this->__('A default News introductory article has been created.'));
         }
         $obj = array('sid'  => $obj['sid'], 'from' => $obj['cr_date']);
         if (!DBUtil::updateObject($obj, 'news', '', 'sid')) {
