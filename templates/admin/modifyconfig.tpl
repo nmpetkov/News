@@ -137,18 +137,25 @@
             <div class="z-formrow">
                 <label for="news_pdflink">{gt text='Display a PDF link for the articles in the index page'}</label>
                 <input id="news_pdflink" type="checkbox" name="pdflink"{if $modvars.News.pdflink} checked="checked"{/if} />
+                {php}
+                    $available = PluginUtil::isAvailable(PluginUtil::getServiceId('SystemPlugin_Tcpdf_Plugin'));
+                    if(!$available) {
+                {/php}
+                <div class="z-warningmsg z-formnote">{gt text='You have to download the TCPDF SystemPlugin from <a href="https://www.github.com/cmfcmf/Tcpdf/tags">https://www.github.com/cmfcmf/Tcpdf/tags</a> to use this!'}</div>
+                {php}
+                    }
+                {/php}
             </div>
             <div id="news_pdflink_details">
                 <div class="z-formrow">
-                    <div class="z-informationmsg z-formnote">{gt text='The PDF link is based on <a href="http://www.tcpdf.org">TCPDF</a>. The News module ships with a subset of available fonts. If you wish to expand the font options, you will need to download the package and transfer fonts to the appropriate folder within the News module. Additionally, you would need to override the News_Controller_User::displaypdf() method to change the fonts used.'}</div>
-                </div>
-				<div class="z-formrow">
-                    <div class="z-informationmsg z-formnote">{gt text='Please ensure, that the TCPDF`s Cache Folder (modules/News/lib/vendor/tcpdf/cache) has writing permissions.'}</div>
+                    <div class="z-informationmsg z-formnote">{gt text='The PDF link is based on <a href="http://www.tcpdf.org">TCPDF</a>, which is implemented by using the TCPDF SystemPlugin you can download <a href="https://www.github.com/cmfcmf/Tcpdf/tags">here</a>.'}</div>
                 </div>
                 <div class="z-formrow">
-                    <label for="news_pdflink_headerlogo">{gt text='TCPDF Header logo image (absolute path or relative to tcpdf/images)'}</label>
+                    <div class="z-informationmsg z-formnote">{gt text='Please ensure, that the TCPDF`s Cache Folder (plugins/Tcpdf/lib/vendor/tcpdf/cache) has writing permissions.'}</div>
+                </div>
+                <div class="z-formrow">
+                    <label for="news_pdflink_headerlogo">{gt text='TCPDF Header logo image (absolute path or relative to your Zikula installation directory)'}</label>
                     <input id="news_pdflink_headerlogo" type="text" name="pdflink_headerlogo" value="{$modvars.News.pdflink_headerlogo|safetext}" />
-                    <div class="z-informationmsg z-formnote">{gt text='Default Header logo is defined by TCPDF and in PathToTCPDF/images folder. tcpdf_logo.jpg has a width of 30'}</div>
                 </div>
                 <div class="z-formrow">
                     <label for="news_pdflink_headerlogo_width">{gt text='TCPDF header logo width in mm'}</label>

@@ -21,7 +21,7 @@ class News_Version extends Zikula_AbstractVersion
         $meta = array();
         $meta['displayname'] = $this->__('News publisher');
         $meta['description'] = $this->__('News enables publishing and managing news articles contributed by site users.');
-        $meta['version'] = '3.1.0';
+        $meta['version'] = '3.1.1';
         //! this defines the module's url
         $meta['url'] = $this->__('news');
         $meta['core_min'] = '1.3.0'; // requires minimum 1.3.0 or later

@@ -903,59 +903,22 @@ class News_Controller_User extends Zikula_AbstractController
         // Store output in variable
         $articlehtml = $this->view->fetch('user/articlepdf.tpl');
 
-        // Include and configure the TCPDF class
-        define('K_TCPDF_EXTERNAL_CONFIG', true);
-        $classfile = DataUtil::formatForOS('modules/News/lib/vendor/tcpdf/tcpdf.php');
-        include_once $classfile;
-        $lang = ZLanguage::getInstance();
-        $langcode = $lang->getLanguageCodeLegacy();
-        $langfile = DataUtil::formatForOS("modules/News/lib/vendor/tcpdf/config/lang/{$langcode}.php");
-        if (file_exists($langfile)) {
-            include_once $langfile;
-        } else {
-            // default to english
-            include_once DataUtil::formatForOS('modules/News/lib/vendor/tcpdf/config/lang/eng.php');
-        }
-        $configfile = DataUtil::formatForOS('modules/News/lib/vendor/tcpdf_news_config.php');
-        require_once $configfile;
-
-        // create new PDF document
-        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $tcpdf = PluginUtil::loadPlugin('SystemPlugin_Tcpdf_Plugin');
+        $pdf = $tcpdf->createPdf();
 
         // set pdf document information
         $pdf->SetCreator(System::getVar('sitename'));
         $pdf->SetAuthor($info['contributor']);
         $pdf->SetTitle($info['title']);
         $pdf->SetSubject($info['cattitle']);
-        //$pdf->SetKeywords($info['cattitle']);
-        // set default header data
-        //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
-        $sitename = System::getVar('sitename');
-        /*    $pdf->SetHeaderData(
-          $modvars['pdflink_headerlogo'],
-          $modvars['pdflink_headerlogo_width'],
-          $this->__f('Article %1$s by %2$s', array($info['title'], $info['contributor'])),
-          $sitename . ' :: ' . $this->__('News publisher')); */
-        $pdf->SetHeaderData($this->getVar('pdflink_headerlogo'), $this->getVar('pdflink_headerlogo_width'), '', $sitename . ' :: ' . $info['cattitle'] . ' :: ' . $info['topicname']);
-        // set header and footer fonts
-        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-        // set default monospaced font
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-        //set margins
-        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-        //set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-        //set image scale factor
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-        //set some language-dependent strings
-        $pdf->setLanguageArray($l); // $l is undefined??? TODO
-        // set font, freeserif is big !
-        //$pdf->SetFont('freeserif', '', 10);
-        // For Unicode data put dejavusans in tcpdf_config.php
-        $pdf->SetFont(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN);
+
+        $title = $info['title'];
+        if(!empty($info['cattitle']))
+            $title .= ' :: ' . $info['cattitle'];
+        if(!empty($info['topicname']))
+            $title .= ' :: ' . $info['topicname'];
+          
+        $pdf->SetHeaderData($this->getVar('pdflink_headerlogo'), $this->getVar('pdflink_headerlogo_width'), $title, PDF_HEADER_STRING);
 
         // add a page
         $pdf->AddPage();
