@@ -60,7 +60,7 @@ class News_Installer extends Zikula_AbstractInstaller
         // pdf link for an article
         $this->setVar('pdflink', false);
         $this->setVar('pdflink_headerlogo', 'images/logo.gif');
-        $this->setVar('pdflink_headerlogo_width', '20');
+        $this->setVar('pdflink_headerlogo_width', '15');
         $this->setVar('pdflink_enablecache', true);
 
         // picture uploading
@@ -378,7 +378,7 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
                 $oldLogo = $this->getVar('pdflink_headerlogo');
                 if($oldLogo == 'tcpdf_logo.jpg') {
                     $this->setVar('pdflink_headerlogo', 'images/logo.gif');
-                    $this->setVar('pdflink_headerlogo_width', '20');
+                    $this->setVar('pdflink_headerlogo_width', '15');
                 }
             case '3.1.1':
                 // future plans
