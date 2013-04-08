@@ -157,14 +157,14 @@
                     <label for="news_pdflink_displayaccess">{gt text='Permissions to create and display PDF file'}</label>
                     <select id="news_pdflink_displayaccess" name="pdflink_displayaccess" size="1">
                         <option value="0"{if $modvars.News.pdflink_displayaccess eq 0} selected="selected"{/if}>{gt text='Not checked'}</option>
-                        <option value="100"{if $modvars.News.pdflink_displayaccess eq 100} selected="selected"{/if}>ACCESS_OVERVIEW</option>
-                        <option value="200"{if $modvars.News.pdflink_displayaccess eq 200} selected="selected"{/if}>ACCESS_READ</option>
-                        <option value="300"{if $modvars.News.pdflink_displayaccess eq 300} selected="selected"{/if}>ACCESS_COMMENT</option>
-                        <option value="400"{if $modvars.News.pdflink_displayaccess eq 400} selected="selected"{/if}>ACCESS_MODERATE</option>
-                        <option value="500"{if $modvars.News.pdflink_displayaccess eq 500} selected="selected"{/if}>ACCESS_EDIT</option>
-                        <option value="600"{if $modvars.News.pdflink_displayaccess eq 600} selected="selected"{/if}>ACCESS_ADD</option>
-                        <option value="700"{if $modvars.News.pdflink_displayaccess eq 700} selected="selected"{/if}>ACCESS_DELETE</option>
-                        <option value="800"{if $modvars.News.pdflink_displayaccess eq 800} selected="selected"{/if}>ACCESS_ADMIN</option>
+                        <option value="100"{if $modvars.News.pdflink_displayaccess eq 100} selected="selected"{/if}>{$permissionlevels[100]}</option>
+                        <option value="200"{if $modvars.News.pdflink_displayaccess eq 200} selected="selected"{/if}>{$permissionlevels[200]}</option>
+                        <option value="300"{if $modvars.News.pdflink_displayaccess eq 300} selected="selected"{/if}>{$permissionlevels[300]}</option>
+                        <option value="400"{if $modvars.News.pdflink_displayaccess eq 400} selected="selected"{/if}>{$permissionlevels[400]}</option>
+                        <option value="500"{if $modvars.News.pdflink_displayaccess eq 500} selected="selected"{/if}>{$permissionlevels[500]}</option>
+                        <option value="600"{if $modvars.News.pdflink_displayaccess eq 600} selected="selected"{/if}>{$permissionlevels[600]}</option>
+                        <option value="700"{if $modvars.News.pdflink_displayaccess eq 700} selected="selected"{/if}>{$permissionlevels[700]}</option>
+                        <option value="800"{if $modvars.News.pdflink_displayaccess eq 800} selected="selected"{/if}>{$permissionlevels[800]}</option>
                     </select>
                 </div>
                 <div class="z-formrow">
