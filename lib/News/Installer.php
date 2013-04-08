@@ -62,6 +62,7 @@ class News_Installer extends Zikula_AbstractInstaller
         $this->setVar('pdflink_headerlogo', 'images/logo.gif');
         $this->setVar('pdflink_headerlogo_width', '15');
         $this->setVar('pdflink_enablecache', true);
+        $this->setVar('pdflink_displayaccess', 0);
 
         // picture uploading
         $this->setVar('picupload_enabled', false);
@@ -262,8 +263,6 @@ class News_Installer extends Zikula_AbstractInstaller
                 $this->setVar('notifyonpending_subject', $this->__('A News Publisher article has been submitted for review'));
                 $this->setVar('notifyonpending_html', true);
                 $this->setVar('pdflink', false);
-                $this->setVar('pdflink_tcpdfpath', 'config/classes/tcpdf/tcpdf.php');
-                $this->setVar('pdflink_tcpdflang', 'config/classes/tcpdf/config/lang/eng.php');
                 $this->setVar('pdflink_headerlogo', 'tcpdf_logo.jpg');
                 $this->setVar('pdflink_headerlogo_width', '30');
 
@@ -380,6 +379,7 @@ CHANGE `pn_pictures` `pictures` INT( 11 ) NULL DEFAULT '0'";
                     $this->setVar('pdflink_headerlogo', 'images/logo.gif');
                     $this->setVar('pdflink_headerlogo_width', '15');
                 }
+                $this->setVar('pdflink_displayaccess', 0);
             case '3.1.1':
                 // future plans
         }

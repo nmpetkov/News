@@ -154,6 +154,20 @@
                     <div class="z-informationmsg z-formnote">{gt text='Please ensure, that the TCPDF`s Cache Folder (plugins/Tcpdf/lib/vendor/tcpdf/cache) has writing permissions.'}</div>
                 </div>
                 <div class="z-formrow">
+                    <label for="news_pdflink_displayaccess">{gt text='Permissions to create and display PDF file'}</label>
+                    <select id="news_pdflink_displayaccess" name="pdflink_displayaccess" size="1">
+                        <option value="0"{if $modvars.News.pdflink_displayaccess eq 0} selected="selected"{/if}>{gt text='Not checked'}</option>
+                        <option value="100"{if $modvars.News.pdflink_displayaccess eq 100} selected="selected"{/if}>ACCESS_OVERVIEW</option>
+                        <option value="200"{if $modvars.News.pdflink_displayaccess eq 200} selected="selected"{/if}>ACCESS_READ</option>
+                        <option value="300"{if $modvars.News.pdflink_displayaccess eq 300} selected="selected"{/if}>ACCESS_COMMENT</option>
+                        <option value="400"{if $modvars.News.pdflink_displayaccess eq 400} selected="selected"{/if}>ACCESS_MODERATE</option>
+                        <option value="500"{if $modvars.News.pdflink_displayaccess eq 500} selected="selected"{/if}>ACCESS_EDIT</option>
+                        <option value="600"{if $modvars.News.pdflink_displayaccess eq 600} selected="selected"{/if}>ACCESS_ADD</option>
+                        <option value="700"{if $modvars.News.pdflink_displayaccess eq 700} selected="selected"{/if}>ACCESS_DELETE</option>
+                        <option value="800"{if $modvars.News.pdflink_displayaccess eq 800} selected="selected"{/if}>ACCESS_ADMIN</option>
+                    </select>
+                </div>
+                <div class="z-formrow">
                     <label for="news_pdflink_headerlogo">{gt text='TCPDF Header logo image (absolute path or relative to your Zikula installation directory)'}</label>
                     <input id="news_pdflink_headerlogo" type="text" name="pdflink_headerlogo" value="{$modvars.News.pdflink_headerlogo|safetext}" />
                 </div>
