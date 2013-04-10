@@ -157,14 +157,14 @@
                     <label for="news_pdflink_displayaccess">{gt text='Permissions to create and display PDF file'}</label>
                     <select id="news_pdflink_displayaccess" name="pdflink_displayaccess" size="1">
                         <option value="0"{if $modvars.News.pdflink_displayaccess eq 0} selected="selected"{/if}>{gt text='Not checked'}</option>
-                        <option value="100"{if $modvars.News.pdflink_displayaccess eq 100} selected="selected"{/if}>{$permissionlevels[100]}</option>
-                        <option value="200"{if $modvars.News.pdflink_displayaccess eq 200} selected="selected"{/if}>{$permissionlevels[200]}</option>
-                        <option value="300"{if $modvars.News.pdflink_displayaccess eq 300} selected="selected"{/if}>{$permissionlevels[300]}</option>
-                        <option value="400"{if $modvars.News.pdflink_displayaccess eq 400} selected="selected"{/if}>{$permissionlevels[400]}</option>
-                        <option value="500"{if $modvars.News.pdflink_displayaccess eq 500} selected="selected"{/if}>{$permissionlevels[500]}</option>
-                        <option value="600"{if $modvars.News.pdflink_displayaccess eq 600} selected="selected"{/if}>{$permissionlevels[600]}</option>
-                        <option value="700"{if $modvars.News.pdflink_displayaccess eq 700} selected="selected"{/if}>{$permissionlevels[700]}</option>
-                        <option value="800"{if $modvars.News.pdflink_displayaccess eq 800} selected="selected"{/if}>{$permissionlevels[800]}</option>
+                        {assign var='plevel' value='ACCESS_OVERVIEW'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_READ'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_COMMENT'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_MODERATE'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_EDIT'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_ADD'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_DELETE'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_ADMIN'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
                     </select>
                 </div>
                 <div class="z-formrow">
