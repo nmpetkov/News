@@ -156,7 +156,7 @@
                 <div class="z-formrow">
                     <label for="news_pdflink_displayaccess">{gt text='Permissions to create and display PDF file'}</label>
                     <select id="news_pdflink_displayaccess" name="pdflink_displayaccess" size="1">
-                        <option value="0"{if $modvars.News.pdflink_displayaccess eq 0} selected="selected"{/if}>{gt text='Not checked'}</option>
+                        <option value="0"{if $modvars.News.pdflink_displayaccess eq 0} selected="selected"{/if}>{gt text='Access from everybody'}</option>
                         {assign var='plevel' value='ACCESS_OVERVIEW'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
                         {assign var='plevel' value='ACCESS_READ'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
                         {assign var='plevel' value='ACCESS_COMMENT'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
