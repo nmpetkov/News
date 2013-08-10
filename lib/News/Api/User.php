@@ -1108,7 +1108,7 @@ class News_Api_User extends Zikula_AbstractApi
             $cache_ids[] = 'homepage'; // for homepage (it can be adjustment in module settings)
             $cache_ids[] = 'News/user/view'; // view function (articles list)
             $cache_ids[] = 'News/user/main'; // main function
-            $cache_ids[] = 'News/user/archives/month_'.DateUtil::getDatetime_Field($item['ffrom'], 2).'/year_'.DateUtil::getDatetime_Field($item['ffrom'], 1); // archives
+            $cache_ids[] = 'News/user/archives/month_'.DateUtil::getDatetime_Field($item['from'], 2).'/year_'.DateUtil::getDatetime_Field($item['from'], 1); // archives
             $theme = Zikula_View_Theme::getInstance();
             //if (Zikula_Core::VERSION_NUM > '1.3.2') {
             if (method_exists($theme, 'clear_cacheid_allthemes')) {
