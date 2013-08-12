@@ -828,6 +828,11 @@ class News_Controller_User extends Zikula_AbstractController
      */
     public function displaypdf($args)
     {
+        $pdflink_displayaccess = $this->getVar('pdflink_displayaccess', 0);
+        if ($pdflink_displayaccess > 0) {
+            $this->throwForbiddenUnless(SecurityUtil::checkPermission('News::', '::', $pdflink_displayaccess), LogUtil::getErrorMsgPermission());
+        }
+
         // Get parameters from whatever input we need
         $sid = (int)FormUtil::getPassedValue('sid', null, 'REQUEST');
         $objectid = (int)FormUtil::getPassedValue('objectid', null, 'REQUEST');

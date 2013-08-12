@@ -154,6 +154,20 @@
                     <div class="z-informationmsg z-formnote">{gt text='Please ensure, that the TCPDF`s Cache Folder (plugins/Tcpdf/lib/vendor/tcpdf/cache) has writing permissions.'}</div>
                 </div>
                 <div class="z-formrow">
+                    <label for="news_pdflink_displayaccess">{gt text='Permissions to create and display PDF file'}</label>
+                    <select id="news_pdflink_displayaccess" name="pdflink_displayaccess" size="1">
+                        <option value="0"{if $modvars.News.pdflink_displayaccess eq 0} selected="selected"{/if}>{gt text='Access from everybody'}</option>
+                        {assign var='plevel' value='ACCESS_OVERVIEW'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_READ'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_COMMENT'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_MODERATE'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_EDIT'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_ADD'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_DELETE'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                        {assign var='plevel' value='ACCESS_ADMIN'|const}<option value="{$plevel}"{if $modvars.News.pdflink_displayaccess eq $plevel} selected="selected"{/if}>{$permissionlevels[$plevel]}</option>
+                    </select>
+                </div>
+                <div class="z-formrow">
                     <label for="news_pdflink_headerlogo">{gt text='TCPDF Header logo image (absolute path or relative to your Zikula installation directory)'}</label>
                     <input id="news_pdflink_headerlogo" type="text" name="pdflink_headerlogo" value="{$modvars.News.pdflink_headerlogo|safetext}" />
                 </div>
