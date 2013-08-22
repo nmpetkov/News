@@ -6,14 +6,12 @@
  * @copyright  (c) Zikula Development Team
  * @link       http://www.zikula.org
  * @license    GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @author     Mark West <mark@zikula.org>
  * @category   Zikula_3rdParty_Modules
  * @package    Content_Management
  * @subpackage News
  */
 class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
 {
-
     /**
      * modify a news entry (incl. delete) via ajax
      *
@@ -26,15 +24,15 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
     {
         $this->checkAjaxToken();
 
-        $sid = $this->request->getPost()->get('sid');
-        $page = $this->request->getPost()->get('page', 1);
+        $sid  = (int)$this->request->getPost()->get('sid');
+        $page = (int)$this->request->getPost()->get('page', 1);
 
         // Get the news article
-        $item = ModUtil::apiFunc('News', 'User', 'get', array('sid' => $sid));
+        $item = ModUtil::apiFunc('News', 'user', 'get', array('sid' => $sid));
         if ($item == false) {
             throw new Zikula_Exception_NotFound($this->__('Error! No such article found.'));
         }
-
+		
         // Security check
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('News::', "{$item['cr_uid']}::$sid", ACCESS_EDIT));
 
@@ -442,21 +440,21 @@ class News_Controller_Ajax extends Zikula_Controller_AbstractAjax
         $enabled = false;
         if (!empty($folder)) {
             if ($folder[0] == '/') {
-                $output = '<img src="images/icons/extrasmall/cancel.png" width="16" height="16" />' . ' ' . DataUtil::formatForDisplayHTML($this->__("Specified path appears to be 'above' the DOCUMENT_ROOT. Please choose a path relative to the webserver (e.g. images/news_picupload)."));
+                $output = '<img src="images/icons/extrasmall/button_cancel.png" width="16" height="16" />' . ' ' . DataUtil::formatForDisplayHTML($this->__("Specified path appears to be 'above' the DOCUMENT_ROOT. Please choose a path relative to the webserver (e.g. images/news_picupload)."));
             } else {
                 if (is_dir($folder)) {
                     if (is_writable($folder)) {
-                        $output = '<img src="images/icons/extrasmall/ok.png" width="16" height="16" />' . ' ' . DataUtil::formatForDisplayHTML($this->__f('Specified path [%s] does exist and is writable.', $folder));
+                        $output = '<img src="images/icons/extrasmall/button_ok.png" width="16" height="16" />' . ' ' . DataUtil::formatForDisplayHTML($this->__f('Specified path [%s] does exist and is writable.', $folder));
                     } else {
-                        $output = '<img src="images/icons/extrasmall/cancel.png" width="16" height="16" />' . ' ' . DataUtil::formatForDisplayHTML($this->__f('Specified path [%s] does exist, but is not writable. Make sure that this path is writable by the webserver.', $folder));
+                        $output = '<img src="images/icons/extrasmall/button_cancel.png" width="16" height="16" />' . ' ' . DataUtil::formatForDisplayHTML($this->__f('Specified path [%s] does exist, but is not writable. Make sure that this path is writable by the webserver.', $folder));
                     }
                 } else {
-                    $output = '<img src="images/icons/extrasmall/cancel.png" width="16" height="16" />' . ' ' . DataUtil::formatForDisplayHTML($this->__f('Specified path [%s] does not exist yet. News pubisher will create this path if you check the field below.', $folder));
+                    $output = '<img src="images/icons/extrasmall/button_cancel.png" width="16" height="16" />' . ' ' . DataUtil::formatForDisplayHTML($this->__f('Specified path [%s] does not exist yet. News pubisher will create this path if you check the field below.', $folder));
                     $enabled = true;
                 }
             }
         } else {
-            $output = '<img src="images/icons/extrasmall/cancel.png" width="16" height="16" />' . ' ' . DataUtil::formatForDisplayHTML($this->__('Specified path is an empty string, please fill in a path (e.g. images/news_picupload).'));
+            $output = '<img src="images/icons/extrasmall/button_cancel.png" width="16" height="16" />' . ' ' . DataUtil::formatForDisplayHTML($this->__('Specified path is an empty string, please fill in a path (e.g. images/news_picupload).'));
         }
         $response = array(
             'result' => $output,

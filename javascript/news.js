@@ -59,7 +59,6 @@ function news_init_check()
  *@params sid    the story id;
  *@params page   the page id;
  *@return none;
- *@author Frank Schummertz
  */
 function editnews(sid, page)
 {
@@ -70,7 +69,7 @@ function editnews(sid, page)
             page: page
         }
         new Zikula.Ajax.Request(
-            "ajax.php?module=News&func=modify",
+            "index.php?module=News&type=ajax&func=modify",
             {
                 parameters: pars,
                 onComplete: editnews_init
@@ -84,7 +83,6 @@ function editnews(sid, page)
  *
  *@params req   response from Ajax request;
  *@return none;
- *@author Frank Schummertz
  */
 function editnews_init(req) 
 {
@@ -107,7 +105,7 @@ function editnews_init(req)
         editors = Xinha.makeEditors(xinha_editorsarray, xinha_config, xinha_plugins);
         Xinha.startEditors(editors);
     }
-
+	
     // enable attribute UI
     var list_newsattributes = null;
     list_newsattributes = new Zikula.itemlist('newsattributes', {headerpresent: true, firstidiszero: true});
@@ -129,7 +127,6 @@ function editnews_init(req)
  *
  *@params none;
  *@return none;
- *@author Frank Schummertz
  */
 function editnews_cancel()
 {
@@ -144,7 +141,6 @@ function editnews_cancel()
  *
  *@params none;
  *@return none;
- *@author Frank Schummertz
  */
 function editnews_save(action)
 {
@@ -159,7 +155,7 @@ function editnews_save(action)
         var pars = $('news_ajax_modifyform').serialize(true);
         pars.action = action;
         new Zikula.Ajax.Request(
-            'ajax.php?module=News&func=update',
+            'index.php?module=News&type=ajax&func=update',
             {
                 parameters: pars,
                 onComplete: editnews_saveresponse
@@ -178,7 +174,6 @@ function editnews_save(action)
  *
  *@params req   response from Ajax request;
  *@return none;
- *@author Frank Schummertz
  */
 function editnews_saveresponse(req)
 {
@@ -316,7 +311,6 @@ function permalinkeditsave_response(originalRequest)
  * Start the saving draft process by calling the appropriate Ajax function
  *
  *@return none;
- *@author Erik Spaan
  */
 function savedraft()
 {
@@ -331,13 +325,18 @@ function savedraft()
     $('news_status_text').update(Zikula.__('Saving quick draft...','module_news_js'));
     $('news_button_text_draft').update(Zikula.__('Saving quick draft...','module_news_js'));
     new Zikula.Ajax.Request(
-        'ajax.php?module=news&func=savedraft',
+        'index.php?module=News&type=ajax&func=savedraft',
         {
             parameters: pars, 
             onComplete: savedraft_update
         });
 }
 
+/**
+ * Save succeeded, this method is called after the Ajax call to the php method
+ *
+ *@return none;
+ */
 function savedraft_update(req)
 {
     $('news_saving_draft').hide();
@@ -539,7 +538,7 @@ function executeuserselectform(data)
             dest: data.destination
         }
         new Zikula.Ajax.Request(
-            "ajax.php?module=News&func=updateauthor",
+            "index.php?module=News&type=ajax&func=updateauthor",
             {
                 parameters: pars,
                 onComplete: executeuserselectform_response

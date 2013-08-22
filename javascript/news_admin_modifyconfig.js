@@ -129,9 +129,9 @@ function news_picupload_writable()
     var pars = {
         folder: $F('news_picupload_uploaddir')
     };
-    $('news_picupload_writable').update('<img src="images/icons/extrasmall/indicator_circle.png" width="16" height="16" alt="" />');
+    $('news_picupload_writable').update('<img src="images/ajax/indicator_arrows.gif" width="16" height="16" alt="" />');
     new Zikula.Ajax.Request(
-        "ajax.php?module=News&func=checkpicuploadfolder",
+        "index.php?module=News&type=ajax&func=checkpicuploadfolder",
         {
             parameters: pars,
             onComplete: news_picupload_writable_update
