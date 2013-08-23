@@ -100,10 +100,9 @@ function editnews_init(req)
     sizecheckinit();
     news_init_check();
     
-    // Manual start of the Xinha editor
-    if (typeof Xinha != "undefined" && typeof xinha_editorsarray != "undefined") {
-        editors = Xinha.makeEditors(xinha_editorsarray, xinha_config, xinha_plugins);
-        Xinha.startEditors(editors);
+    // Manual start of the Scribite editor
+    if (typeof Scribite !== 'undefined') {
+        Scribite.createEditors();
     }
 	
     // enable attribute UI
@@ -148,9 +147,9 @@ function editnews_save(action)
         editing = false;
         Element.show('news_savenews');
 
-        // A manual onsubmit for xinha to update the textarea data again.
-        if (typeof Xinha != "undefined") {
-            $('news_ajax_modifyform').onsubmit();
+        // if Scribite is used, 'push' the rendered content back to the DOM element
+        if (typeof Scribite !== 'undefined') {
+            Scribite.renderAllElements();
         }
         var pars = $('news_ajax_modifyform').serialize(true);
         pars.action = action;
@@ -314,9 +313,9 @@ function permalinkeditsave_response(originalRequest)
  */
 function savedraft()
 {
-    // Re-fill the original textareas if Scribite Xinha is used, manual onsubmit needed
-    if (typeof Xinha != "undefined") {
-        $('news_user_newform').onsubmit();
+    // if Scribite is used, 'push' the rendered content back to the DOM element
+    if (typeof Scribite !== 'undefined') {
+        Scribite.renderAllElements();
     }
     var pars = $('news_user_newform').serialize(true);
 
