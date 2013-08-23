@@ -39,3 +39,6 @@
 {$hook}
 {/if}
 {/foreach}
+{if $modvars.News.enableajaxedit}
+    {notifydisplayhooks eventname='news.ui_hooks.articles.form_edit' id=$info.sid}
+{/if}
