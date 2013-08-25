@@ -11,6 +11,7 @@ function news_init_check()
 {
     if ($('news_loadnews')) {
         Element.hide('news_loadnews');
+        Element.hide('news-quickedit-hooks');
     }
     // if Javascript is on remove regular links
     if ($('news_editlinks') && $('news_editlinks_ajax')) {
@@ -87,6 +88,8 @@ function editnews(sid, page)
 function editnews_init(req) 
 {
     Element.hide('news_loadnews');
+    Element.hide('news-articledisplay-hooks');
+    Element.show('news-quickedit-hooks');
     if(!req.isSuccess()) {
         Zikula.showajaxerror(req.getMessage());
         return;
@@ -166,7 +169,7 @@ function editnews_save(action)
 /**
  * This functions gets called then the Ajax request in editnews_save() returns.
  * It removes the update html and the article html as well. The new article content
- * (the pnRendered news_user_articlecontent.htm) gets returned as part of the JSON result.
+ * (the rendered news_user_articlecontent.htm) gets returned as part of the JSON result.
  * Depending on the action performed it *might* initiate a page reload! This is necessary
  * when the story has been deleted or set to pending state which means the sid in the url
  * is no longer valid.
@@ -193,6 +196,8 @@ function editnews_saveresponse(req)
         Element.removeClassName($('news_editlinks_ajax'), 'hidelink'); 
     } 
     Element.show('news_articlecontent');
+    Element.show('news-articledisplay-hooks');
+    Element.hide('news-quickedit-hooks');
     switch(data.action) {
         case 'update':
             // reload if necessary (e.g. urltitle change)

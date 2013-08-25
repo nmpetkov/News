@@ -31,7 +31,7 @@
 </ul>
 </div>
 {/if}
-
+<div id="news-articledisplay-hooks">
 {* the next code is to display any hooks (e.g. comments, ratings). All hooks are stored in $hooks and called individually. EZComments is not called when Commenting is not allowed *}
 {notifydisplayhooks eventname='news.ui_hooks.articles.display_view' id=$info.sid assign='hooks'}
 {foreach from=$hooks key='provider_area' item='hook'}
@@ -39,6 +39,9 @@
 {$hook}
 {/if}
 {/foreach}
+</div>
 {if $modvars.News.enableajaxedit}
-    {notifydisplayhooks eventname='news.ui_hooks.articles.form_edit' id=$info.sid}
+<div id="news-quickedit-hooks">
+{notifydisplayhooks eventname='news.ui_hooks.articles.form_edit' id=$info.sid}
+</div>
 {/if}
