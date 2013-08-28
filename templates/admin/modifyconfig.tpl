@@ -78,7 +78,6 @@
             </div>
             <div id="news_ajaxedit_details">
                 <div class="z-informationmsg z-formnote">{gt text="Picture/file operations not supported in 'Quick edit' mode due to Ajax limitations."}</div>
-                <div class="z-informationmsg z-formnote">{gt text='When Scribite! is being used for editing, the <strong>display</strong> function needs to be added to the list of module functions that Scribite! uses for the News Publisher module.'}</div>
             </div>
             <div class="z-formrow">
                 <label for="news_enablemorearticlesincat">{gt text='Enable \'More articles in category\' when displaying an article'}</label>
