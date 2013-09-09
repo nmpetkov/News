@@ -680,7 +680,6 @@ class News_Controller_Admin extends Zikula_AbstractController
             }
         }
 
-		
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('News', 'news');
         $properties = array_keys($catregistry);
         $topicproperty = FormUtil::getPassedValue('topicproperty', null, 'POST');
