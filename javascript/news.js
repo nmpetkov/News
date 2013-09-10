@@ -69,8 +69,9 @@ function editnews(sid, page)
             sid: sid,
             page: page
         }
+        // Zikula 1.3.6 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 1.3.5
         new Zikula.Ajax.Request(
-            "index.php?module=News&type=ajax&func=modify",
+            "ajax.php?module=News&type=ajax&func=modify",
             {
                 parameters: pars,
                 onComplete: editnews_init
@@ -156,8 +157,9 @@ function editnews_save(action)
         }
         var pars = $('news_ajax_modifyform').serialize(true);
         pars.action = action;
+        // Zikula 1.3.6 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 1.3.5
         new Zikula.Ajax.Request(
-            'index.php?module=News&type=ajax&func=update',
+            'ajax.php?module=News&type=ajax&func=update',
             {
                 parameters: pars,
                 onComplete: editnews_saveresponse
@@ -216,101 +218,6 @@ function editnews_saveresponse(req)
     return;
 }
 
-
-/* Taken from Dizkus edittopicsubject TOBEDONE !
-function permalinkedit(topicid)
-{
-    if(subjectstatus == false) {
-        subjectstatus = true;
-        var pars = "module=Dizkus&func=edittopicsubject&topic=" + topicid;
-        Ajax.Responders.register(dzk_globalhandlers);
-        var myAjax = new Ajax.Request(
-            document.location.pnbaseURL+"ajax.php",
-            {
-                method: 'post',
-                parameters: pars,
-                onComplete: permalinkeditinit
-            });
-    }
-}
-
-function permalinkeditinit(originalRequest)
-{
-    // show error if necessary
-    if( originalRequest.status != 200 ) {
-        dzk_showajaxerror(originalRequest.responseText);
-        subjectstatus = false;
-        return;
-    }
-
-    var result = dejsonize(originalRequest.responseText);
-
-    var topicsubjectID = 'topicsubject_' + result.topic_id;
-
-    Element.hide(topicsubjectID);
-    updateAuthid(result.authid);
-
-    new Insertion.After($(topicsubjectID), result.data);
-}
-
-function permalinkeditcancel(topicid)
-{
-    var topicsubjectID = 'topicsubject_' + topicid;
-
-    Element.remove(topicsubjectID + '_editor');
-    Element.show(topicsubjectID);
-    subjectstatus = false;
-}
-
-function permalinkeditsave(topicid)
-{
-    var topicsubjectID = 'topicsubject_' + topicid;
-    var editID = topicsubjectID + '_edit';
-    var authID = topicsubjectID + '_authid';
-    if($F(editID) == '') {
-        // no text
-        return;
-    }
-
-    var pars = "module=Dizkus&func=updatetopicsubject" +
-               "&topic=" + topicid +
-               "&subject=" + encodeURIComponent($F(editID)) +
-               "&authid=" + $F(authID);
-    Ajax.Responders.register(dzk_globalhandlers);
-    var myAjax = new Ajax.Request(
-                    document.location.pnbaseURL+"ajax.php",
-                    {
-                        method: 'post',
-                        parameters: pars,
-                        onComplete: permalinkeditsave_response
-                    }
-                    );
-
-}
-
-function permalinkeditsave_response(originalRequest)
-{
-    // show error if necessary
-    if( originalRequest.status != 200 ) {
-        dzk_showajaxerror(originalRequest.responseText);
-        subjectstatus = false;
-        return;
-    }
-
-    var result = dejsonize(originalRequest.responseText);
-    var topicsubjectID = 'topicsubject_' + result.topic_id;
-
-    Element.remove(topicsubjectID + '_editor');
-    updateAuthid(result.authid);
-
-    Element.update(topicsubjectID + '_content', result.topic_title);
-    Element.show(topicsubjectID);
-
-    subjectstatus = false;
-}
-*/
-
-
 /**
  * Start the saving draft process by calling the appropriate Ajax function
  *
@@ -328,8 +235,9 @@ function savedraft()
     $('news_saving_draft').show();
     $('news_status_text').update(Zikula.__('Saving quick draft...','module_news_js'));
     $('news_button_text_draft').update(Zikula.__('Saving quick draft...','module_news_js'));
+    // Zikula 1.3.6 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 1.3.5
     new Zikula.Ajax.Request(
-        'index.php?module=News&type=ajax&func=savedraft',
+        'ajax.php?module=News&type=ajax&func=savedraft',
         {
             parameters: pars, 
             onComplete: savedraft_update
@@ -541,8 +449,9 @@ function executeuserselectform(data)
             sid: $F('news_sid'),
             dest: data.destination
         }
+        // Zikula 1.3.6 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 1.3.5
         new Zikula.Ajax.Request(
-            "index.php?module=News&type=ajax&func=updateauthor",
+            "ajax.php?module=News&type=ajax&func=updateauthor",
             {
                 parameters: pars,
                 onComplete: executeuserselectform_response

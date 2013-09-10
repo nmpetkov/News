@@ -131,7 +131,7 @@ function news_picupload_writable()
     };
     $('news_picupload_writable').update('<img src="images/ajax/indicator_arrows.gif" width="16" height="16" alt="" />');
     new Zikula.Ajax.Request(
-        "index.php?module=News&type=ajax&func=checkpicuploadfolder",
+        "ajax.php?module=News&type=ajax&func=checkpicuploadfolder",
         {
             parameters: pars,
             onComplete: news_picupload_writable_update
