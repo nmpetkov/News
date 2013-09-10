@@ -72,9 +72,8 @@ class News_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerArgsError();
         }
 
-        // Get the news article in the db
+        // Get the news article from the db
         $dbitem = ModUtil::apiFunc('News', 'user', 'get', array('sid' => $sid));
-
         if ($dbitem === false) {
             return LogUtil::registerError($this->__('Error! No such article found.'), 404);
         }
@@ -354,7 +353,6 @@ class News_Controller_Admin extends Zikula_AbstractController
 
         // Get the news story
         $item = ModUtil::apiFunc('News', 'user', 'get', array('sid' => $sid));
-
         if ($item == false) {
             return LogUtil::registerError($this->__('Error! No such article found.'), 404);
         }
