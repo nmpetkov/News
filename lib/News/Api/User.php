@@ -685,7 +685,7 @@ class News_Api_User extends Zikula_AbstractApi
     }
 
     /**
-     * analize if the News module has an Scribite! editor assigned
+     * analyze if the News module has an Scribite! editor assigned
      */
     public function isformatted($args)
     {
@@ -693,7 +693,7 @@ class News_Api_User extends Zikula_AbstractApi
             $args['func'] = 'all';
         }
 
-        if (ModUtil::available('scribite')) {
+        if (ModUtil::available('Scribite')) {
             $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('Scribite'));
             if (version_compare($modinfo['version'], '5.0', '>=')) {
                 // Scribite 5.0 onwards has editor on by default, otherwise detect in JS in template

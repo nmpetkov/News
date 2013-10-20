@@ -76,7 +76,8 @@ class News_Controller_User extends Zikula_AbstractController
         $item['pictures'] = isset($sess_item['pictures']) ? $sess_item['pictures'] : 0;
         $item['tempfiles'] = isset($sess_item['tempfiles']) ? $sess_item['tempfiles'] : null;
         $item['temp_pictures'] = isset($sess_item['tempfiles']) ? unserialize($sess_item['tempfiles']) : null;
-        
+
+        // Check if in preview mode
         $preview = '';
         if (isset($sess_item['action']) && $sess_item['action'] == self::ACTION_PREVIEW) {
             $preview = $this->preview(array('title' => $item['title'],
@@ -109,10 +110,11 @@ class News_Controller_User extends Zikula_AbstractController
         // Assign the item to the template
         $this->view->assign('item', $item);
 
-        // Assign the content format
+        // Check if Scribite is enabled and hence html format enabled
         $formattedcontent = ModUtil::apiFunc('News', 'user', 'isformatted', array('func' => 'newitem'));
         $this->view->assign('formattedcontent', $formattedcontent);
 
+        // Perform access checks, from basic to advanced
         $this->view->assign('accessadd', 0);
         if (SecurityUtil::checkPermission('News::', '::', ACCESS_ADD)) {
             $this->view->assign('accessadd', 1);
