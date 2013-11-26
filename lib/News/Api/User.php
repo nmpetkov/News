@@ -752,7 +752,7 @@ class News_Api_User extends Zikula_AbstractApi
         }
 
         // define the available user functions
-        $funcs = array('main', 'newitem', 'create', 'view', 'archives', 'display', 'categorylist', 'displaypdf');
+        $funcs = array('index', 'main', 'newitem', 'create', 'view', 'archives', 'display', 'categorylist', 'displaypdf');
         // set the correct function name based on our input
         if (empty($args['vars'][2])) {
             System::queryStringSetVar('func', 'view');
@@ -805,20 +805,22 @@ class News_Api_User extends Zikula_AbstractApi
             // remove any category path down to the leaf category
             $permalinkkeycount = count($permalinkkeys);
             $varscount = count($args['vars']);
-            ($args['vars'][$varscount-2] == 'page') ? $pagersize = 2 : $pagersize = 0 ;
-            if (($permalinkkeycount + $pagersize) != $varscount) {
+            (($varscount >= 2) && ($args['vars'][$varscount-2] == 'page')) ? $pagersize = 2 : $pagersize = 0 ;
+            if (isset($permalinkkeys['%category%']) && (($permalinkkeycount + $pagersize) != $varscount)) {
                 array_splice($args['vars'], $permalinkkeys['%category%'],  $varscount - $permalinkkeycount);
             }
 
             // get the story id or title
             foreach ($permalinkkeys as $permalinkvar => $permalinkkey) {
-                System::queryStringSetVar(str_replace('%', '', $permalinkvar), $args['vars'][$permalinkkey]);
+                if (isset($args['vars'][$permalinkkey])) {
+                    System::queryStringSetVar(str_replace('%', '', $permalinkvar), $args['vars'][$permalinkkey]);
+                }
             }
 
             if (isset($permalinkkeys['%articleid%']) && isset($args['vars'][$permalinkkeys['%articleid%']]) && is_numeric($args['vars'][$permalinkkeys['%articleid%']])) {
                 System::queryStringSetVar('sid', $args['vars'][$permalinkkeys['%articleid%']]);
                 $nextvar = $permalinkkeys['%articleid%']+1;
-            } else {
+            } else if (isset($args['vars'][$permalinkkeys['%articletitle%']])) {
                 System::queryStringSetVar('title', $args['vars'][$permalinkkeys['%articletitle%']]);
                 $nextvar = $permalinkkeys['%articletitle%']+1;
             }
