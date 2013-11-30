@@ -224,7 +224,7 @@ class News_Api_User extends Zikula_AbstractApi
 
         $date = DateUtil::getDatetime();
         $where = "($news_column[from] < '$date' AND $news_column[published_status] = '0')";
-        // revert to manual SQL call because Doctrine 1 doesn't support EXTRACT()
+        // revert to manual SQL call because of use of GROUP BY in ORDER param
         $sql = "SELECT $news_column[from] FROM $tables[news] AS tbl WHERE $where $order";
         $res = DBUtil::executeSQL($sql);
         $dates = DBUtil::marshallFieldArray($res);
