@@ -57,7 +57,7 @@
             <button id="news_button_reject" class="z-btred" type="submit" name="story[action]" value="3" title="{gt text='Reject this article'}">{img src='locked.png' modname='core' set='icons/extrasmall' __alt='Reject'  __title='Reject this article' } {gt text='Reject'}</button>
             {/if}
             {/if}
-            {checkpermissionblock component='News::' instance="$item.cr_uid::$item.sid" level='ACCESS_DELETE'}
+            {checkpermissionblock component='News::' instance=$item.cr_uid|cat:'::'|cat:$item.sid level='ACCESS_DELETE'}
             <a id="news_button_delete" href="{modurl modname='News' type='admin' func='delete' sid=$item.sid}" class="z-btred">{img modname='core' src='editdelete.png' set='icons/extrasmall' __alt='Delete' __title='Delete this article'} {gt text='Delete'}</a>
             {/checkpermissionblock}
             <a id="news_button_cancel" href="{modurl modname='News' type='admin' func='view'}" class="z-btred">{img modname='core' src='button_cancel.png' set='icons/extrasmall' __alt='Cancel' __title='Cancel'} {gt text='Cancel'}</a>

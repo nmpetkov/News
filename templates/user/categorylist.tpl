@@ -28,7 +28,7 @@
             {if $categoryname eq ''}{assign var='categoryname' value=$category.category.name}{/if}
             {array_field assign='categorydesc' array=$category.category.display_desc field=$lang}
             {assign var='categoryid' value=$category.category.id}
-            {checkpermission component='Categories::category' instance="ID::$category.category.id" level='ACCESS_EDIT' assign='authcatedit'}
+            {checkpermission component='Categories::category' instance="ID::"|cat:$category.category.id level='ACCESS_EDIT' assign='authcatedit'}
             <li>
                 {* Remove this line to enable category image display
                 {if !empty($category.category.catimage)}
@@ -71,7 +71,7 @@
                     {if $categoryname eq ''}{assign var='categoryname' value=$subcat.category.name}{/if}
                     {array_field assign='categorydesc' array=$subcat.category.display_desc field=$lang}
                     {assign var='categoryid' value=$subcat.category.id}
-                    {checkpermission component='Categories::category' instance="ID::$subcat.category.id" level='ACCESS_EDIT' assign='authcatedit'}
+                    {checkpermission component='Categories::category' instance="ID::"|cat:$subcat.category.id level='ACCESS_EDIT' assign='authcatedit'}
                     <li>
                 {* Remove this line to enable category image display
                 {if !empty($subcat.category.catimage)}
