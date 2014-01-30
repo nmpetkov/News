@@ -69,9 +69,9 @@ function editnews(sid, page)
             sid: sid,
             page: page
         }
-        // Zikula 1.3.6 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 1.3.5
+        // Zikula 137/140 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 135/136
         new Zikula.Ajax.Request(
-            "ajax.php?module=News&type=ajax&func=modify",
+            Zikula.Config.baseURL + 'ajax.php?module=News&type=ajax&func=modify',
             {
                 parameters: pars,
                 onComplete: editnews_init
@@ -157,9 +157,9 @@ function editnews_save(action)
         }
         var pars = $('news_ajax_modifyform').serialize(true);
         pars.action = action;
-        // Zikula 1.3.6 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 1.3.5
+        // Zikula 137/140 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 135/136
         new Zikula.Ajax.Request(
-            'ajax.php?module=News&type=ajax&func=update',
+            Zikula.Config.baseURL + 'ajax.php?module=News&type=ajax&func=update',
             {
                 parameters: pars,
                 onComplete: editnews_saveresponse
@@ -235,9 +235,9 @@ function savedraft()
     $('news_saving_draft').show();
     $('news_status_text').update(Zikula.__('Saving quick draft...','module_news_js'));
     $('news_button_text_draft').update(Zikula.__('Saving quick draft...','module_news_js'));
-    // Zikula 1.3.6 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 1.3.5
+    // Zikula 137/140 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 135/136
     new Zikula.Ajax.Request(
-        'ajax.php?module=News&type=ajax&func=savedraft',
+        Zikula.Config.baseURL + 'ajax.php?module=News&type=ajax&func=savedraft',
         {
             parameters: pars, 
             onComplete: savedraft_update
@@ -449,9 +449,9 @@ function executeuserselectform(data)
             sid: $F('news_sid'),
             dest: data.destination
         }
-        // Zikula 1.3.6 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 1.3.5
+        // Zikula 137/140 needs index.php?module=News&type=ajax&func=.. , but doesn't work in 135/136
         new Zikula.Ajax.Request(
-            "ajax.php?module=News&type=ajax&func=updateauthor",
+            Zikula.Config.baseURL + 'ajax.php?module=News&type=ajax&func=updateauthor',
             {
                 parameters: pars,
                 onComplete: executeuserselectform_response
