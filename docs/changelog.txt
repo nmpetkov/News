@@ -1,6 +1,21 @@
 CHANGELOG
 =========
 
+#### 3.1.0 (2014)
+
+In progress: https://github.com/zikula-modules/News/issues?milestone=2&state=closed
+
+
+#### 3.0.1 (14 Jan 2013)
+
+https://github.com/zikula-modules/News/issues?milestone=5&state=closed
+
+* Fixed: TCPDF updated and some bugs (e.g. language related) solved (#106)
+* Improved caching (thanks nmpetkov)
+* Images in RSS feed and PDF view (#46, #29)
+* Added legacy short url scheme to configuration options (#97)
+* RSS feed with special chars solved (#90)
+
 #### 3.0.0
 
     http://code.zikula.org/news/query?milestone=3.0.0
