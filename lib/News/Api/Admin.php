@@ -192,7 +192,7 @@ class News_Api_Admin extends Zikula_AbstractApi
      * @author Mark West
      * @return array array of admin links
      */
-    public function getlinks()
+    public function getLinks()
     {
         // Counts with a tolerance of 3 seconds
         $now = DateUtil::getDatetime(time() + 3);

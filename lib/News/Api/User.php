@@ -935,7 +935,7 @@ class News_Api_User extends Zikula_AbstractApi
      *
      * @return array array of admin links
      */
-    public function getlinks()
+    public function getLinks()
     {
         if (!SecurityUtil::checkPermission('News::', '::', ACCESS_OVERVIEW)) {
             return;
