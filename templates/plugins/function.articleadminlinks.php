@@ -85,7 +85,7 @@ function smarty_function_articleadminlinks($params, &$smarty)
             PageUtil::addVar('stylesheet', 'modules/News/style/datepicker.css');
             $articlelinks .= '<img id="news_loadnews" src="'.System::getBaseUrl().'images/ajax/circle-ball-dark-antialiased.gif" alt="" /><span class="' . $params['class'] . '"> ' . $params['start'] . ' <a onclick="editnews(' . $params['sid'] . ',' . $params['page'] . ')" href="javascript:void(0);">' . __('Quick edit', $dom) . '</a> ' . $params['end'] . "</span>\n";
         } else {
-            $articlelinks .= '<span class="' . $params['class'] . '"> ' . $params['start'] . ' <a href="' . DataUtil::formatForDisplayHTML(ModUtil::url('News', 'admin', 'modify', array('sid' => $params['sid']))) . '">' . __('Edit', $dom) . '</a>';
+            $articlelinks .= '<span class="' . $params['class'] . '"> ' . $params['start'] . ' <a href="' . DataUtil::formatForDisplay(ModUtil::url('News', 'admin', 'modify', array('sid' => $params['sid']))) . '">' . __('Edit', $dom) . '</a>';
             if (SecurityUtil::checkPermission('News::', "$info[cr_uid]:$info[cattitle]:$info[sid]", ACCESS_DELETE)) {
                 $articlelinks .= ' ' . $params['seperator'] . ' <a href="' . DataUtil::formatForDisplay(ModUtil::url('News', 'admin', 'delete', array('sid' => $params['sid']))) . '">' . __('Delete', $dom) . '</a>';
             }
