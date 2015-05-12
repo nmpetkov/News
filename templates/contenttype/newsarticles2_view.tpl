@@ -1,7 +1,7 @@
 <h3>{$title}</h3>
 <style>
 .newsarticles_stories_odd {
-    background: transparant;
+    background: #fff;
     padding: 8px;
 }
 .newsarticles_stories_even {
@@ -28,7 +28,7 @@
 </style>
 {if $stories}
     {foreach from=$stories item='story'}
-    <div class="z-clearfix {cycle values='newsarticles_stories_odd,newsarticles_stories_even}">
+    <div class="z-clearfix {cycle values='newsarticles_stories_odd,newsarticles_stories_even'}">
         {if $story.readperm}
             {if $useshorturls}
                 {modurl modname='News' type='user' func='display' sid=$story.sid from=$story.from urltitle=$story.urltitle assign='storylink'}
