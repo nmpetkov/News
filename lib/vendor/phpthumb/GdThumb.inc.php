@@ -112,6 +112,9 @@ class GdThumb extends ThumbBase
 				break;
 			case 'PNG':
 				$this->oldImage = imagecreatefrompng($this->fileName);
+				// make sure transparency is handled correct
+				imagealphablending($this->oldImage, true);
+				//imagesavealpha($this->oldImage, true);
 				break;
 			case 'STRING':
 				$this->oldImage = imagecreatefromstring($this->fileName);

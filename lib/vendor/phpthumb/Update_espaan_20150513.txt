@@ -1,0 +1,13 @@
+PNG files with transparency get a black part where the files where using the alpha channel.
+This is solved by making sure the png files are using the alpha channel when generating the jpg
+thumbnail.
+by these lines in GdThumb.inc.php around line 114.
+				// make sure transparency is handled correct
+				imagealphablending($this->oldImage, true);
+				//imagesavealpha($this->oldImage, true);
+
+A better solution would be to scale png's to png's and not convert to jpg, but that will most probably not
+be done with this plugin. A better solution would be to then use the Api of SimpleMedia2 and go from there.
+                
+E.Spaan
+20150513
