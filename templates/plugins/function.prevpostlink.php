@@ -28,7 +28,7 @@
  * Smarty function to display a link to the previous post
  *
  * Example
- * <!--[prevpostlink sid=$info.sid layout='<span class="news_metanav">&laquo;</span> %link%']-->
+ * {prevpostlink sid=$info.sid layout='<span class="news_metanav">&laquo;</span> %link%'}
  *
  * @author Mark West
  * @since 3/7/2007
@@ -51,16 +51,26 @@ function smarty_function_prevpostlink($params, &$smarty)
         $params['layout'] = '<span class="news_metanav">&laquo;</span> %link%';
     }
 
+    $linkTitle = isset($params['title']) ? $params['title'] : '';
+
     $article = ModUtil::apiFunc('News', 'user', 'getall',
                             array('query' => array(array('sid', '<', $params['sid'])),
-                                  'orderdir' => 'ASC',
+                                  'orderdir' => 'DESC',
                                   'numitems' => 1));
 
     if (!$article) {
         return;
     }
 
-    $articlelink = '<a href="'.DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'display', array('sid' => $article[0]['sid']))).'">'.DataUtil::formatForDisplay($article[0]['title']).'</a>';
+    $article = $article[0];
+
+    if ($linkTitle == '') {
+        $linkTitle = $article['title'];
+    }
+
+    $articlelink = ModUtil::url('News', 'user', 'display', array('sid' => $article['sid'], 'from' => $article['from'], 'urltitle' => $article['urltitle']));
+    $articlelink = '<a href="'.DataUtil::formatForDisplay($articlelink).'">'.DataUtil::formatForDisplay($linkTitle).'</a>';
+
     $articlelink = str_replace('%link%', $articlelink, $params['layout']);
 
     if (isset($params['assign'])) {
