@@ -28,7 +28,7 @@
  * Smarty function to display a link to the next post
  *
  * Example
- * <!--[nextpostlink sid=$info.sid layout='%link% <span class="news_metanav">&raquo;</span>']-->
+ * {nextpostlink sid=$info.sid layout='%link% <span class="news_metanav">&raquo;</span>'}
  *
  * @author Mark West
  * @since 20/10/03
@@ -51,8 +51,10 @@ function smarty_function_nextpostlink($params, &$smarty)
         $params['layout'] = '%link% <span class="news_metanav">&raquo;</span>';
     }
 
+    $linkTitle = isset($params['title']) ? $params['title'] : '';
+
     $article = ModUtil::apiFunc('News', 'user', 'getall',
-                            array('query' => array(array('sid', '>', $params[sid])),
+                            array('query' => array(array('sid', '>', $params['sid'])),
                                   'orderdir' => 'ASC',
                                   'numitems' => 1));
 
@@ -60,7 +62,15 @@ function smarty_function_nextpostlink($params, &$smarty)
         return;
     }
 
-    $articlelink = '<a href="'.DataUtil::formatForDisplay(ModUtil::url('News', 'user', 'display', array('sid' => $article[0]['sid']))).'">'.DataUtil::formatForDisplay($article[0]['title']).'</a>';
+    $article = $article[0];
+
+    if ($linkTitle == '') {
+        $linkTitle = $article['title'];
+    }
+
+    $articlelink = ModUtil::url('News', 'user', 'display', array('sid' => $article['sid'], 'from' => $article['from'], 'urltitle' => $article['urltitle']));
+    $articlelink = '<a href="'.DataUtil::formatForDisplay($articlelink).'">'.DataUtil::formatForDisplay($linkTitle).'</a>';
+
     $articlelink = str_replace('%link%', $articlelink, $params['layout']);
 
     if (isset($params['assign'])) {
