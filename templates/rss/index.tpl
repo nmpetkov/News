@@ -9,6 +9,8 @@
         {$info.hometext|notifyfilters:'news.filter_hooks.articles.filter'}
         ]]>
     </description>
-    <pubDate>{$info.from|updated|published}</pubDate>
+    {assign var='format' value='D, d M Y H:i:s O'}
+    {assign var='date' value=$info.from|strtotime}
+    <pubDate>{$format|date:$date}</pubDate>
     <guid>{modurl modname='News' type='user' func='display' sid=$info.sid title=$info.urltitle fqurl=true}</guid>
 </item>
